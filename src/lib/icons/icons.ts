@@ -499,14 +499,81 @@ export const icons = {
     viewBox: '0 0 361 360',
     set: 'xpriori',
   },
+  sidebar: {
+    symbol: `<path fill="currentColor" scale-80 d="M16.5 4C17.3284 4 18 4.67157 18 5.5V14.5C18 15.3284 17.3284 16 16.5 16H3.5C2.67157 16 2 15.3284 2 14.5V5.5C2 4.67157 2.67157 4 3.5 4H16.5ZM7 15H16.5C16.7761 15 17 14.7761 17 14.5V5.5C17 5.22386 16.7761 5 16.5 5H7V15ZM3.5 5C3.22386 5 3 5.22386 3 5.5V14.5C3 14.7761 3.22386 15 3.5 15H6V5H3.5Z"></path>`,
+    viewBox: '0 0 20 20',
+    set: 'claude',
+  },
+  'left-edge': {
+    symbol: `<path fill="currentColor" d="M16.5 3C16.7761 3 17 3.22386 17 3.5V16.5L16.9902 16.6006C16.9437 16.8286 16.7417 17 16.5 17C16.2583 17 16.0563 16.8286 16.0098 16.6006L16 16.5V3.5C16 3.22386 16.2239 3 16.5 3ZM8.12793 5.16504C8.28958 4.98547 8.5524 4.95058 8.75293 5.06836L8.83496 5.12793L13.835 9.62793C13.9403 9.72275 14 9.85828 14 10C14 10.1063 13.9667 10.2093 13.9053 10.2939L13.835 10.3721L8.83496 14.8721C8.62972 15.0568 8.31267 15.0402 8.12793 14.835C7.94322 14.6297 7.95984 14.3127 8.16504 14.1279L12.1963 10.5H3.5C3.22386 10.5 3 10.2761 3 10C3 9.72386 3.22386 9.5 3.5 9.5H12.1963L8.16504 5.87207L8.09766 5.79688C7.95931 5.60979 7.96622 5.34471 8.12793 5.16504Z"></path>`,
+    viewBox: '0 0 20 20',
+    set: 'claude',
+  },
+  'play-solid': {
+    symbol:
+      '<path fill="currentColor" d="M10.01 5.887c-1.667-.972-3.76.23-3.76 2.16v7.906c0 1.93 2.093 3.132 3.76 2.16l6.777-3.954c1.653-.964 1.653-3.354 0-4.318z"/>',
+    viewBox: '0 0 24 24',
+    set: 'stash',
+  },
+  'arrow-swap': {
+    symbol:
+      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9.618 12.249l-3.814 3.814c-.293.293-.44.677-.44 1.06M9.619 22l-3.814-3.814a1.5 1.5 0 0 1-.44-1.061m13.395 0H5.365m-.124-9.751h13.394m-4.253-4.875l3.814 3.814c.293.293.44.677.44 1.06m-4.254 4.876l3.814-3.814c.293-.293.44-.677.44-1.061"/>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  'checkbox-unchecked': {
+    symbol:
+      '<rect width="16.5" height="16.5" x="3.75" y="3.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" rx="4"/>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  'checkbox-indeterminate': {
+    symbol:
+      '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><rect width="16.5" height="16.5" x="3.75" y="3.75" rx="4"/><path d="M16.19 12H7.81"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  'checkbox-indeterminate-2': {
+    symbol:
+      '<g fill="none"><rect width="18.5" height="18.5" x="2.75" y="2.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" rx="4"/><path fill="currentColor" d="M7.113 6.25a.86.86 0 0 0-.863.862v9.775c0 .477.386.863.862.863h9.775a.863.863 0 0 0 .863-.863V7.114a.863.863 0 0 0-.863-.863z"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  filter: {
+    symbol:
+      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.5 7.25h15M7.385 12h9.23m-6.345 4.75h3.46"/>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  printer: {
+    symbol:
+      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 17v1.05c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.428.218.988.218 2.108.218h4.1c1.12 0 1.68 0 2.108-.218a2 2 0 0 0 .874-.874c.218-.428.218-.988.218-2.108V17m-10.5 0v-1.05c0-1.12 0-1.68.218-2.108a2 2 0 0 1 .874-.874c.428-.218.988-.218 2.108-.218h4.1c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874c.218.428.218.988.218 2.108V17m-10.5 0h-.8c-1.12 0-1.68 0-2.108-.218a2 2 0 0 1-.874-.874c-.218-.428-.218-.988-.218-2.108v-3c0-1.68 0-2.52.327-3.162a3 3 0 0 1 1.311-1.311C5.03 6 5.87 6 7.55 6h8.9c1.68 0 2.52 0 3.162.327a3 3 0 0 1 1.311 1.311c.327.642.327 1.482.327 3.162v3c0 1.12 0 1.68-.218 2.108a2 2 0 0 1-.874.874C19.73 17 19.17 17 18.05 17h-.8M6.75 4.25a1.5 1.5 0 0 1 1.5-1.5h7.5a1.5 1.5 0 0 1 1.5 1.5V6H6.75z"/>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  'more-h': {
+    symbol:
+      '<g fill="currentColor"><circle cx="6" cy="12" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="18" cy="12" r="1.75"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  'more-v': {
+    symbol:
+      '<g fill="currentColor"><circle cx="12" cy="18" r="1.75" transform="rotate(-90 12 18)"/><circle cx="12" cy="12" r="1.75" transform="rotate(-90 12 12)"/><circle cx="12" cy="6" r="1.75" transform="rotate(-90 12 6)"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'proicons',
+  },
+  'slash-bold': {
+    symbol: `<path fill-rule="evenodd" clip-rule="evenodd" d="M18.1818 0H5.81818C2.60489 0 0 2.60489 0 5.81818V18.1818C0 21.3951 2.60489 24 5.81818 24H18.1818C21.3951 24 24 21.3951 24 18.1818V5.81818C24 2.60489 21.3951 0 18.1818 0ZM9.36263 19.7164L16.6062 5.22648C16.8789 4.68103 16.6577 4.01781 16.1123 3.74514C15.5668 3.47247 14.9036 3.69359 14.6309 4.23904L7.38738 18.7289C7.11471 19.2744 7.33584 19.9376 7.88129 20.2103C8.42674 20.4829 9.08996 20.2618 9.36263 19.7164Z" fill="currentColor"/>`,
+    viewBox: `0 0 24 24`,
+    set: `proicons`,
+  },
 }
 
 /*
+<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="shrink-0 opacity-0 scale-75 absolute inset-0 transition-all text-text-200" aria-hidden="true">
+<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="shrink-0 group-hover:scale-80 transition scale-100 text-text-300" aria-hidden="true">
 
-<svg width="361" height="360" viewBox="0 0 361 360" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-</svg>
-
- */
+*/
 
 export type IconNameType = keyof typeof icons
