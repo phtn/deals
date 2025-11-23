@@ -46,7 +46,6 @@ export const Search = forwardRef<HTMLInputElement, Props<unknown>>(
       },
       [ref],
     )
-    Search.displayName = 'Search'
 
     useEffect(() => {
       handlerRef.current = handleKeyDown
@@ -103,3 +102,5 @@ export const Search = forwardRef<HTMLInputElement, Props<unknown>>(
     )
   },
 )
+
+Search.displayName = 'Search'

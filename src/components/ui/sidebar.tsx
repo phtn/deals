@@ -63,6 +63,7 @@ function SidebarProvider({
   const isMobile = useMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
 
+  // Always start with defaultOpen to ensure server/client match
   const [_open, _setOpen] = React.useState(defaultOpen)
   const open = openProp ?? _open
   const setOpen = React.useCallback(
@@ -73,10 +74,32 @@ function SidebarProvider({
       } else {
         _setOpen(openState)
       }
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+      // Only set cookie on client
+      if (typeof window !== 'undefined') {
+        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+      }
     },
     [setOpenProp, open],
   )
+
+  // Sync with cookie on mount (client-only) - only if not controlled
+  // This runs after hydration to avoid mismatches
+  React.useEffect(() => {
+    if (openProp !== undefined) return // Don't sync if controlled
+    if (typeof window === 'undefined') return
+
+    const cookies = document.cookie.split(';')
+    const sidebarCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith(`${SIDEBAR_COOKIE_NAME}=`),
+    )
+    if (sidebarCookie) {
+      const value = sidebarCookie.split('=')[1]?.trim()
+      const cookieState = value === 'true'
+      if (cookieState !== open) {
+        _setOpen(cookieState)
+      }
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleSidebar = React.useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
@@ -116,6 +139,7 @@ function SidebarProvider({
     <SidebarContext.Provider value={contextValue}>
       <TooltipProvider delayDuration={0}>
         <div
+          suppressHydrationWarning
           style={
             {
               '--sidebar-width': SIDEBAR_WIDTH,
@@ -187,6 +211,7 @@ function Sidebar({
 
   return (
     <div
+      suppressHydrationWarning
       className='group peer hidden md:block text-sidebar-foreground'
       data-state={state}
       data-collapsible={state === 'collapsed' ? collapsible : ''}
@@ -241,9 +266,9 @@ function SidebarTrigger({
         toggleSidebar()
       }}>
       {open ? (
-        <Icon name='sidebar' className='size-6' aria-hidden='true' />
+        <Icon name='sidebar' className='size-5' />
       ) : (
-        <Icon name='sidebar' className='size-6 rotate-180' aria-hidden='true' />
+        <Icon name='sidebar' className='size-5 rotate-180' />
       )}
       <span className='sr-only'>Toggle Sidebar</span>
     </Button>
@@ -261,7 +286,7 @@ function SidebarRail({className, ...props}: React.ComponentProps<'button'>) {
       onClick={toggleSidebar}
       title='Toggle Sidebar'
       className={cn(
-        'absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-in-out after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex',
+        'absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-in-out after:absolute after:inset-y-0 after:left-1/2 after:w-0.5 hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
         '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
         'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar',
@@ -274,15 +299,16 @@ function SidebarRail({className, ...props}: React.ComponentProps<'button'>) {
   )
 }
 
-function SidebarInset({className, ...props}: React.ComponentProps<'main'>) {
+function SidebarInset({className, ...props}: React.ComponentProps<'div'>) {
   return (
-    <main
+    <div
+      suppressHydrationWarning
+      {...props}
       className={cn(
         'relative flex min-h-svh flex-1 flex-col bg-sidebar',
         'peer-data-[variant=inset]:min-h-[calc(100svh-(--spacing(4)))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm',
         className,
       )}
-      {...props}
     />
   )
 }
@@ -537,8 +563,13 @@ function SidebarMenuSkeleton({
 }: React.ComponentProps<'div'> & {
   showIcon?: boolean
 }) {
-  const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
+  // Use a stable width to avoid hydration mismatches
+  // Generate based on a hash of the component instance or use a fixed value
+  const [width, setWidth] = React.useState('70%')
+
+  React.useEffect(() => {
+    // Only set random width on client after mount to avoid hydration mismatch
+    setWidth(`${Math.floor(Math.random() * 40) + 50}%`)
   }, [])
 
   return (

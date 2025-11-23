@@ -12,7 +12,13 @@ import {
   type User,
 } from 'firebase/auth'
 import {useRouter} from 'next/navigation'
-import React, {createContext, useContext, useEffect, useState} from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useEffectEvent,
+  useState,
+} from 'react'
 import {useSigninCheck} from 'reactfire'
 import type {AuthUser} from '../../lib/firebase/types'
 
@@ -52,7 +58,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
     try {
       await signInWithPopup(auth, provider)
       setLoading(false)
-      router.push('/main')
+      router.push('/x')
     } catch (error) {
       console.error('Error signin?? in with Google:', error)
       setLoading(false)
@@ -61,7 +67,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
 
   const {status, data: signInCheckResult} = useSigninCheck()
 
-  useEffect(() => {
+  useEffectEvent(() => {
     if (status === 'success' && signInCheckResult.user) {
       setLoading(false)
       const firebaseUser = signInCheckResult.user
@@ -138,7 +144,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
     } else if (status === 'success' && !signInCheckResult.user) {
       setUser(null)
     }
-  }, [status, signInCheckResult])
+  })
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(

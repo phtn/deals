@@ -1,5 +1,4 @@
 'use client'
-import {useCallback} from 'react'
 
 import type {NavGroup, NavItem} from '@/components/types'
 import {Button} from '@/components/ui/button'
@@ -19,45 +18,18 @@ import {useAppTheme} from '@/hooks/use-theme'
 import {cn} from '@/lib/utils'
 
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
-  const [isDark, toggleTheme] = useAppTheme()
-  const ToggleTheme = useCallback(
-    () => (
-      <SidebarMenuItem>
-        <SidebarMenuButton
-          asChild
-          className='group/menu-button h-9 rounded-md [&>svg]:size-auto'>
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={toggleTheme}
-            className='capitalize w-fit px-4 space-x-2'>
-            <span className='space-x-1'>
-              <span className='opacity-80 tracking-tighter font-extrabold dark:opacity-70'>
-                Toggle
-              </span>
-              <span
-                className={cn(' text-slate-700', {
-                  'font-light text-orange-300': isDark,
-                })}>
-                {isDark ? 'Light' : 'Dark'}
-              </span>
-            </span>
-          </Button>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    ),
-    [toggleTheme, isDark],
-  )
   return (
-    <Sidebar {...props} className='!border-none'>
+    <Sidebar {...props} className='border-none!' suppressHydrationWarning>
       <SidebarHeader className=''>
         <div className='h-14.5 flex items-end justify-between px-4'>
-          <h3 className='text-base font-figtree font-semibold'>BestDeal</h3>
+          <h3 className='text-base h-8 font-figtree font-semibold tracking-tight'>
+            BestDeal
+          </h3>
         </div>
         <div
           className={cn(
             'relative transition-all duration-300 ease-in-out',
-            'after:absolute after:inset-x-0 after:top-0 after:h-[0.5px] after:bg-gradient-to-r after:from-foreground/10 after:via-foreground/15 before:to-foreground/10',
+            'after:absolute after:inset-x-0 after:top-0 after:h-[0.5px] after:bg-linear-to-r after:from-foreground/10 after:via-foreground/15 before:to-foreground/10',
           )}
         />
       </SidebarHeader>
@@ -78,7 +50,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                     key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      className='group/menu-button h-8 data-[active=true]:hover:bg-background data-[active=true]:bg-gradient-to-b data-[active=true]:from-sidebar-primary data-[active=true]:to-sidebar-primary/70 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.05),inset_0_1px_0_0_rgb(255_255_255/.12)] [&>svg]:size-auto'
+                      className='group/menu-button h-8 data-[active=true]:hover:bg-background data-[active=true]:bg-linear-to-b data-[active=true]:from-sidebar-primary data-[active=true]:to-sidebar-primary/70 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.05),inset_0_1px_0_0_rgb(255_255_255/.12)] [&>svg]:size-auto'
                       isActive={item.isActive}>
                       <MenuContent {...item} />
                     </SidebarMenuButton>
@@ -86,16 +58,16 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 ))}
               <a
                 data-active='true'
-                className='relative flex flex-row items-center tracking-tight gap-2 rounded-lg p-2 ps-4 text-start [overflow-wrap:anywhere] [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary/10 text-fd-primary'
+                className='relative flex flex-row items-center tracking-tight gap-2 rounded-lg p-2 ps-4 text-start wrap:anywhere [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary/10 text-fd-primary'
                 href='/docs/components/action-search-bar'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
-                  width='24'
-                  height='24'
                   viewBox='0 0 24 24'
                   fill='none'
+                  height={8}
+                  width={8}
                   stroke='currentColor'
-                  strokeWidth='2'
+                  strokeWidth='1'
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   className='lucide lucide-command'
@@ -142,7 +114,8 @@ const MenuContent = (item: NavItem) => {
   return (
     <a
       href={item.url}
-      className=' font-figtree group/menu-content hover:bg-foreground/10 rounded-lg flex items-center px-4 h-[2.5rem]'>
+      suppressHydrationWarning
+      className=' font-figtree group/menu-content hover:bg-foreground/10 rounded-lg flex items-center px-4 h-10'>
       <span className='group-hover/menu-content:text-foreground tracking-tighter text-sm font-medium text-foreground/80'>
         {item.title}
       </span>
@@ -155,7 +128,7 @@ const data: Record<string, NavGroup[]> = {
     {
       name: 'BestDeal',
       logo: 'https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp2/logo-01_upxvqe.png',
-      url: '/',
+      url: '/x',
     },
   ],
   navMain: [
@@ -164,32 +137,39 @@ const data: Record<string, NavGroup[]> = {
       url: '#',
       items: [
         {
-          title: 'Sales',
-          url: '/',
+          title: 'Overview',
+          url: '/x',
+          icon: 'chat',
+          isActive: true,
+        },
+        {
+          title: 'Affiliates',
+          url: '/x/affiliates',
+          icon: 'chevron-right',
+        },
+        {
+          title: 'Leads',
+          url: '/x',
           icon: 'chat',
           isActive: true,
         },
 
         {
           title: 'Scans',
-          url: '#',
+          url: '/x',
           icon: 'chat',
         },
-        {
-          title: 'Affiliates',
-          url: '#',
-          icon: 'chevron-right',
-        },
+
         {
           title: 'Master',
-          url: '#',
+          url: '/x',
           icon: 'chat',
         },
       ],
     },
     {
       title: 'Preferences',
-      url: '#',
+      url: '/x',
       items: [
         {
           title: 'Settings',
@@ -199,4 +179,35 @@ const data: Record<string, NavGroup[]> = {
       ],
     },
   ],
+}
+
+const ToggleTheme = () => {
+  const [isDark, toggleTheme] = useAppTheme()
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        asChild
+        className='group/menu-button h-10 rounded-md [&>svg]:size-auto'>
+        <Button
+          variant='ghost'
+          size='sm'
+          onClick={toggleTheme}
+          className='capitalize w-fit px-4 space-x-2'>
+          <span className='space-x-1'>
+            <span className='opacity-80 tracking-tighter font-extrabold dark:opacity-70'>
+              Toggle
+            </span>
+            <span
+              suppressHydrationWarning
+              className={cn(
+                'font-light',
+                `${isDark ? 'text-orange-300' : 'text-slate-700 '}`,
+              )}>
+              {isDark ? 'Light' : 'Dark'}
+            </span>
+          </span>
+        </Button>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  )
 }

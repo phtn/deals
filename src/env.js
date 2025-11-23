@@ -1,9 +1,9 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import {createEnv} from '@t3-oss/env-nextjs'
+import {z} from 'zod'
 
 export const env = createEnv({
   server: {
-    NODE_ENV: z.enum(["development", "test", "production"]),
+    NODE_ENV: z.enum(['development', 'test', 'production']),
 
     // CLOUDINARY
     CLOUDINARY_CLOUD_NAME: z.string(),
@@ -14,6 +14,12 @@ export const env = createEnv({
     // RESEND
     RESEND_API: z.string(),
     RESEND_FROM: z.string(),
+
+    // GOOGLE CLOUD
+    GOOGLE_CLOUD_CREDENTIALS: z.string(),
+
+    // IPAPI
+    IPAPI_API_KEY: z.string(),
   },
 
   client: {
@@ -62,6 +68,12 @@ export const env = createEnv({
     // RESEND
     RESEND_API: process.env.RESEND_API,
     RESEND_FROM: process.env.RESEND_FROM,
+
+    // GOOGLE CLOUD
+    GOOGLE_CLOUD_CREDENTIALS: process.env.GOOGLE_CLOUD_CREDENTIALS,
+
+    // IPAPI
+    IPAPI_API_KEY: process.env.IPAPI_API_KEY,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
@@ -70,4 +82,4 @@ export const env = createEnv({
    * `SOME_VAR=''` will throw an error.
    */
   emptyStringAsUndefined: true,
-});
+})

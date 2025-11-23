@@ -24,7 +24,7 @@ export const Navbar = () => {
     return nav_data.map((item, index) => (
       <a
         key={index}
-        className="text-sidebar-foreground/50 hover:text-sidebar-foreground/70 transition-colors [&[aria-current]]:text-sidebar-foreground before:content-['·'] before:px-4 before:text-sidebar-foreground/30 first:before:hidden"
+        className="text-sidebar-foreground/50 hover:text-sidebar-foreground/70 transition-colors aria-[current]:text-sidebar-foreground before:content-['·'] before:px-4 before:text-sidebar-foreground/30 first:before:hidden"
         href={item.href}
         aria-current={item.ariaCurrent}>
         {item.label}

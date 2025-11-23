@@ -20,7 +20,7 @@ export default function Layout({children}: LayoutProps) {
             <div className='flex items-center gap-6'>
               {/* Logo */}
               <div className='flex items-center gap-2'>
-                <div className='w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center'>
+                <div className='w-10 h-10 bg-linear-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center'>
                   <div className='w-6 h-6 border-2 border-white rounded transform rotate-45' />
                 </div>
               </div>

@@ -1,17 +1,17 @@
 'use client'
 
-import { type IconNameType, icons } from '@/lib/icons/icons'
-import type { IconData, IconProps } from '@/lib/icons/types'
-import type { FC } from 'react'
-import { motion, MotionProps } from 'motion/react'
-import { cn } from '../utils'
+import {type IconNameType, icons} from '@/lib/icons/icons'
+import type {IconData, IconProps} from '@/lib/icons/types'
+import {motion, MotionProps} from 'motion/react'
+import type {FC} from 'react'
+import {cn} from '../utils'
 
 export type IconName = IconNameType
 
-export const Icon: FC<IconProps & { motionprops?: MotionProps }> = ({
+export const Icon: FC<IconProps & {motionprops?: MotionProps}> = ({
   name,
   className,
-  size = 24,
+  size = 16,
   color = 'currentColor',
   solid = true,
   ...props
@@ -33,7 +33,7 @@ export const Icon: FC<IconProps & { motionprops?: MotionProps }> = ({
         strokeLinejoin='round'
         aria-hidden
         {...props}
-        dangerouslySetInnerHTML={{ __html: icon.symbol }}
+        dangerouslySetInnerHTML={{__html: icon.symbol}}
       />
     </motion.div>
   )

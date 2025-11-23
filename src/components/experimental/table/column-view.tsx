@@ -5,19 +5,57 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Column} from '@tanstack/react-table'
+import {useMemo} from 'react'
 
 interface Props<T> {
   cols: Column<T, unknown>[]
   isMobile: boolean
 }
+
+// Helper function to extract header text from column definition
+const getColumnHeaderText = <T,>(column: Column<T, unknown>): string => {
+  const header = column.columnDef.header
+
+  // If header is a string, use it directly
+  if (typeof header === 'string') {
+    return header
+  }
+
+  // If header is a function, try to extract meaningful text
+  if (typeof header === 'function') {
+    // For function headers, use the column ID as fallback
+    // Convert camelCase or kebab-case to readable format
+    return formatColumnId(column.id)
+  }
+
+  // For ReactNode headers, use formatted column ID
+  return formatColumnId(column.id)
+}
+
+// Format column ID to readable text (e.g., "createdAt" -> "Created At")
+const formatColumnId = (id: string): string => {
+  return id
+    .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+    .replace(/[-_]/g, ' ') // Replace hyphens and underscores with spaces
+    .trim()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
+
 export const ColumnView = <T,>({cols, isMobile}: Props<T>) => {
-  const invisibleColumns = cols.filter((col) => !col.getIsVisible())
+  // Filter columns where enableHiding is true (default is true, so filter out false)
+  const hideableColumns = useMemo(() => {
+    return cols.filter((col) => col.getCanHide())
+  }, [cols])
+
+  const invisibleColumns = hideableColumns.filter((col) => !col.getIsVisible())
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -25,11 +63,16 @@ export const ColumnView = <T,>({cols, isMobile}: Props<T>) => {
           variant='secondary'
           className='relative select-none font-sans md:aspect-auto aspect-square data-[state=open]:bg-origin/50'>
           {invisibleColumns.length > 0 && (
-            <Badge className='absolute bg-amber-500 dark:bg-amber-600 rounded-full -top-1.5 md:-top-0.5 left-full -translate-x-3.5 md:-translate-1/2 size-5 aspect-square px-1 text-white font-space'>
+            <Badge className='absolute bg-orange-400 dark:bg-orange-500 rounded-full -top-1.5 md:-top-0.5 left-full -translate-x-3.5 md:-translate-1/2 size-5 aspect-square px-1 text-white font-space'>
               {invisibleColumns.length > 99 ? '99+' : invisibleColumns.length}
             </Badge>
           )}
-          <Icon name='eye' className='size-4 opacity-60' />
+          <Icon
+            name='eye'
+            className={cn('size-4 md:size-5 opacity-60', {
+              'text-orange-500 opacity-100': invisibleColumns.length > 0,
+            })}
+          />
           <span className='hidden md:flex'>View</span>
         </Button>
       </DropdownMenuTrigger>
@@ -44,7 +87,8 @@ export const ColumnView = <T,>({cols, isMobile}: Props<T>) => {
           <span className='opacity-60'>Toggle columns</span>
         </DropdownMenuLabel>
         <div className='h-0.5 bg-origin/50 my-2' />
-        {cols.map((column) => {
+        {hideableColumns.map((column) => {
+          const headerText = getColumnHeaderText(column)
           return (
             <DropdownMenuCheckboxItem
               key={column.id}
@@ -55,29 +99,20 @@ export const ColumnView = <T,>({cols, isMobile}: Props<T>) => {
               checked={column.getIsVisible()}
               onCheckedChange={(value) => column.toggleVisibility(!!value)}
               onSelect={(event) => event.preventDefault()}>
-              {columns[column.id]}
+              {headerText}
             </DropdownMenuCheckboxItem>
           )
         })}
-        <DropdownMenuSeparator className='dark:bg-origin/30' />
+        {/*<DropdownMenuSeparator className='dark:bg-origin/30' />*/}
         <Button
-          onClick={() => cols.forEach((col) => col.toggleVisibility(true))}
+          onClick={() =>
+            hideableColumns.forEach((col) => col.toggleVisibility(true))
+          }
           className='w-full tracking-tight font-medium font-figtree rounded-2xl hover:bg-origin dark:hover:bg-origin/20 hover:border-origin dark:hover:border-origin/80 h-12'
           variant='outline'>
-          Restore defaults
+          Reset
         </Button>
       </DropdownMenuContent>
     </DropdownMenu>
   )
-}
-
-const columns: Record<string, string> = {
-  serialNumber: 'Serial Number',
-  ownerId: 'Owner',
-  createdByName: 'Created By',
-  isActive: 'Status',
-  createdAt: 'Created At',
-  group: 'Group',
-  series: 'Series',
-  Batch: 'Batch',
 }

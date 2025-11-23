@@ -10,12 +10,13 @@ import {cn} from '@/lib/utils'
 import {LiquidMetal} from '@paper-design/shaders-react'
 import {AnimatePresence, motion, Transition, Variant} from 'motion/react'
 import Link from 'next/link'
-import {ReactNode} from 'react'
+import {useRouter} from 'next/navigation'
+import {ReactNode, useEffect} from 'react'
 
 export const Content = () => {
   // const router = useRouter();
   // const [state, setState] = useState<string>("Initializing ...");
-
+  const router = useRouter()
   const {sequence, currentStep, isCorrect, handleClick, message} = useSequence()
 
   // useEffect(() => {
@@ -51,7 +52,13 @@ export const Content = () => {
     y: 0,
   }
 
-  const {signInWithGoogle, loading} = useAuthCtx()
+  const {signInWithGoogle, loading, user} = useAuthCtx()
+
+  useEffect(() => {
+    if (isCorrect && user) {
+      router.push('/x')
+    }
+  }, [isCorrect, user, router])
 
   return (
     <div className='flex items-start justify-center'>
@@ -62,8 +69,8 @@ export const Content = () => {
           initial={{opacity: 0, scale: 0}}
           animate={{opacity: 1, scale: 1}}
           transition={transition}
-          className='absolute flex items-center w-screen h-[40rem] md:size-[50rem] justify-center'>
-          <div className='space-y-10 shadow-lg bg-gradient-to-br from-neutral-50/60 via-neutral-50 to-neutral-50/40 dark:from-neutral-400 dark:via-neutral-300 dark:to-neutral-200 backdrop-blur-lg size-[28rem] rounded-[4.5rem] flex flex-col items-center justify-center'>
+          className='absolute flex items-center w-screen h-160 md:size-200 justify-center'>
+          <div className='space-y-10 shadow-lg bg-linear-to-br from-neutral-50/60 via-neutral-50 to-neutral-50/40 dark:from-neutral-400 dark:via-neutral-300 dark:to-neutral-200 backdrop-blur-lg size-112 rounded-[4.5rem] flex flex-col items-center justify-center'>
             <div className='h-12 border-b border-neutral-300 w-full flex items-center justify-between px-8'>
               <div className='flex items-center space-x-4'>
                 <TextAnimate

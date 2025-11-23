@@ -17,7 +17,9 @@ import {useCopy} from '@/hooks/use-copy'
 import {Icon, IconName} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Row} from '@tanstack/react-table'
-import {useCallback, useMemo, useState} from 'react'
+import {useMutation} from 'convex/react'
+import {useCallback, useState} from 'react'
+import {api} from '../../../../convex/_generated/api'
 
 interface ISubMenuItem {
   label: string
@@ -51,10 +53,11 @@ export const RowActions = <T,>({
   const {copy} = useCopy({timeout: 2000})
   const [loading, setLoading] = useState(false)
 
-  const handleView = useCallback(
-    () => typeof viewFn === 'function' && viewFn(),
-    [viewFn],
-  )
+  const handleView = useCallback(() => {
+    if (typeof viewFn === 'function') {
+      viewFn()
+    }
+  }, [viewFn])
 
   const handleDelete = useCallback(() => {
     deleteFn?.(row.original)
@@ -67,27 +70,25 @@ export const RowActions = <T,>({
     [row.original],
   )
 
-  const submenuItems = useMemo(
-    () =>
-      [
-        {label: 'CSV', icon: 'printer', fn: () => console.log('csv')},
-        {
-          label: 'Copy JSON',
-          icon: 'json',
-          fn: () => copy('Row', JSON.stringify(row.original, null, 2)),
-        },
-        {label: 'Advance', icon: 'pawn', fn: () => console.log('delete')},
-      ] as ISubMenuItem[],
-    [copy, row.original],
-  )
+  const submenuItems: Array<ISubMenuItem> = [
+    {label: 'CSV', icon: 'printer', fn: () => console.log('csv')},
+    {
+      label: 'Copy JSON',
+      icon: 'json' as IconName,
+      fn: () => copy('Row', JSON.stringify(row.original, null, 2)),
+    },
+    {
+      label: 'Advance',
+      icon: 'pawn' as IconName,
+      fn: () => console.log('delete'),
+    },
+  ]
 
-  const rowItem = useCallback(({cardId}: {cardId: string}) => {
-    console.log(cardId)
-  }, [])
+  const rowItem = useMutation(api.affiliates.m.removeOne)
   const handleDeleteRow = useCallback(() => {
-    const cardId = row.getValue('cardId') as string
+    const uid = row.getValue('uid') as string
     setLoading(true)
-    rowItem({cardId})
+    rowItem({uid})
   }, [rowItem, row])
 
   return (
@@ -100,7 +101,7 @@ export const RowActions = <T,>({
           aria-label='More'>
           <Icon
             solid
-            name={loading ? 'spinners-ring' : 'more-h'}
+            name={loading ? 'spinners-ring' : 'settings'}
             className={cn('text-muted-foreground size-4', {
               'dark:text-amber-400': loading,
             })}

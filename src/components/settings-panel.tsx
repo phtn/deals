@@ -1,12 +1,12 @@
 'use client'
 
 import {Button} from '@/components/ui/button'
-import {Label} from '@/components/ui/label'
 import {ScrollArea} from '@/components/ui/scroll-area'
 import {Sheet, SheetContent, SheetTitle} from '@/components/ui/sheet'
-import {SliderControl} from '@/components/ui/slider-control'
+import {AffiliateCtx} from '@/ctx/affiliate'
 import {useMobile} from '@/hooks/use-mobile'
 import {Icon} from '@/lib/icons'
+import {QrViewer} from '@/lib/qr-code/viewer'
 import {cn} from '@/lib/utils'
 import {motion} from 'motion/react'
 import {
@@ -16,7 +16,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useId,
   useMemo,
   useState,
 } from 'react'
@@ -213,9 +212,51 @@ const SettingsPanel = ({
 }
 SettingsPanel.displayName = 'SettingsPanel'
 
-const SettingsPanelContent = () => {
-  const id = useId()
+const QRCodeSection = () => {
+  const affiliateCtx = useContext(AffiliateCtx)
+  const qrCodeUrl = affiliateCtx?.qrCodeUrl
 
+  // TEMPORARY: Static QR code for dimension tweaking
+  // TODO: Remove this and use qrCodeUrl from context
+  const staticQRCodeUrl =
+    'https://scan-ts.vercel.app/?id=test-123&grp=test-group&seed=&iztp1nk=b-test-d'
+
+  // Force re-render when QR code URL changes
+  useEffect(() => {
+    if (qrCodeUrl) {
+      console.log('QR Code URL updated:', qrCodeUrl)
+    }
+  }, [qrCodeUrl])
+
+  // Use static URL for now, fallback to context URL
+  const displayUrl = staticQRCodeUrl || qrCodeUrl
+
+  if (!displayUrl) {
+    return null
+  }
+
+  return (
+    <div
+      key={displayUrl}
+      className={cn(
+        'py-5 relative',
+        'before:absolute before:inset-x-0 before:top-0 before:h-[0.5px] before:bg-gradient-to-r before:from-foreground/10 before:via-foreground/15 before:to-foreground/10',
+      )}>
+      <h3 className='text-xs font-medium uppercase text-muted-foreground/80 mb-4'>
+        QR Code
+      </h3>
+      <div className='flex flex-col items-center gap-3'>
+        {/* TEMPORARY: Adjust size and padding here for dimension tweaking */}
+        <QrViewer url={displayUrl} className='w-full' size={230} padding={3} />
+        <p className='text-xs text-muted-foreground text-center max-w-[200px]'>
+          Scan this QR code to access the affiliate link
+        </p>
+      </div>
+    </div>
+  )
+}
+
+const SettingsPanelContent = () => {
   return (
     <>
       {/* Sidebar header */}
@@ -234,147 +275,8 @@ const SettingsPanelContent = () => {
 
       {/* Sidebar content */}
       <motion.div className='-mt-px whitespace-nowrap'>
-        {/* Conversations list */}
-        <div
-          className={cn(
-            'py-5 relative transition-all duration-300 ease-in-out',
-            'before:absolute before:inset-x-0 before:top-0 before:h-[0.5px] before:bg-gradient-to-r before:from-foreground/10 before:via-foreground/15 before:to-foreground/10',
-          )}>
-          <div className='flex items-center justify-between mb-2'>
-            <h3 className='text-xs font-medium uppercase text-muted-foreground/80'>
-              Conversations
-            </h3>
-          </div>
-
-          <div className='space-y-1 w-80 block'></div>
-        </div>
-
-        {/* Assistant settings */}
-        <div
-          className={cn(
-            'py-5 relative transition-all duration-300 ease-in-out',
-            'before:absolute before:inset-x-0 before:top-0 before:h-[0.5px] before:bg-gradient-to-r before:from-foreground/10 before:via-foreground/15 before:to-foreground/10',
-          )}>
-          <h3 className='text-xs font-medium uppercase text-muted-foreground/80 mb-2'>
-            Assistant
-          </h3>
-          <div className='space-y-3'>
-            {/* Model */}
-            <div className='flex h-12 items-center justify-between gap-2'>
-              <Label htmlFor={`${id}-model`} className='font-normal'>
-                Model
-              </Label>
-              {/*<Select value={model} onValueChange={setModel}>
-                <SelectTrigger
-                  id={`${id}-model`}
-                  className="bg-muted w-auto max-w-full h-8 py-1 px-2 gap-1 [&_svg]:-me-1 border-none"
-                >
-                  <SelectValue placeholder="Select model" />
-                </SelectTrigger>
-                <SelectContent
-                  className="[&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-                  align="end"
-                >
-                  {CHAT_MODELS.map((m) => (
-                    <SelectItem key={m.value} value={m.value}>
-                      {m.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>*/}
-            </div>
-
-            {/* Web search */}
-            <div className='flex h-12 items-center justify-between gap-2'>
-              <Label htmlFor={`${id}-web-search`} className='font-normal'>
-                Web search
-              </Label>
-              <div className='flex items-center gap-2'>
-                {/*<Checkbox
-                  id={`${id}-web-search`}
-                  checked={webSearch}
-                  onCheckedChange={(c) => setWebSearch(c === true)}
-                />*/}
-              </div>
-            </div>
-
-            {/* Speech */}
-            <div className='flex h-12 items-center justify-between gap-2'>
-              <Label htmlFor={`${id}-speech`} className='font-normal'>
-                Speech
-              </Label>
-              <div className='flex items-center gap-2'>
-                {/*<Checkbox
-                  id={`${id}-speech`}
-                  checked={speechEnabled}
-                  onCheckedChange={(c) => setSpeechEnabled(c === true)}
-                />*/}
-              </div>
-            </div>
-
-            {/* Voice */}
-            <div className='flex h-12 items-center justify-between gap-2'>
-              <Label htmlFor={`${id}-voice`} className='font-normal'>
-                Voice
-              </Label>
-              {/*<Select value={voice} onValueChange={setVoice}>
-                <SelectTrigger
-                  id={`${id}-voice`}
-                  className="bg-muted w-auto max-w-full h-8 py-1 px-2 gap-1 [&_svg]:-me-1 border-none"
-                >
-                  <SelectValue placeholder="Select voice" />
-                </SelectTrigger>
-                <SelectContent
-                  className="[&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-                  align="end"
-                >
-                  <SelectItem value="ellie">Ellie</SelectItem>
-                  <SelectItem value="sakura">Sakura</SelectItem>
-                  <SelectItem value="moody">Moody</SelectItem>
-                  <SelectItem value="kendall">Kendall</SelectItem>
-                </SelectContent>
-              </Select>*/}
-            </div>
-          </div>
-        </div>
-
-        {/* Configurations (placeholders for future use) */}
-        <div
-          className={cn(
-            'py-5 relative',
-            'before:absolute before:inset-x-0 before:top-0 before:h-[0.5px] before:bg-gradient-to-r before:from-foreground/10 before:via-foreground/15 before:to-foreground/10',
-          )}>
-          <h3 className='text-xs font-medium uppercase text-muted-foreground/80 mb-4'>
-            Configurations
-          </h3>
-          <div className='space-y-3'>
-            <SliderControl
-              minValue={0}
-              maxValue={2}
-              initialValue={[1.25]}
-              defaultValue={[1]}
-              step={0.01}
-              label='Temperature'
-            />
-            <SliderControl
-              className='[&_input]:w-14'
-              minValue={1}
-              maxValue={16383}
-              initialValue={[2048]}
-              defaultValue={[2048]}
-              step={1}
-              label='Maximum length'
-            />
-            <SliderControl
-              minValue={0}
-              maxValue={1}
-              initialValue={[0.5]}
-              defaultValue={[0]}
-              step={0.01}
-              label='Top P'
-            />
-          </div>
-        </div>
+        {/* QR Code Viewer */}
+        <QRCodeSection />
       </motion.div>
     </>
   )
@@ -397,11 +299,7 @@ const SettingsPanelTrigger = () => {
       data-sidebar='trigger'
       className={cn('text-foreground/80 hover:text-foreground')}
       onClick={togglePanel}>
-      <Icon
-        name='sidebar'
-        className={cn('size-6', isExpanded && 'rotate-180')}
-        aria-hidden='true'
-      />
+      <Icon name='sidebar' className={cn('h-4', isExpanded && 'rotate-180')} />
       <span className='sr-only'>Toggle Sidebar</span>
     </Button>
   )

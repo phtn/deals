@@ -17,7 +17,15 @@ import {
   VisibilityState,
 } from '@tanstack/react-table'
 
-import {ChangeEvent, useCallback, useMemo, useRef, useState} from 'react'
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {HyperCard} from '../../card/hyper-card'
 
 import {
   Table,
@@ -30,10 +38,10 @@ import {
 import {useMobile} from '@/hooks/use-mobile'
 import {useToggle} from '@/hooks/use-toggle'
 import {cn} from '@/lib/utils'
-import {HyperCard} from '../card/hyper-card'
 import {ColumnSort} from './column-sort'
 import {ColumnView} from './column-view'
 import {ActionConfig, ColumnConfig, createColumns} from './create-columns'
+import {DeleteButton} from './delete-button'
 import {ExportTable} from './export-table'
 import {Filter} from './filter'
 import {PageControl, Paginator} from './pagination'
@@ -47,6 +55,8 @@ interface TableProps<T> {
   editingRowId: string | null
   columnConfigs: ColumnConfig<T>[]
   actionConfig?: ActionConfig<T>
+  onDeleteSelected?: (ids: string[]) => void | Promise<void>
+  deleteIdAccessor?: keyof T
 }
 
 export const DataTable = <T,>({
@@ -56,7 +66,11 @@ export const DataTable = <T,>({
   columnConfigs,
   actionConfig,
   title = 'Data Table',
+  onDeleteSelected,
+  deleteIdAccessor = 'id' as keyof T,
 }: TableProps<T>) => {
+  'use no memo'
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -81,19 +95,10 @@ export const DataTable = <T,>({
   ])
 
   const [_data] = useState<T[]>(data)
-
-  // const handleDeleteRows = () => {
-  //   const selectedRows = table.getSelectedRowModel().rows;
-  //   const updatedData = d.filter(
-  //     (item) => !selectedRows.some((row) => row.original.id === item.id),
-  //   );
-  //   setData(updatedData);
-  //   table.resetRowSelection();
-  // };
-
   const {on: selectOn, toggle: selectToggle} = useToggle()
   const columns = createColumns(columnConfigs, actionConfig, selectOn)
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: _data,
     columns,
@@ -151,26 +156,52 @@ export const DataTable = <T,>({
 
   const isMobile = useMobile()
 
+  // Listen for '/' keypress to focus search input
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check if '/' key is pressed
+      if (event.key !== '/') return
+
+      // Don't trigger if user is typing in an input or textarea
+      const target = event.target as HTMLElement
+      const isTyping =
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+
+      // Only focus if not already typing and input is not already focused
+      if (
+        !isTyping &&
+        inputRef.current &&
+        document.activeElement !== inputRef.current
+      ) {
+        event.preventDefault()
+        inputRef.current.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   return (
     <div
       className={cn(
         'text-foreground flex w-full overflow-hidden gap-x-4 transition-[max-width] duration-500 ease-in-out will-change-[max-width] md:max-w-[100vw] xl:max-w-[100vw]',
       )}>
-      <HyperCard className='dark:bg-greyed/80 mb-2 h-[92lvh] inset-0 dark:inset-0 md:rounded-4xl pt-2 md:pt-6 pb-4 flex-1 min-w-0 overflow-hidden'>
-        <div className='px-2 md:px-3 md:mb-0 flex items-center justify-between'>
-          <div className='flex items-center gap-1 md:gap-4'>
+      <HyperCard className='dark:bg-greyed/80 mb-2 h-[92lvh] inset-0 dark:inset-0 md:rounded-2xl pt-2 md:pt-6 pb-4 flex-1 min-w-0 overflow-hidden'>
+        <div className='px-2 md:pl-0 md:pr-3 md:mb-0 flex items-center justify-between'>
+          <div className='flex items-center gap-x-1 md:gap-4'>
             <Title title={title} />
-            <div className='flex items-center space-x-1 md:space-x-3'>
+            <div className='flex items-center space-x-3 md:space-x-3'>
               <Search
                 ref={inputRef}
                 onChange={handleFilterChange}
                 value={globalFilter}
               />
-              <SelectToggle
-                on={selectOn}
-                toggleFn={selectToggle}
-                rows={selectedRows}
-              />
+
               <Filter
                 columns={allCols}
                 activeFilterColumns={activeFilterColumns}
@@ -178,10 +209,27 @@ export const DataTable = <T,>({
                 isMobile={isMobile}
               />
               <ColumnView cols={allCols} isMobile={isMobile} />
+              <SelectToggle
+                on={selectOn}
+                toggleFn={selectToggle}
+                rows={selectedRows}
+              />
+              {onDeleteSelected && (
+                <DeleteButton
+                  rows={selectedRows}
+                  onDelete={async (ids) => {
+                    await onDeleteSelected(ids)
+                    // Reset selection after successful deletion
+                    setRowSelection({})
+                  }}
+                  idAccessor={deleteIdAccessor}
+                  disabled={loading}
+                />
+              )}
             </div>
           </div>
           <div className='flex items-center gap-3'>
-            <ExportTable loading={loading} />
+            <ExportTable table={table} loading={loading} />
           </div>
         </div>
 
@@ -198,7 +246,7 @@ export const DataTable = <T,>({
                       <TableHead
                         key={header.id}
                         style={{width: `${header.getSize()}px`}}
-                        className='md:h-10 h-8 font-normal font-space tracking-tighter md:tracking-tight text-xs md:text-sm border-b-[0.5px] dark:text-zinc-400 dark:bg-greyed'>
+                        className='md:h-10 h-8 font-medium font-space tracking-tighter md:tracking-tight text-xs md:text-sm border-y-[0.5px] dark:text-zinc-400 dark:bg-greyed'>
                         <ColumnSort flexRender={flexRender} header={header} />
                       </TableHead>
                     )

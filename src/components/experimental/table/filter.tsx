@@ -13,13 +13,13 @@ import {
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Column} from '@tanstack/react-table'
-import {useId, useMemo, useState} from 'react'
+import {useId, useMemo} from 'react'
 
 interface Props<T> {
   columns: Column<T, unknown>[]
   activeFilterColumns?: Column<T, unknown>[]
   onFilterColumnsChange?: (columns: Column<T, unknown>[]) => void
-  isMobile?: boolean
+  isMobile: boolean
 }
 export const Filter = <T,>({
   columns,
@@ -28,8 +28,6 @@ export const Filter = <T,>({
   isMobile,
 }: Props<T>) => {
   const baseId = useId()
-  const [, setFilterUpdateTrigger] = useState(0)
-  const [, setCheckboxUpdateKey] = useState(0)
 
   // Get filterable columns (exclude select and actions columns)
   const filterableColumns = useMemo(
@@ -52,10 +50,14 @@ export const Filter = <T,>({
   )
 
   // Get all active filters data - reactive to column filter changes
+  // Read filter values to ensure they're tracked as dependencies
   const activeFiltersData = useMemo(() => {
-    return activeFilterColumns.map((column) => {
+    // Read all filter values first to ensure they're tracked
+    const filterValues = activeFilterColumns.map((col) => col.getFilterValue())
+
+    return activeFilterColumns.map((column, index) => {
       const facetedValues = column.getFacetedUniqueValues()
-      const filterValue = column.getFilterValue() as string[] | undefined
+      const filterValue = filterValues[index] as string[] | undefined
 
       return {
         column,
@@ -78,9 +80,6 @@ export const Filter = <T,>({
     if (column && !activeFilterColumns.some((col) => col.id === columnId)) {
       const newActiveColumns = [...activeFilterColumns, column]
       onFilterColumnsChange?.(newActiveColumns)
-
-      // Force re-render to update UI state
-      setFilterUpdateTrigger((prev) => prev + 1)
     }
   }
 
@@ -93,9 +92,6 @@ export const Filter = <T,>({
         (col) => col.id !== columnId,
       )
       onFilterColumnsChange?.(newActiveColumns)
-
-      // Force re-render to update UI state
-      setFilterUpdateTrigger((prev) => prev + 1)
     }
   }
 
@@ -120,14 +116,14 @@ export const Filter = <T,>({
           <Icon
             name='filter'
             className={cn(
-              'size-4 opacity-50',
+              'size-4 md:size-5 opacity-60',
               (totalActiveFilters > 0 || activeFilterColumns.length > 0) &&
-                'text-mac-blue opacity-100',
+                'text-mac-indigo opacity-100',
             )}
           />
           <span className='capitalize hidden md:flex'>filter</span>
           {totalActiveFilters > 0 && (
-            <Badge className='absolute rounded-full -top-1.5 md:-top-0.5 left-full -translate-x-3.5 md:-translate-1/2 size-5 aspect-square px-1 text-white font-space'>
+            <Badge className='absolute bg-mac-indigo rounded-full -top-1.5 md:-top-0.5 left-full -translate-x-3.5 md:-translate-1/2 size-5 aspect-square px-1 text-white font-space'>
               {totalActiveFilters > 99 ? '99+' : totalActiveFilters}
             </Badge>
           )}
@@ -202,9 +198,17 @@ export const Filter = <T,>({
               <div className='max-h-32 overflow-y-auto'>
                 {filterData.uniqueValues.map((value, i) => {
                   const id = `v-${baseId}-${columnIndex}-${i}`
+                  // Normalize value to string for consistent comparison
                   const vStr = String(value)
                   const labelText = formatLabel(value)
                   const count = filterData.valueCounts.get(value) ?? 0
+                  // Check if this value is in the selected filters
+                  const isChecked = filterData.selectedValues.some(
+                    (selected) => {
+                      // Compare normalized strings for consistency
+                      return String(selected) === vStr || selected === value
+                    },
+                  )
 
                   return (
                     <div
@@ -212,27 +216,36 @@ export const Filter = <T,>({
                       className='flex h-10 px-3 items-center gap-2 hover:bg-origin/80 rounded-lg'>
                       <Checkbox
                         id={id}
-                        checked={filterData.selectedValues.includes(vStr)}
+                        checked={isChecked}
                         onCheckedChange={(checked) => {
                           const column = activeFilterColumns.find(
                             (col) => col.id === filterData.column.id,
                           )
                           if (!column) return
 
-                          const currentFilter =
-                            column.getFilterValue() as string[]
+                          const currentFilter = column.getFilterValue() as (
+                            | string
+                            | number
+                            | boolean
+                          )[]
                           const newFilterValue = currentFilter
                             ? [...currentFilter]
                             : []
 
                           if (checked) {
-                            // Add value if not already present
-                            if (!newFilterValue.includes(vStr)) {
+                            // Add value if not already present (check both string and original value)
+                            const alreadyExists = newFilterValue.some(
+                              (fv) => String(fv) === vStr || fv === value,
+                            )
+                            if (!alreadyExists) {
+                              // Store as string for consistency
                               newFilterValue.push(vStr)
                             }
                           } else {
-                            // Remove value if present
-                            const index = newFilterValue.indexOf(vStr)
+                            // Remove value if present (check both string and original value)
+                            const index = newFilterValue.findIndex(
+                              (fv) => String(fv) === vStr || fv === value,
+                            )
                             if (index > -1) {
                               newFilterValue.splice(index, 1)
                             }
@@ -241,10 +254,6 @@ export const Filter = <T,>({
                           column.setFilterValue(
                             newFilterValue.length ? newFilterValue : undefined,
                           )
-
-                          // Force re-render to update UI state - need to trigger both the column change and our local state
-                          setFilterUpdateTrigger((prev) => prev + 1)
-                          setCheckboxUpdateKey((prev) => prev + 1)
                         }}
                       />
                       <Label

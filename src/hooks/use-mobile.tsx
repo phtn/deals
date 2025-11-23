@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffectEvent, useState} from 'react'
 
 const MOBILE_BREAKPOINT = 768
 
@@ -9,7 +9,7 @@ export const useMobile = (breakpoint = MOBILE_BREAKPOINT) => {
 
   const [isMobile, setIsMobile] = useState<boolean | undefined>(getIsMobile)
 
-  useEffect(() => {
+  useEffectEvent(() => {
     if (typeof window === 'undefined') return
 
     const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
@@ -23,7 +23,7 @@ export const useMobile = (breakpoint = MOBILE_BREAKPOINT) => {
     setIsMobile(mql.matches)
 
     return () => mql.removeEventListener('change', onChange)
-  }, [breakpoint])
+  })
 
   return !!isMobile
 }

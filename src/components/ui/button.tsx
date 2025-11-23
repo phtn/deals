@@ -78,7 +78,7 @@ export const variantClasses: Record<ButtonVariant, string> = {
     'bg-transparent',
     'text-foreground/80 hover:text-foreground',
     'border-transparent',
-    'hover:bg-zinc-100/80 dark:hover:bg-zinc-600/50',
+    'hover:bg-zinc-100/80 dark:hover:bg-zinc-800/80',
     // 'inset-shadow-[0_1px_rgb(237_237_237)]/50',
     // 'dark:inset-shadow-[0_1px_rgb(100_100_100)]/40',
   ),
@@ -99,7 +99,7 @@ const sizeClasses: Record<ButtonSize, string> = {
   sm: 'h-9 px-3 text-sm rounded-[10px] [&_svg]:size-4 gap-1.5',
   md: 'h-10 md:h-12 px-4 text-base [&_svg]:size-4 gap-2',
   lg: 'h-14 md:h-14 px-6 text-base [&_svg]:size-5 gap-2.5',
-  sq: 'w-8 h-6 aspect-square rounded-sm',
+  sq: 'w-6 h-6 aspect-square rounded-md',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
