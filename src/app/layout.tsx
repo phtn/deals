@@ -1,6 +1,12 @@
 import {ProvidersCtxProvider} from '@/ctx/providers'
 import type {Metadata} from 'next'
-import {Figtree, Geist, Geist_Mono as GeistMono} from 'next/font/google'
+import {
+  Bakbak_One as BakbakOne,
+  Figtree,
+  Geist,
+  Geist_Mono as GeistMono,
+  Major_Mono_Display as MajorMonoDisplay,
+} from 'next/font/google'
 import {type ReactNode} from 'react'
 import './globals.css'
 
@@ -18,6 +24,19 @@ const figtree = Figtree({
   variable: '--font-figtree',
   subsets: ['latin'],
 })
+
+const major = MajorMonoDisplay({
+  variable: '--font-major',
+  weight: ['400'],
+  subsets: ['latin'],
+})
+
+const bone = BakbakOne({
+  variable: '--font-bone',
+  weight: ['400'],
+  subsets: ['latin'],
+})
+
 export const metadata: Metadata = {
   title: 'BestDeal Admin',
   description: 'Made by re-up.ph',
@@ -31,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body
-        className={`${figtree.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}>
+        className={`${figtree.variable} ${geistSans.variable} ${geistMono.variable} ${major.variable} ${bone.variable} antialiased`}>
         <ProvidersCtxProvider>{children}</ProvidersCtxProvider>
       </body>
     </html>

@@ -1,4 +1,4 @@
-import {useCallback, useEffectEvent, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {useSFX} from './use-sfx'
 
 interface UseSequenceReturn {
@@ -9,26 +9,25 @@ interface UseSequenceReturn {
   isCorrect: boolean
 }
 
+const generateShuffledSequence = (): number[] => {
+  const numbers: number[] = [1, 2, 3, 4]
+  return [...numbers].sort(() => Math.random() - 0.5)
+}
+
 export const useSequence = (): UseSequenceReturn => {
-  const [sequence, setSequence] = useState<number[]>([])
+  const [sequence, setSequence] = useState<number[]>(() => generateShuffledSequence())
   const [currentStep, setCurrentStep] = useState<number>(1)
-  const [message, setMessage] = useState<string>('Sequential Order Challenge')
+  const [message, setMessage] = useState<string>('Sequence Challenge')
   const [isCorrect, setIsCorrect] = useState<boolean>(false)
 
   const {sfxDarbuka: darbuka} = useSFX({interrupt: true})
 
   const generateSequence = (): void => {
-    const numbers: number[] = [1, 2, 3, 4]
-    const shuffled: number[] = numbers.sort(() => Math.random() - 0.5)
-    setSequence(shuffled)
+    setSequence(generateShuffledSequence())
     setCurrentStep(1)
     setIsCorrect(false)
     setMessage('Sequence Challenge')
   }
-
-  useEffectEvent(() => {
-    generateSequence()
-  })
 
   const handleClick = useCallback(
     (num: number) => () => {

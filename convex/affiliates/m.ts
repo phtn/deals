@@ -4,7 +4,19 @@ import {affiliateSchema} from './d'
 
 export const create = mutation({
   args: {data: affiliateSchema},
-  handler: async ({db}, {data}) => await db.insert('affiliates', data),
+  handler: async ({db}, {data}) => {
+    // Check if email already exists
+    if (data.email) {
+      const existing = await db
+        .query('affiliates')
+        .withIndex('by_email', (q) => q.eq('email', data.email))
+        .first()
+      if (existing) {
+        throw new Error('Email address already exists')
+      }
+    }
+    return await db.insert('affiliates', data)
+  },
 })
 
 export const update = mutation({
@@ -12,6 +24,18 @@ export const update = mutation({
   handler: async ({db}, {id, data}) => {
     const affiliate = await db.get(id)
     if (!affiliate) throw new Error('Affiliate not found')
+    
+    // Check if email already exists (but allow same email for the same affiliate)
+    if (data.email && data.email !== affiliate.email) {
+      const existing = await db
+        .query('affiliates')
+        .withIndex('by_email', (q) => q.eq('email', data.email))
+        .first()
+      if (existing) {
+        throw new Error('Email address already exists')
+      }
+    }
+    
     return await db.patch(affiliate._id, data)
   },
 })

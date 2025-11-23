@@ -159,7 +159,11 @@ const data: Record<string, NavGroup[]> = {
           url: '/x',
           icon: 'chat',
         },
-
+        {
+          title: 'OCR Upload',
+          url: '/x/ocr',
+          icon: 'chat',
+        },
         {
           title: 'Master',
           url: '/x',

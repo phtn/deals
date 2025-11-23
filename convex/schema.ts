@@ -1,5 +1,7 @@
 import {defineSchema, defineTable} from 'convex/server'
 import {affiliateSchema} from './affiliates/d'
+import {documentSchema} from './documents/d'
+import {fileSchema} from './files/d'
 import {qrCodeSchema} from './qrcodes/d'
 
 export default defineSchema({
@@ -11,4 +13,9 @@ export default defineSchema({
       searchField: 'name',
       filterFields: ['name'],
     }),
+  documents: defineTable(documentSchema)
+    .index('by_status', ['ocrStatus'])
+    .index('by_type', ['documentType'])
+    .index('by_uploader', ['uploadedBy']),
+  files: defineTable(fileSchema),
 })

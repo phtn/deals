@@ -64,7 +64,7 @@ function useSettingsPanel() {
 
 const SettingsPanelProvider = ({
   children,
-  defaultOpen = true,
+  defaultOpen = false,
   open: openProp,
   onOpenChange: setOpenProp,
   style,
@@ -240,7 +240,7 @@ const QRCodeSection = () => {
       key={displayUrl}
       className={cn(
         'py-5 relative',
-        'before:absolute before:inset-x-0 before:top-0 before:h-[0.5px] before:bg-gradient-to-r before:from-foreground/10 before:via-foreground/15 before:to-foreground/10',
+        'before:absolute before:inset-x-0 before:top-0 before:h-[0.5px] before:bg-linear-to-r before:from-foreground/10 before:via-foreground/15 before:to-foreground/10',
       )}>
       <h3 className='text-xs font-medium uppercase text-muted-foreground/80 mb-4'>
         QR Code

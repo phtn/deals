@@ -26,7 +26,6 @@ export default function Layout({children, toolbar}: DashboardLayoutProps) {
           <AppSidebar />
           <SettingsPanelProvider>
             <SidebarInset className='group/sidebar-inset'>
-              {/*<Navbar />*/}
               <Container>
                 <WrappedContent toolbar={toolbar}>{children}</WrappedContent>
                 <SettingsPanel />

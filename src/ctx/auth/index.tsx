@@ -25,8 +25,8 @@ import type {AuthUser} from '../../lib/firebase/types'
 interface AuthContextType {
   user: AuthUser | null
   loading: boolean
-  signInWithGoogle?: VoidPromise
-  onSignOut?: VoidPromise
+  signInWithGoogle: VoidPromise
+  onSignOut: VoidPromise
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)

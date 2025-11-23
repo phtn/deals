@@ -196,7 +196,7 @@ export const AffiliateCtxProvider = ({children}: {children: ReactNode}) => {
         await toast.promise(promise, {
           loading: 'Creating affiliate...',
           success: 'Affiliate created successfully.',
-          error: 'Failed to create the affiliate.',
+          error: (err: Error) => err.message || 'Failed to create the affiliate.',
         })
 
         setAffiliates((prev) => [
@@ -209,6 +209,11 @@ export const AffiliateCtxProvider = ({children}: {children: ReactNode}) => {
         isSuccess = true
       } catch (error) {
         console.error('Affiliate creation failed', error)
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'Failed to create the affiliate.'
+        toast.error(errorMessage)
         isSuccess = false
       } finally {
         setLoading(false)

@@ -14,31 +14,9 @@ import {useRouter} from 'next/navigation'
 import {ReactNode, useEffect} from 'react'
 
 export const Content = () => {
-  // const router = useRouter();
-  // const [state, setState] = useState<string>("Initializing ...");
   const router = useRouter()
   const {sequence, currentStep, isCorrect, handleClick, message} = useSequence()
 
-  // useEffect(() => {
-  //   let serverTimer: NodeJS.Timeout | undefined;
-  //   let appTimer: NodeJS.Timeout | undefined;
-  //   if (typeof window !== "undefined") {
-  //     onSuccess("re-up secure server online.");
-
-  //     serverTimer = setTimeout(() => {
-  //       setState("Redirecting ...");
-  //     }, 8000);
-  //     appTimer = setTimeout(() => {
-  //       // router.push("/alpha");
-  //     }, 5000);
-  //   }
-
-  //   return () => {
-  //     clearTimeout(serverTimer);
-  //     clearTimeout(appTimer);
-  //   };
-  // }, [router]);
-  //
   const transition: Transition = {
     duration: 0.8,
     delay: 0.5,
@@ -258,7 +236,9 @@ const SilverButton = ({
         />
       </div>
 
-      <span className='text-4xl text-white drop-shadow-xs drop-shadow-neutral-950 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+      <span
+        suppressHydrationWarning
+        className='text-4xl text-white drop-shadow-xs drop-shadow-neutral-950 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
         {children as ReactNode}
       </span>
     </Button>

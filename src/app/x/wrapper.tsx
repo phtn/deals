@@ -21,7 +21,11 @@ export const WrappedContent = ({children, toolbar}: WrappedContentProps) => {
     <Wrapper isPanelExpanded={isExpanded}>
       <div className='px-2 sm:px-3 py-3.5 flex items-center justify-between min-w-0'>
         <SidebarTrigger className='' />
-        <div className='flex w-full min-w-0 capitalize text-lg tracking-tighter font-semibold px-1 md:px-2 lg:px-4'>
+        <div
+          className={cn(
+            'flex flex-1 w-full capitalize text-lg opacity-90 font-semibold px-1 md:px-2 lg:px-4 font-bone',
+            {uppercase: endpoint === 'ocr'},
+          )}>
           {endpoint}
         </div>
         {toolbar}

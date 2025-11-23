@@ -29,6 +29,7 @@ interface ButtonProps extends MotionProps {
   rightIcon?: IconName
   badge?: IconName | ReactNode
   id?: number | string
+  type?: 'button' | 'submit' | 'reset'
 }
 
 const base =

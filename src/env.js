@@ -20,6 +20,9 @@ export const env = createEnv({
 
     // IPAPI
     IPAPI_API_KEY: z.string(),
+
+    // GEMINI
+    GEMINI_API_KEY: z.string(),
   },
 
   client: {
@@ -74,6 +77,7 @@ export const env = createEnv({
 
     // IPAPI
     IPAPI_API_KEY: process.env.IPAPI_API_KEY,
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
