@@ -98,7 +98,7 @@ export const DataTablePage = () => {
           cell: formatText(
             '_id',
             (v) => (v && v.substring(0, 7)) ?? '',
-            'font-mono text-muted-foreground',
+            'font-space text-xs text-muted-foreground',
           ),
           size: 150,
           enableHiding: true,
@@ -111,7 +111,7 @@ export const DataTablePage = () => {
           cell: formatText(
             'documentType',
             (v) => v.substring(0, 5),
-            'font-mono truncate text-clip w-[10ch]',
+            'font-space text-xs uppercase truncate text-clip w-[10ch]',
           ),
           size: 150,
           enableHiding: true,
@@ -124,7 +124,7 @@ export const DataTablePage = () => {
           accessorKey: 'ocrStatus',
           cell: textCell(
             'ocrStatus',
-            'font-space uppercase truncate text-clip w-[10ch]',
+            'font-space text-xs uppercase truncate text-clip w-[10ch]',
           ),
           size: 150,
           enableHiding: true,
@@ -135,9 +135,10 @@ export const DataTablePage = () => {
           id: 'uploadedByName',
           header: 'Creator',
           accessorKey: 'uploadedByName',
-          cell: textCell(
+          cell: formatText(
             'uploadedByName',
-            'font-mono truncate text-clip w-[10ch]',
+            (v) => String(v.split(' ').shift()),
+            'font-space text-sm truncate text-clip w-[10ch]',
           ),
           size: 150,
           enableHiding: true,
@@ -148,7 +149,11 @@ export const DataTablePage = () => {
           id: 'mimeType',
           header: 'Format',
           accessorKey: 'mimeType',
-          cell: textCell('mimeType', 'font-mono truncate text-clip w-[10ch]'),
+          cell: formatText(
+            'mimeType',
+            (v) => String(v.split('/').pop()),
+            'font-space text-xs uppercase truncate text-clip w-[10ch]',
+          ),
           size: 150,
           enableHiding: true,
           enableSorting: true,
@@ -158,7 +163,11 @@ export const DataTablePage = () => {
           id: 'fileSize',
           header: 'Size',
           accessorKey: 'fileSize',
-          cell: textCell('fileSize', 'font-mono truncate text-clip w-[10ch]'),
+          cell: formatText(
+            'fileSize',
+            (v) => String((+v / 1000000).toFixed(2) + 'MB'),
+            'font-space text-xs truncate text-clip w-[10ch]',
+          ),
           size: 150,
           enableHiding: true,
           enableSorting: true,
@@ -193,7 +202,7 @@ export const DataTablePage = () => {
           cell: dateCell<Doc<'documents'>>(
             '_creationTime',
             (date) => formatDate(Number(date)),
-            'font-space text-muted-foreground max-w-[20ch] truncate text-clip',
+            'font-space text-xs text-muted-foreground max-w-[20ch] truncate text-clip',
           ),
           size: 180,
           enableHiding: true,

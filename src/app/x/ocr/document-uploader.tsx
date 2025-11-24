@@ -1,231 +1,78 @@
 'use client'
 
 import {Button} from '@/components/ui/button'
-import {useAuthCtx} from '@/ctx/auth'
+import {useDocumentUploader} from '@/hooks/use-document-uploader'
+import {useGeminiParsing} from '@/hooks/use-gemini-parsing'
+import {useOCRProcessing} from '@/hooks/use-ocr-processing'
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
-import {parseWithGemini} from '@/lib/vision/parse-gemini'
 import {VehicleRegistration} from '@/lib/vision/parse-lto'
 import {useMutation} from 'convex/react'
 import Image from 'next/image'
-import {ChangeEvent, DragEvent, FormEvent, useRef, useState} from 'react'
+import {FormEvent, useState} from 'react'
 import toast from 'react-hot-toast'
 import {api} from '../../../../convex/_generated/api'
 
 interface DocumentUploaderProps {
   onDataExtracted: (data: VehicleRegistration | null) => void
   onDocumentCreated?: (documentId: string) => void
+  documentType?: string
 }
 
 export function DocumentUploader({
   onDataExtracted,
   onDocumentCreated,
+  documentType = 'cr',
 }: DocumentUploaderProps) {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [uploading, setUploading] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
-  const [isDragging, setIsDragging] = useState<boolean>(false)
   const [rawText, setRawText] = useState<string>('')
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const {user} = useAuthCtx()
-  const generateUploadUrl = useMutation(api.files.upload.url)
-  const createFileRecord = useMutation(api.files.upload.file)
-  const createDocument = useMutation(api.documents.m.create)
   const updateOcrStatus = useMutation(api.documents.m.updateOcrStatus)
 
-  const handleFileSelect = (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setError('Please select an image file')
-      return
-    }
+  const uploader = useDocumentUploader({
+    documentType,
+    onDocumentCreated,
+  })
 
-    setSelectedFile(file)
-    setError('')
-
-    // Create preview
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string)
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    if (e.target.files && e.target.files[0]) {
-      handleFileSelect(e.target.files[0])
-    }
-  }
-
-  const handleDragOver = (e: DragEvent<HTMLDivElement>): void => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(true)
-  }
-
-  const handleDragLeave = (e: DragEvent<HTMLDivElement>): void => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-  }
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>): void => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileSelect(e.dataTransfer.files[0])
-    }
-  }
-
-  // Map MIME type to file format
-  const getFileFormat = (
-    mimeType: string,
-  ):
-    | 'image/jpeg'
-    | 'image/png'
-    | 'image/avif'
-    | 'image/webp'
-    | 'image/gif'
-    | 'image/heic'
-    | 'image/heif'
-    | 'image/tiff'
-    | 'image/svg+xml'
-    | 'pdf'
-    | 'csv'
-    | 'xlsx' => {
-    const formatMap: Record<
-      string,
-      | 'image/jpeg'
-      | 'image/png'
-      | 'image/avif'
-      | 'image/webp'
-      | 'image/gif'
-      | 'image/heic'
-      | 'image/heif'
-      | 'image/tiff'
-      | 'image/svg+xml'
-      | 'pdf'
-      | 'csv'
-      | 'xlsx'
-    > = {
-      'image/jpeg': 'image/jpeg',
-      'image/png': 'image/png',
-      'image/avif': 'image/avif',
-      'image/webp': 'image/webp',
-      'image/gif': 'image/gif',
-      'image/heic': 'image/heic',
-      'image/heif': 'image/heif',
-      'image/tiff': 'image/tiff',
-      'image/svg+xml': 'image/svg+xml',
-      'application/pdf': 'pdf',
-      'text/csv': 'csv',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        'xlsx',
-    }
-    return formatMap[mimeType] || 'image/png' // default fallback
-  }
-
-  const uploadFileAndCreateDocument = async (file: File) => {
-    if (!user) {
-      throw new Error('User must be authenticated to upload documents')
-    }
-
-    // Step 1: Get upload URL from Convex
-    const uploadUrl = await generateUploadUrl()
-
-    // Step 2: Upload file to Convex storage
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'POST',
-      headers: {'Content-Type': file.type},
-      body: file,
-    })
-
-    if (!uploadResponse.ok) {
-      throw new Error('Failed to upload file to storage')
-    }
-
-    // Convex returns storageId as JSON
-    const {storageId} = await uploadResponse.json()
-
-    // Step 3: Create file record (optional but good for tracking)
-    const fileFormat = getFileFormat(file.type)
-    await createFileRecord({
-      storageId,
-      author: user.uid,
-      type: 'image',
-      format: fileFormat,
-    })
-
-    // Step 4: Create document entry
-    // Store storageId as fileUrl - we can get the actual URL later using files.get query
-    const documentId = await createDocument({
-      data: {
-        documentType: 'cr', // Default, can be changed later
-        fileUrl: storageId, // Store storageId as fileUrl reference
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type,
-        ocrStatus: 'pending',
-        uploadedBy: user.uid,
-        uploadedByName: user.displayName || user.email || 'Unknown',
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-    })
-
-    return {documentId, storageId}
-  }
+  const {extractText: extractOCRText, loading: ocrLoading} = useOCRProcessing()
+  const {parseText, loading: geminiLoading} = useGeminiParsing()
 
   const handleSubmit = async (
     e?: FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     e?.preventDefault()
 
-    if (!selectedFile) {
-      setError('Please select an image file')
+    if (!uploader.selectedFile) {
+      uploader.setError('Please select an image file')
       return
     }
 
-    if (!user) {
-      setError('Please sign in to upload documents')
+    if (!uploader.user) {
+      uploader.setError('Please sign in to upload documents')
       return
     }
 
     setLoading(true)
-    setUploading(true)
-    setError('')
+    uploader.setUploading(true)
+    uploader.setError('')
 
     try {
       // Step 1: Upload file and create document
-      const {documentId} = await uploadFileAndCreateDocument(selectedFile)
+      const {documentId} = await uploader.uploadFileAndCreateDocument(
+        uploader.selectedFile,
+      )
 
       toast.success('Document uploaded successfully')
 
       // Step 2: Process OCR
       try {
-        const formData = new FormData()
-        formData.append('image', selectedFile)
-
-        const response = await fetch('/api/ocr', {
-          method: 'POST',
-          body: formData,
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to process image')
-        }
-
-        const data: {text: string} = await response.json()
+        const extractedText = await extractOCRText(uploader.selectedFile)
 
         // Store raw text
-        setRawText(data.text)
+        setRawText(extractedText)
 
         // Parse the text into structured data using Gemini
-        const parsed = await parseWithGemini(data.text)
+        const parsed = await parseText(extractedText)
         onDataExtracted(parsed)
 
         // Update document with OCR results
@@ -233,7 +80,7 @@ export function DocumentUploader({
           id: documentId,
           status: 'completed',
           ocrResults: {
-            text: data.text,
+            text: extractedText,
             confidence: 0.95, // You can calculate this from OCR response if available
             fields: parsed,
             processedAt: Date.now(),
@@ -251,68 +98,54 @@ export function DocumentUploader({
         })
         throw ocrError // Re-throw to be caught by outer catch
       }
-
-      // Notify parent component about document creation
-      if (onDocumentCreated) {
-        onDocumentCreated(documentId)
-      }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to process document'
-      setError(errorMessage)
+      uploader.setError(errorMessage)
       toast.error(errorMessage)
       console.error(err)
     } finally {
       setLoading(false)
-      setUploading(false)
+      uploader.setUploading(false)
     }
   }
 
   const handleClear = () => {
-    setSelectedFile(null)
-    setImagePreview(null)
-    setError('')
+    uploader.handleClear()
     setRawText('')
     onDataExtracted(null)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
   }
 
-  const handleBrowseFile = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click()
-    }
-  }
+  const isLoading = loading || ocrLoading || geminiLoading || uploader.uploading
 
   return (
-    <div className='h-2/5 flex flex-col'>
+    <div className='h-2/5 flex flex-col border-t-[0.33px] border-stone-400/80'>
       <form onSubmit={handleSubmit} className='flex-1 flex flex-col'>
         <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={handleBrowseFile}
+          onDragOver={uploader.handleDragOver}
+          onDragLeave={uploader.handleDragLeave}
+          onDrop={uploader.handleDrop}
+          onClick={uploader.handleBrowseFile}
           className={`
             flex-1 w-full border-l-[0.33px] border-stone-400/80 dark:border-greyed
             transition-all duration-200 cursor-pointer
             flex items-center justify-center relative overflow-hidden
-            ${isDragging ? 'bg-blue-50 scale-[1.02]' : 'border-greyed/60 dark:bg-white'}
-            ${imagePreview ? 'p-2' : 'p-8'}
+            ${uploader.isDragging ? 'bg-blue-50 scale-[1.02]' : 'border-greyed/60 dark:bg-white'}
+            ${uploader.imagePreview ? 'p-2' : 'p-8'}
             min-h-[400px]
           `}>
           <input
-            ref={fileInputRef}
+            ref={uploader.fileInputRef}
             type='file'
             accept='image/*'
-            onChange={handleFileChange}
+            onChange={uploader.handleFileChange}
             className='hidden'
           />
 
-          {imagePreview ? (
+          {uploader.imagePreview ? (
             <div className='relative w-full h-full flex items-center justify-center group'>
               <Image
-                src={imagePreview}
+                src={uploader.imagePreview}
                 alt='Document preview'
                 fill
                 className='object-contain rounded-lg shrink-0'
@@ -341,7 +174,7 @@ export function DocumentUploader({
 
               <div className='space-y-2'>
                 <p className='text-xl font-semibold font-figtree tracking-tight text-stone-500'>
-                  {isDragging ? (
+                  {uploader.isDragging ? (
                     <span>Drop your document here</span>
                   ) : (
                     <span>
@@ -369,14 +202,14 @@ export function DocumentUploader({
           )}
         </div>
 
-        {error && (
+        {uploader.error && (
           <div className='mt-4 p-3 bg-red-50 text-red-700 rounded-lg border border-red-200 text-sm'>
-            {error}
+            {uploader.error}
           </div>
         )}
 
-        <div className='mt-0 flex border-t-[0.44px] border-stone-400/80'>
-          {imagePreview && (
+        <div className='mt-0 flex border-l-[0.44px] border-y-[0.44px] border-stone-400/80'>
+          {uploader.imagePreview && (
             <Button
               size='lg'
               variant='ghost'
@@ -388,18 +221,20 @@ export function DocumentUploader({
           <Button
             size='lg'
             variant='ghost'
-            type={!selectedFile ? 'button' : 'submit'}
-            onClick={!selectedFile ? handleBrowseFile : undefined}
-            disabled={loading || !user}
+            type={!uploader.selectedFile ? 'button' : 'submit'}
+            onClick={
+              !uploader.selectedFile ? uploader.handleBrowseFile : undefined
+            }
+            disabled={isLoading || !uploader.user}
             className={cn(
               'flex-1 px-4 py-2 dark:bg-background/80  text-blue-400 dark:text-amber-50 hover:bg-gray-300 transition-colors rounded-none! tracking-normal ',
-              {'text-stone-500': !selectedFile},
+              {'text-stone-500': !uploader.selectedFile},
             )}>
-            {uploading
+            {uploader.uploading
               ? 'Uploading...'
-              : loading
+              : isLoading
                 ? 'Processing...'
-                : !selectedFile
+                : !uploader.selectedFile
                   ? 'Select a document to scan'
                   : 'Scan Document'}
           </Button>
@@ -407,7 +242,7 @@ export function DocumentUploader({
       </form>
 
       {rawText && (
-        <div className='mt-2 h-screen border-l-[0.33px]'>
+        <div className='mt-2 h-screen border-l-[0.33px] border-stone-400/80'>
           <h3 className='text-sm px-3 font-semibold mb-2'>Raw Extract</h3>
           <div className='flex-1 overflow-scroll h-180 bg-gray-50 p-4'>
             <pre className='text-xs whitespace-pre-wrap font-mono text-gray-700'>

@@ -24,10 +24,10 @@ export const WrappedContent = ({children, toolbar}: WrappedContentProps) => {
         <header
           id='mobile-navbar'
           className={cn(
-            'flex flex-1 w-full capitalize text-lg dark:text-orange-200 font-semibold md:px-2 lg:px-3 font-bone',
+            'flex flex-1 w-full whitespace-nowrap capitalize text-lg dark:text-orange-200 font-semibold md:px-2 lg:px-3 font-bone',
             {uppercase: endpoint === 'ocr'},
           )}>
-          {endpoint}
+          {endpoint?.split('-').join(' ')}
         </header>
         {toolbar}
         <Button

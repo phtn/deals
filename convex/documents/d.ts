@@ -5,9 +5,12 @@ export const documentType = v.union(
   v.literal('payslip'),
   v.literal('deposit_slip'),
   v.literal('receipt'),
+  v.literal('ewallet_transfer'),
   v.literal('invoice'),
-  v.literal('other'),
   v.literal('cr'),
+  v.literal('driver_license'),
+  v.literal('passport'),
+  v.literal('other'),
 )
 
 export const ocrStatus = v.union(

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select'
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
-import {Column} from '@tanstack/react-table'
+import {Column, ColumnFiltersState} from '@tanstack/react-table'
 import {useId, useMemo} from 'react'
 import {TButton} from './buttons'
 
@@ -20,12 +20,14 @@ interface Props<T> {
   columns: Column<T, unknown>[]
   activeFilterColumns?: Column<T, unknown>[]
   onFilterColumnsChange?: (columns: Column<T, unknown>[]) => void
+  columnFilters?: ColumnFiltersState
   isMobile: boolean
 }
 export const Filter = <T,>({
   columns,
   activeFilterColumns = [],
   onFilterColumnsChange,
+  columnFilters = [],
   isMobile,
 }: Props<T>) => {
   const baseId = useId()
@@ -51,14 +53,13 @@ export const Filter = <T,>({
   )
 
   // Get all active filters data - reactive to column filter changes
-  // Read filter values to ensure they're tracked as dependencies
+  // Read filter values from columnFilters state to ensure reactivity
   const activeFiltersData = useMemo(() => {
-    // Read all filter values first to ensure they're tracked
-    const filterValues = activeFilterColumns.map((col) => col.getFilterValue())
-
-    return activeFilterColumns.map((column, index) => {
+    return activeFilterColumns.map((column) => {
       const facetedValues = column.getFacetedUniqueValues()
-      const filterValue = filterValues[index] as string[] | undefined
+      // Read filter value from columnFilters state (reactive) instead of column.getFilterValue()
+      const filterEntry = columnFilters.find((f) => f.id === column.id)
+      const filterValue = filterEntry?.value as string[] | undefined
 
       return {
         column,
@@ -67,7 +68,7 @@ export const Filter = <T,>({
         selectedValues: filterValue ?? [],
       }
     })
-  }, [activeFilterColumns])
+  }, [activeFilterColumns, columnFilters])
 
   // Calculate total active filter count - reactive to filter changes
   const totalActiveFilters = useMemo(() => {

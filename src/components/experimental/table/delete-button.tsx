@@ -18,22 +18,25 @@ export const DeleteButton = <T, I>({
   disabled = false,
 }: DeleteButtonProps<T, I>) => {
   const [loading, setLoading] = useState(false)
-  const selectedCount = rows.filter((row) => row.getIsSelected()).length
+  // rows is already filtered to only selected rows from table.getSelectedRowModel().rows
+  const selectedCount = rows.length
   const hasSelection = selectedCount > 0
 
   const handleDelete = useCallback(() => {
     if (!hasSelection) return
     setLoading(true)
 
-    const selectedIds = rows
-      .filter((row) => row.getIsSelected())
-      .map((row) => {
-        const value = row.original[idAccessor]
-        return typeof value === 'string' ? value : String(value)
-      }) as I[]
+    const selectedIds = rows.map((row) => {
+      const value = row.original[idAccessor]
+      return typeof value === 'string' ? value : String(value)
+    }) as I[]
 
     if (selectedIds.length > 0) {
-      onDelete(selectedIds)
+      Promise.resolve(onDelete(selectedIds)).finally(() => {
+        setLoading(false)
+      })
+    } else {
+      setLoading(false)
     }
   }, [rows, onDelete, idAccessor, hasSelection])
 

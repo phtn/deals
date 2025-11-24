@@ -20,7 +20,7 @@ export const SelectToggle = <T,>({
 
   return (
     <div className='relative inline-block'>
-      {on && selectedCount > 0 && (
+      {selectedCount > 0 && (
         <Badge
           variant='default'
           className='absolute bg-mac-blue z-100 pointer-events-none select-none rounded-full -top-2 -right-2 size-5 min-w-5 aspect-square px-1 text-white font-space flex items-center justify-center shadow-lg'>

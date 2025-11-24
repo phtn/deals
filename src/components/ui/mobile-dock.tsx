@@ -64,7 +64,7 @@ export const MobileDock = ({dockItems}: MobileDockProps) => {
       <TooltipProvider>
         <Dock
           direction='middle'
-          className='dark:bg-background/95 backdrop-blur-3xl'>
+          className='dark:bg-orange-50 backdrop-blur-3xl'>
           {dockItems?.nav.map((item) => (
             <DockIcon key={item.label}>
               <Tooltip>

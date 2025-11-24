@@ -103,7 +103,7 @@ export function CertificateOfRegistrationForm({
   }
 
   return (
-    <div className='portrait:h-[88lvh] overflow-y-scroll w-full md:max-w-6xl md:px-6 px-3 bg-white text-black shadow-2xl overflow-scroll print:shadow-none min-w-0'>
+    <div className='portrait:h-[88lvh] overflow-y-scroll w-full md:max-w-6xl md:px-6 px-3 bg-white text-black shadow-2xl overflow-scroll print:shadow-none min-w-0 border-t-[0.33px] border-stone-400/80'>
       {/* Header Section */}
       <div className='flex flex-col items-center p-4 relative'>
         <div className='absolute md:left-8 -left-4 -top-3  md:top-8 scale-50 md:scale-100'>

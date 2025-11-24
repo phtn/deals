@@ -101,7 +101,6 @@ export const DataTable = <T, I>({
     setData(data)
   }, [data])
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: _data,
     columns,
@@ -154,7 +153,9 @@ export const DataTable = <T, I>({
   const tableRows = table.getRowModel().rows
   const selectedRows = useMemo(
     () => table.getSelectedRowModel().rows ?? [],
-    [table],
+
+    /// eslint-ignore-next-line @typescript-eslint/exhaustive-deps
+    [table, rowSelection],
   )
 
   const isMobile = useMobile()
@@ -194,7 +195,7 @@ export const DataTable = <T, I>({
       className={cn(
         'text-foreground flex w-full justify-center gap-x-4 transition-[max-width] duration-500 ease-in-out will-change-[max-width] md:max-w-[100vw] xl:max-w-[100vw]',
       )}>
-      <HyperCard className='dark:bg-stone-950/30 mb-2 h-[92lvh] inset-0 dark:inset-0 md:rounded-2xl pt-2 md:pt-6 pb-4 w-screen md:w-full md:max-w-full overflow-x-scroll overflow-y-hidden flex flex-col'>
+      <HyperCard className='dark:bg-stone-950/30 mb-2 h-[92lvh] inset-0 dark:inset-0 md:rounded-md pt-2 md:pt-6 pb-4 w-screen md:w-full md:max-w-full overflow-x-scroll overflow-y-hidden flex flex-col'>
         <div className='px-2 md:pl-0 md:pr-3 md:mb-0 flex items-center justify-between'>
           <div className='flex items-center h-10 pt-3 md:pt-0 gap-x-1 md:gap-x-4'>
             <Title title={title} />
@@ -209,6 +210,7 @@ export const DataTable = <T, I>({
                 columns={allCols}
                 activeFilterColumns={activeFilterColumns}
                 onFilterColumnsChange={setActiveFilterColumns}
+                columnFilters={columnFilters}
                 isMobile={isMobile}
               />
               <ColumnView cols={allCols} isMobile={isMobile} />
@@ -309,7 +311,7 @@ const renderRow = <T,>(
       data-state={row.getIsSelected() && 'selected'}
       className={cn(
         'h-14 md:h-16 text-foreground md:text-base text-xs overflow-hidden dark:border-greyed group/row dark:hover:bg-background/40 border-b-origin/40',
-        'peer-hover:border-transparent bg-transparent hover:last:rounded-tr-2xl hover:bg-primary-hover/5',
+        'peer-hover:border-transparent bg-transparent hover:last:rounded-tr-2xl hover:bg-blue-200/40',
         'transition-colors duration-75',
         {
           // Apply editing styles - same as hover but persistent

@@ -223,7 +223,7 @@ export const icons = {
   },
   table: {
     symbol:
-      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M15 9h6v9c0 .943 0 1.414-.293 1.707S19.943 20 19 20h-4zM3 9h6v11H5c-.943 0-1.414 0-1.707-.293S3 18.943 3 18zm6 0h6v11H9zM3 6c0-.943 0-1.414.293-1.707S4.057 4 5 4h14c.943 0 1.414 0 1.707.293S21 5.057 21 6v3H3z"/>',
+      '<g fill="none"><path stroke="currentColor" stroke-width="2" d="M9 18H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2M4 8h16M4 13h5"/><path stroke="currentColor" stroke-width="2" d="M11.54 16.972a2 2 0 0 1 0-1.944l.676-1.213l.712-1.19a2 2 0 0 1 1.684-.973L16 11.63l1.388.022a2 2 0 0 1 1.684.972l.713 1.191l.674 1.213a2 2 0 0 1 0 1.944l-.674 1.213l-.713 1.19a2 2 0 0 1-1.684.973L16 20.37l-1.388-.022a2 2 0 0 1-1.684-.972l-.713-1.191z"/><circle cx="16" cy="16" r="1" fill="currentColor"/></g>',
     viewBox: '0 0 24 24',
     set: 'lets-icons',
   },
@@ -625,6 +625,12 @@ export const icons = {
   money: {
     symbol:
       '<path fill="currentColor" fill-opacity=".25" d="M3 10c0-1.886 0-2.828.586-3.414S5.114 6 7 6h10c1.886 0 2.828 0 3.414.586S21 8.114 21 10v4c0 1.886 0 2.828-.586 3.414S18.886 18 17 18H7c-1.886 0-2.828 0-3.414-.586S3 15.886 3 14z"/><circle cx="12" cy="12" r="2" fill="currentColor"/><rect width="3" height="1" x="5" y="8" fill="currentColor" rx=".5"/><rect width="3" height="1" x="16" y="15" fill="currentColor" rx=".5"/>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  nut: {
+    symbol:
+      '<path fill="currentColor" fill-opacity=".25" d="m5.31 6.693l-1.324 2.5C3.258 10.568 2.894 11.255 2.894 12s.364 1.432 1.092 2.807l1.324 2.5c.823 1.556 1.235 2.333 1.949 2.763s1.594.43 3.354.43h2.774c1.76 0 2.64 0 3.354-.43s1.126-1.207 1.95-2.763l1.323-2.5c.728-1.375 1.092-2.062 1.092-2.807s-.364-1.432-1.092-2.807l-1.324-2.5c-.823-1.556-1.235-2.333-1.949-2.763s-1.594-.43-3.354-.43h-2.774c-1.76 0-2.64 0-3.354.43s-1.126 1.207-1.95 2.763"/><circle cx="12" cy="12" r="3" fill="currentColor"/>',
     viewBox: '0 0 24 24',
     set: 'lets-icons',
   },

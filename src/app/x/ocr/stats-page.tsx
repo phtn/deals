@@ -1,14 +1,14 @@
 'use client'
 
 import {Card} from '@/components/ui/card'
+import {useMetrics} from '@/ctx/ocr/metrics'
 import {useMobile} from '@/hooks/use-mobile'
 import {useToggle} from '@/hooks/use-toggle'
-import {useMetrics} from '@/ctx/ocr/metrics'
+import {Icon} from '@/lib/icons'
 import {useQuery} from 'convex/react'
 import {
   Activity,
   CheckCircle2,
-  FileText,
   Gauge,
   TrendingUp,
   User,
@@ -241,164 +241,157 @@ export const StatsPage = () => {
   const chartData = stats.byDay.map((d) => ({value: d.count}))
 
   return (
-    <div ref={containerRef} className='p-4 h-[88lvh] overflow-scroll'>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0'>
+    <div
+      ref={containerRef}
+      className='p-4 overflow-scroll border-t-[0.33px] border-stone-400/80 dark:border-dysto'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 min-w-0'>
         {/* Total Documents */}
         {isVisible('totalDocuments') && (
-          <Card className='bg-[#1a1f2e] border-[#1a1f2e] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-          <div className='flex items-start justify-between mb-3'>
-            <div className='p-2 bg-[#242938] rounded-lg'>
-              <FileText className='w-5 h-5 text-cyan-400' />
+          <Card className='bg-terminal border-terminal  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+            <div className='flex items-start justify-between'>
+              <div className='flex items-center space-x-4'>
+                <div className='flex items-baseline'>
+                  <span className='text-3xl font-bold text-white tracking-tighter'>
+                    {stats.total}
+                  </span>
+                </div>
+                <p className='text-xs md:text-sm text-gray-400 max-w-[10ch] leading-4'>
+                  Documents This Week
+                </p>
+              </div>
+              <div className='p-1 bg-[#242938] rounded-lg'>
+                <Icon name='doc' className='size-6 text-cyan-400' />
+              </div>
             </div>
-          </div>
-          <div className='space-y-1'>
-            <div className='flex items-baseline gap-2'>
-              <span className='text-3xl font-bold text-white'>
-                {stats.total}
-              </span>
-            </div>
-            <p className='text-sm text-gray-400'>Documents This Week</p>
-          </div>
-          {chartData.length > 0 && (
-            <div className='mt-4 h-12'>
-              <MiniChart data={chartData} color='#06b6d4' />
-            </div>
-          )}
-        </Card>
+
+            {chartData.length > 0 && (
+              <div className='h-10'>
+                <MiniChart data={chartData} color='#06b6d4' />
+              </div>
+            )}
+          </Card>
         )}
 
         {/* Success Rate */}
         {isVisible('successRate') && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-          <div className='flex items-start justify-between mb-3'>
-            <div className='p-2 bg-[#242938] rounded-lg'>
-              <CheckCircle2 className='w-5 h-5 text-green-400' />
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+            <div className='flex items-start justify-between mb-4'>
+              <div className='flex items-center space-x-4'>
+                <div className='flex items-baseline gap-1'>
+                  <span className='text-3xl font-bold text-white tracking-tighter'>
+                    {stats.successRate}
+                  </span>
+                  <span className='text-xs md:text-sm text-gray-400'>%</span>
+                </div>
+                <p className='text-xs md:text-sm text-gray-400 max-w-[8ch] leading-4'>
+                  Success Rate
+                </p>
+              </div>
+              <div className='flex flex-col items-center'>
+                <div className='p-1 bg-[#242938] rounded-lg'>
+                  <CheckCircle2 className='size-6 text-green-400' />
+                </div>
+                <div className='font-space text-xs text-gray-400'>
+                  {stats.completed}/{stats.total}
+                </div>
+              </div>
             </div>
-            <div className='text-xs text-gray-400'>
-              {stats.completed}/{stats.total}
+
+            <div className='h-1 bg-vim rounded-full overflow-hidden'>
+              <div
+                className='h-full bg-linear-to-r from-green-500 to-emerald-500 transition-all duration-700'
+                style={{width: `${stats.successRate}%`}}
+              />
             </div>
-          </div>
-          <div className='space-y-1'>
-            <div className='flex items-baseline gap-2'>
-              <span className='text-3xl font-bold text-white'>
-                {stats.successRate}
-              </span>
-              <span className='text-sm text-gray-400'>%</span>
-            </div>
-            <p className='text-sm text-gray-400'>Success Rate</p>
-          </div>
-          <div className='mt-4 h-1 bg-[#2a3142] rounded-full overflow-hidden'>
-            <div
-              className='h-full bg-linear-to-r from-green-500 to-emerald-500 transition-all duration-700'
-              style={{width: `${stats.successRate}%`}}
-            />
-          </div>
-        </Card>
+          </Card>
         )}
 
         {/* Average Confidence */}
         {isVisible('avgConfidence') && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-          <div className='flex items-start justify-between mb-3'>
-            <div className='p-2 bg-[#242938] rounded-lg'>
-              <Gauge className='w-5 h-5 text-blue-400' />
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+            <div className='flex items-start justify-between'>
+              <div className='flex items-center space-x-3'>
+                <div className='flex items-baseline gap-1'>
+                  <span className='text-3xl font-bold text-white tracking-tighter'>
+                    {stats.avgConfidence}
+                  </span>
+                  <span className='text-xs md:text-sm text-gray-400'>%</span>
+                </div>
+                <p className='text-xs md:text-sm text-gray-400 max-w-[10ch] leading-4'>
+                  Avg Confidence
+                </p>
+              </div>
+              <div className='p-1 bg-[#242938] rounded-lg'>
+                <Gauge className='size-6 text-blue-400' />
+              </div>
             </div>
-            <div className='relative inline-flex'>
-              <svg width='48' height='48' className='transform -rotate-90'>
-                <circle
-                  cx='24'
-                  cy='24'
-                  r='20'
-                  stroke='#2a3142'
-                  strokeWidth='4'
-                  fill='none'
-                />
-                <circle
-                  cx='24'
-                  cy='24'
-                  r='20'
-                  stroke='#3b82f6'
-                  strokeWidth='4'
-                  fill='none'
-                  strokeDasharray={`${stats.avgConfidence * 1.25} ${125.6}`}
-                  strokeLinecap='round'
-                  className='transition-all duration-700'
-                />
-              </svg>
-            </div>
-          </div>
-          <div className='space-y-1'>
-            <div className='flex items-baseline gap-2'>
-              <span className='text-3xl font-bold text-white'>
-                {stats.avgConfidence}
-              </span>
-              <span className='text-sm text-gray-400'>%</span>
-            </div>
-            <p className='text-sm text-gray-400'>Avg Confidence</p>
-          </div>
-        </Card>
+          </Card>
         )}
 
         {/* Failed Documents */}
         {isVisible('failed') && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-          <div className='flex items-start justify-between mb-3'>
-            <div className='p-2 bg-[#242938] rounded-lg'>
-              <XCircle className='w-5 h-5 text-red-400' />
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+            <div className='flex items-start justify-between mb-3'>
+              <div className='flex items-center space-x-4'>
+                <div className='flex items-baseline gap-2'>
+                  <span className='text-3xl font-bold text-white tracking-tighter'>
+                    {stats.failed}
+                  </span>
+                </div>
+                <p className='text-xs md:text-sm text-gray-400 leading-4 max-w-[10ch]'>
+                  Failed Processing
+                </p>
+              </div>
+              <div className='p-1 bg-[#242938] rounded-lg'>
+                <XCircle className='size-6 text-red-400' />
+              </div>
             </div>
-          </div>
-          <div className='space-y-1'>
-            <div className='flex items-baseline gap-2'>
-              <span className='text-3xl font-bold text-white'>
-                {stats.failed}
-              </span>
-            </div>
-            <p className='text-sm text-gray-400'>Failed Processing</p>
-          </div>
-        </Card>
+          </Card>
         )}
 
         {/* Processing */}
         {isVisible('processing') && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-          <div className='flex items-start justify-between mb-3'>
-            <div className='p-2 bg-[#242938] rounded-lg'>
-              <Activity className='w-5 h-5 text-orange-400' />
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+            <div className='flex items-start justify-between mb-3'>
+              <div className='flex items-center space-x-4'>
+                <div className='flex items-baseline gap-2'>
+                  <span className='text-3xl font-bold text-white'>
+                    {stats.processing}
+                  </span>
+                </div>
+                <p className='text-xs md:text-sm text-gray-400'>In Progress</p>
+              </div>
+              <div className='p-1 bg-[#242938] rounded-lg'>
+                <Activity className='size-6 text-orange-400' />
+              </div>
             </div>
-          </div>
-          <div className='space-y-1'>
-            <div className='flex items-baseline gap-2'>
-              <span className='text-3xl font-bold text-white'>
-                {stats.processing}
-              </span>
-            </div>
-            <p className='text-sm text-gray-400'>In Progress</p>
-          </div>
-        </Card>
+          </Card>
         )}
 
         {/* Total Amount */}
         {isVisible('totalAmount') && stats.totalAmount > 0 && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
             <div className='flex items-start justify-between mb-3'>
-              <div className='p-2 bg-[#242938] rounded-lg'>
-                <TrendingUp className='w-5 h-5 text-purple-400' />
+              <div className='flex items-center space-x-4'>
+                <div className='flex items-baseline gap-2'>
+                  <span className='text-3xl font-bold text-white'>
+                    ₱{stats.totalAmount.toLocaleString()}
+                  </span>
+                </div>
+                <p className='text-xs md:text-sm text-gray-400 leading-4 max-w-[8ch]'>
+                  Total Amount
+                </p>
               </div>
-            </div>
-            <div className='space-y-1'>
-              <div className='flex items-baseline gap-2'>
-                <span className='text-3xl font-bold text-white'>
-                  ₱{stats.totalAmount.toLocaleString()}
-                </span>
+              <div className='p-1 bg-[#242938] rounded-lg'>
+                <TrendingUp className='size-6 text-purple-400' />
               </div>
-              <p className='text-sm text-gray-400'>Total Amount</p>
             </div>
           </Card>
         )}
 
         {/* Documents by Type */}
         {isVisible('byType') && Object.keys(stats.byType).length > 0 && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0 md:col-span-2 lg:col-span-3'>
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0 md:col-span-2 lg:col-span-3'>
             <h3 className='text-lg font-semibold text-white mb-4'>
               Documents by Type
             </h3>
@@ -406,7 +399,9 @@ export const StatsPage = () => {
               {Object.entries(stats.byType).map(([type, count]) => (
                 <div key={type} className='space-y-1'>
                   <div className='text-2xl font-bold text-white'>{count}</div>
-                  <p className='text-xs text-gray-400 capitalize'>{type}</p>
+                  <p className='text-xs md:text-xs text-gray-400 capitalize'>
+                    {type}
+                  </p>
                 </div>
               ))}
             </div>
@@ -415,17 +410,19 @@ export const StatsPage = () => {
 
         {/* Top Vehicle Types */}
         {isVisible('topVehicleTypes') && stats.topVehicleTypes.length > 0 && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
             <h3 className='text-lg font-semibold text-white mb-4'>
               Top Vehicle Types
             </h3>
             <div className='space-y-2'>
               {stats.topVehicleTypes.map(({type, count}) => (
                 <div key={type} className='flex items-center justify-between'>
-                  <span className='text-sm text-gray-300 capitalize'>
+                  <span className='text-xs md:text-sm text-gray-300 capitalize'>
                     {type}
                   </span>
-                  <span className='text-sm font-bold text-white'>{count}</span>
+                  <span className='text-xs md:text-sm font-bold text-white'>
+                    {count}
+                  </span>
                 </div>
               ))}
             </div>
@@ -434,17 +431,19 @@ export const StatsPage = () => {
 
         {/* Top Colors */}
         {isVisible('topColors') && stats.topColors.length > 0 && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+          <Card className='bg-terminal border-vim  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
             <h3 className='text-lg font-semibold text-white mb-4'>
               Top Colors
             </h3>
             <div className='space-y-2'>
               {stats.topColors.map(({color, count}) => (
                 <div key={color} className='flex items-center justify-between'>
-                  <span className='text-sm text-gray-300 capitalize'>
+                  <span className='text-xs md:text-sm text-gray-300 capitalize'>
                     {color}
                   </span>
-                  <span className='text-sm font-bold text-white'>{count}</span>
+                  <span className='text-xs md:text-sm font-bold text-white'>
+                    {count}
+                  </span>
                 </div>
               ))}
             </div>
@@ -453,15 +452,16 @@ export const StatsPage = () => {
 
         {/* Most Active Users */}
         {isVisible('mostActiveUsers') && stats.mostActiveUsers.length > 0 && (
-          <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+          <Card className='bg-terminal border-vim transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
             <div className='flex items-start justify-between mb-4'>
-              <div className='p-2 bg-[#242938] rounded-lg'>
-                <User className='w-5 h-5 text-indigo-400' />
+              <h3 className='text-lg font-semibold text-white'>
+                Most Active User
+              </h3>
+              <div className='p-1 bg-[#242938] rounded-lg'>
+                <User className='size-6 text-indigo-400' />
               </div>
             </div>
-            <h3 className='text-lg font-semibold text-white mb-4'>
-              Most Active Users
-            </h3>
+
             <div className='space-y-3'>
               {stats.mostActiveUsers.map(({name, count}, index) => (
                 <div
@@ -473,11 +473,13 @@ export const StatsPage = () => {
                         👑
                       </span>
                     )}
-                    <span className='text-sm text-gray-300 truncate max-w-[150px]'>
+                    <span className='text-xs md:text-sm text-gray-300 truncate max-w-[150px]'>
                       {name}
                     </span>
                   </div>
-                  <span className='text-sm font-bold text-white'>{count}</span>
+                  <span className='text-xs md:text-sm font-bold text-white'>
+                    {count}
+                  </span>
                 </div>
               ))}
             </div>

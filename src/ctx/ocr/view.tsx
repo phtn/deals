@@ -2,7 +2,13 @@
 
 import {createContext, ReactNode, useContext, useState} from 'react'
 
-export type ViewType = 'stats' | 'table' | 'settings' | 'scan-doc' | 'scan-id'
+export type ViewType =
+  | 'stats'
+  | 'table'
+  | 'settings'
+  | 'scan-doc'
+  | 'scan-id'
+  | 'add-new'
 
 interface ViewContextType {
   view: ViewType

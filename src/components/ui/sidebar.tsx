@@ -263,7 +263,8 @@ function SidebarTrigger({
       variant='ghost'
       data-sidebar='trigger'
       className={cn(
-        'text-stone-400/80 hover:text-blue-500 dark:hover:text-orange-50 dark:hover:bg-transparent/90',
+        'text-stone-600 dark:text-stone-400  hover:text-blue-500 dark:hover:text-orange-50 dark:hover:bg-transparent/90',
+        {'dark:text-teal-400': isMobile},
         className,
       )}
       onClick={() => {
@@ -271,7 +272,7 @@ function SidebarTrigger({
       }}>
       <Icon
         name={isMobile ? 'remote' : 'switch'}
-        className={cn('md:size-6 rotate-180 dark:opacity-50', {
+        className={cn('md:size-6 rotate-180', {
           'rotate-0': open,
         })}
       />

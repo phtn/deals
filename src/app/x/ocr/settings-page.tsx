@@ -3,17 +3,18 @@
 import {Card} from '@/components/ui/card'
 import {Checkbox} from '@/components/ui/checkbox'
 import {useMetrics, type MetricKey} from '@/ctx/ocr/metrics'
+import {cn} from '@/lib/utils'
 import {
   Activity,
+  BarChart3,
+  Car,
   CheckCircle2,
   FileText,
   Gauge,
+  Palette,
   TrendingUp,
   User,
   XCircle,
-  Palette,
-  Car,
-  BarChart3,
 } from 'lucide-react'
 
 const metricConfig: Array<{
@@ -88,16 +89,18 @@ export const SettingsPage = () => {
   const {isVisible, toggleMetric} = useMetrics()
 
   return (
-    <div className='p-4 h-[88lvh] overflow-scroll'>
-      <div className='max-w-3xl mx-auto space-y-4'>
+    <div className='p-4 h-[88lvh] overflow-scroll border-t-[0.33px] border-stone-400/80 dark:border-dysto'>
+      <div className='space-y-4'>
         <div className='mb-6'>
-          <h1 className='text-2xl font-bold text-white mb-2'>Metric Settings</h1>
+          <h1 className='text-xl font-semibold tracking-tighter text-white mb-2'>
+            Metric Settings
+          </h1>
           <p className='text-sm text-gray-400'>
             Toggle visibility of metrics in the stats page
           </p>
         </div>
 
-        <div className='space-y-2'>
+        <div className='flex flex-wrap gap-4'>
           {metricConfig.map((metric) => {
             const Icon = metric.icon
             const visible = isVisible(metric.key)
@@ -105,11 +108,14 @@ export const SettingsPage = () => {
             return (
               <Card
                 key={metric.key}
-                className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-4 cursor-pointer'
+                className={cn(
+                  'bg-dysto border-vim transition-all duration-300 p-4 cursor-pointer',
+                  {'bg-terminal': visible},
+                )}
                 onClick={() => toggleMetric(metric.key)}>
-                <div className='flex items-center justify-between'>
+                <div className='flex items-start justify-between'>
                   <div className='flex items-center gap-3 flex-1 min-w-0'>
-                    <div className='p-2 bg-[#242938] rounded-lg shrink-0'>
+                    <div className='p-2 bg-terminal rounded-lg shrink-0'>
                       <Icon
                         className={`w-5 h-5 ${
                           visible ? 'text-cyan-400' : 'text-gray-500'

@@ -5,6 +5,7 @@ import {DockItems, MobileDock} from '@/components/ui/mobile-dock'
 import {useOCRView} from '@/ctx/ocr/view'
 import {VehicleRegistration} from '@/lib/vision/parse-lto'
 import {useCallback, useMemo, useState} from 'react'
+import {AddDocument} from './add-document'
 import {CertificateOfRegistrationForm} from './cr'
 import {DocumentUploader} from './document-uploader'
 import {SettingsPage} from './settings-page'
@@ -19,7 +20,7 @@ export const Content = () => {
   const dockItems = useMemo(
     () =>
       ({
-        nav: [{id: 'back', icon: 'chart', fn: voidFn, label: 'Dashboard'}],
+        nav: [{id: 'back', icon: 'table', fn: voidFn, label: 'Dashboard'}],
         toolbar: [
           {
             name: 'start scan',
@@ -27,33 +28,33 @@ export const Content = () => {
             icon: 'table',
             style: isScanning
               ? 'animate-pulse text-zinc-600 dark:text-lime'
-              : 'text-zinc-600 dark:text-slate-300',
+              : 'text-blue-500 dark:text-stone-700',
           },
           {
             name: 'halt',
             fn: voidFn,
-            icon: 'folder',
+            icon: 'scan-doc',
             style: isScanning
               ? 'text-amber-500'
-              : 'text-zinc-400/80 dark:text-zinc-700',
+              : 'text-blue-500 dark:text-stone-700',
           },
           {
             name: 'sound',
             fn: voidFn,
-            icon: 'scan-doc',
+            icon: 'scan-user',
             style: isScanning
               ? 'text-primary dark:text-blue-300'
-              : 'text-zinc-400 dark:text-slate-600',
+              : 'text-blue-500 dark:text-stone-700',
           },
         ],
         options: [
           {
             name: 'clear list',
             fn: voidFn,
-            icon: 'scan-user',
+            icon: 'tweak',
             style: isScanning
               ? 'text-zinc-400/80 dark:text-zinc-700'
-              : 'text-zinc-600 dark:text-slate-300',
+              : 'text-blue-500 dark:text-stone-700',
           },
         ],
       }) as DockItems,
@@ -69,6 +70,8 @@ export const Content = () => {
         return <SettingsPage />
       case 'scan-doc':
         return <CRScanner />
+      case 'add-new':
+        return <AddDocument />
       default:
         return null
     }
@@ -77,7 +80,7 @@ export const Content = () => {
   return (
     <main className='relative w-full md:min-w-0 pb-20 md:pb-0'>
       {renderContent()}
-      <div className='fixed md:hidden bottom-16 w-screen md:w-full flex flex-col items-center'>
+      <div className='fixed md:hidden bottom-18 w-screen md:w-full flex flex-col items-center'>
         <MobileDock dockItems={dockItems} />
       </div>
     </main>

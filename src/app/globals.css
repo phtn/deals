@@ -65,6 +65,13 @@
   --color-mac-pink: var(--mac-pink);
   --color-mac-brown: var(--mac-brown);
   --color-mac-gray: var(--mac-gray);
+  --depslip-gradient: linear-gradient(
+    135deg,
+    #fcd47f 0%,
+    #f5a94f 30%,
+    #f28944 70%,
+    #fcd47f 100%
+  );
 }
 
 :root {
