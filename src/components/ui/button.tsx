@@ -78,7 +78,7 @@ export const variantClasses: Record<ButtonVariant, string> = {
   ghost: cn(
     'bg-transparent',
     'text-foreground/80 hover:text-foreground',
-    'border-transparent',
+    'border-transparent disabled:grayscale',
     'hover:bg-zinc-100/80 dark:hover:bg-zinc-800/80',
     // 'inset-shadow-[0_1px_rgb(237_237_237)]/50',
     // 'dark:inset-shadow-[0_1px_rgb(100_100_100)]/40',
@@ -146,8 +146,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {/* Overlay shimmer layer */}
         <div
           className={cn(
-            'pointer-events-none absolute inset-0 h-full w-full rounded-[10px] opacity-0 transition duration-400',
-            'bg-gradient-to-r from-white/70 via-white/50 to-white/30',
+            'pointer-events-none absolute inset-0 h-full w-full rounded-[10px] opacity-0',
+            'bg-linear-to-r from-white/70 via-white/50 to-white/30',
             'dark:from-zinc-800/50 dark:via-zinc-800/70 dark:to-zinc-800/90',
             'hover:opacity-100',
           )}

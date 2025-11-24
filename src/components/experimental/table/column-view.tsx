@@ -11,6 +11,7 @@ import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Column} from '@tanstack/react-table'
 import {useMemo} from 'react'
+import {TButton} from './buttons'
 
 interface Props<T> {
   cols: Column<T, unknown>[]
@@ -59,26 +60,26 @@ export const ColumnView = <T,>({cols, isMobile}: Props<T>) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
+        <TButton
           variant='secondary'
           className='relative select-none font-sans md:aspect-auto aspect-square data-[state=open]:bg-origin/50'>
           {invisibleColumns.length > 0 && (
-            <Badge className='absolute bg-orange-400 dark:bg-orange-500 rounded-full -top-1.5 md:-top-0.5 left-full -translate-x-3.5 md:-translate-1/2 size-5 aspect-square px-1 text-white font-space'>
+            <Badge className='absolute bg-mac-orange dark:bg-mac-orange rounded-full -top-1.5 md:-top-0.5 left-full -translate-x-3.5 md:-translate-1/2 size-5 aspect-square px-1 text-white font-space'>
               {invisibleColumns.length > 99 ? '99+' : invisibleColumns.length}
             </Badge>
           )}
           <Icon
             name='eye'
-            className={cn('size-4 md:size-5 opacity-60', {
-              'text-orange-500 opacity-100': invisibleColumns.length > 0,
+            className={cn('size-4 md:size-4 opacity-60', {
+              'text-orange-300 opacity-100': invisibleColumns.length > 0,
             })}
           />
           <span className='hidden md:flex'>View</span>
-        </Button>
+        </TButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align={isMobile ? 'end' : 'start'}
-        className='bg-dark-origin dark:bg-dark-origin p-3 rounded-3xl min-w-44'>
+        className=' border-sidebar bg-sidebar-accent p-3 rounded-3xl min-w-44'>
         <DropdownMenuLabel className='flex items-center space-x-1.5 italic capitalize'>
           <Icon
             name='arrow-swap'

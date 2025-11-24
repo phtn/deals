@@ -1,22 +1,22 @@
-import {Button} from '@/components/ui/button'
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Row} from '@tanstack/react-table'
 import {useCallback, useState} from 'react'
+import {TButton} from './buttons'
 
-interface DeleteButtonProps<T> {
+interface DeleteButtonProps<T, I> {
   rows: Row<T>[]
-  onDelete: (ids: string[]) => void | Promise<void>
+  onDelete: (ids: I[]) => void | Promise<void>
   idAccessor: keyof T
   disabled?: boolean
 }
 
-export const DeleteButton = <T,>({
+export const DeleteButton = <T, I>({
   rows,
   onDelete,
   idAccessor,
   disabled = false,
-}: DeleteButtonProps<T>) => {
+}: DeleteButtonProps<T, I>) => {
   const [loading, setLoading] = useState(false)
   const selectedCount = rows.filter((row) => row.getIsSelected()).length
   const hasSelection = selectedCount > 0
@@ -30,7 +30,7 @@ export const DeleteButton = <T,>({
       .map((row) => {
         const value = row.original[idAccessor]
         return typeof value === 'string' ? value : String(value)
-      })
+      }) as I[]
 
     if (selectedIds.length > 0) {
       onDelete(selectedIds)
@@ -42,7 +42,7 @@ export const DeleteButton = <T,>({
   }
 
   return (
-    <Button
+    <TButton
       variant='secondary'
       className='relative aspect-square select-none'
       onClick={handleDelete}
@@ -59,6 +59,6 @@ export const DeleteButton = <T,>({
           {selectedCount > 99 ? '99+' : selectedCount}
         </span>
       )}
-    </Button>
+    </TButton>
   )
 }

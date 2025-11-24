@@ -1,4 +1,3 @@
-import {Button} from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +10,7 @@ import {Icon, IconName} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Table} from '@tanstack/react-table'
 import {useCallback, useMemo} from 'react'
+import {TButton} from './buttons'
 
 interface Props<T> {
   loading: boolean
@@ -28,6 +28,7 @@ interface IMenuItem {
 
 export const ExportTable = <T,>({table, tableName = '', loading}: Props<T>) => {
   const {copy} = useCopy({timeout: 2000})
+
   const handleCopy = useCallback(async () => {
     const data = table.getRowModel().rows.map((row) => row.original)
     await copy(`Table: ${tableName}`, JSON.stringify(data, null, 2))
@@ -39,14 +40,14 @@ export const ExportTable = <T,>({table, tableName = '', loading}: Props<T>) => {
         {
           id: 'csv',
           label: 'CSV',
-          icon: 'code-square',
+          icon: 'search',
           fn: () => console.log('csv'),
         },
         {
           id: 'copy-json',
           label: 'Copy JSON',
-          icon: 'json',
-          fn: handleCopy(),
+          icon: 'tweak',
+          fn: () => handleCopy(),
           // fn: () => copy('Row', JSON.stringify(row.original, null, 2)),
         },
         {
@@ -62,19 +63,19 @@ export const ExportTable = <T,>({table, tableName = '', loading}: Props<T>) => {
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
+          <TButton
             variant='secondary'
             className={cn(
-              'ml-auto bg-background/30 translate-x-0 transition-transform duration-200 ease-in-out md:aspect-auto aspect-square select-none',
+              'relative aspect-square data-[state=open]:bg-origin/50 select-none',
             )}>
-            <Icon
-              name={loading ? 'spinners-ring' : 'download'}
-              className='size-4 opacity-60'
-            />
-            <span className='font-sans md:inline-flex items-center gap-2 hidden'>
+            <span className='md:flex items-center font-sans pr-1.5 hidden'>
               {loading ? 'Loading' : 'Export'}
             </span>
-          </Button>
+            <Icon
+              name={loading ? 'spinners-ring' : 'download'}
+              className='size-4'
+            />
+          </TButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align='end'

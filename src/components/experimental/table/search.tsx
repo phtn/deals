@@ -66,7 +66,7 @@ export const Search = forwardRef<HTMLInputElement, Props<unknown>>(
           id={`input-${id}`}
           ref={ref}
           className={cn(
-            'peer md:h-10 dark:bg-background/40 w-28 md:min-w-60 ps-3 rounded-lg border-none',
+            'peer h-9 bg-stone-200/40 dark:bg-background/40 w-36 md:min-w-60 ps-3 rounded-lg border-none',
             '',
             Boolean(getFilterValue) && 'pe-10',
           )}
@@ -82,7 +82,7 @@ export const Search = forwardRef<HTMLInputElement, Props<unknown>>(
           <Icon
             name='slash-bold'
             aria-hidden='true'
-            className='size-6 md:opacity-20 opacity-0'
+            className='size-5 md:opacity-20 opacity-0'
           />
         </div>
         {Boolean(col?.getFilterValue()) && (

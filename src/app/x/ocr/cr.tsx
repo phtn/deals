@@ -103,58 +103,67 @@ export function CertificateOfRegistrationForm({
   }
 
   return (
-    <div className='w-full max-w-6xl px-6 bg-white text-black shadow-2xl overflow-scroll print:shadow-none border-r-[0.33px] border-foreground/30'>
+    <div className='portrait:h-[88lvh] overflow-y-scroll w-full md:max-w-6xl md:px-6 px-3 bg-white text-black shadow-2xl overflow-scroll print:shadow-none min-w-0'>
       {/* Header Section */}
       <div className='flex flex-col items-center p-4 relative'>
-        <div className='absolute left-8 top-8 hidden md:block'>
+        <div className='absolute md:left-8 -left-4 -top-3  md:top-8 scale-50 md:scale-100'>
           <Image src='/svg/dot.svg' alt='dot' width={64} height={64} />
         </div>
-        <div className='absolute right-8 top-8 hidden md:block'>
+        <div className='absolute md:right-8 -right-4 -top-3  md:top-8 scale-50 md:scale-100'>
           <Image src='/svg/lto.svg' alt='lto' width={64} height={64} />
         </div>
 
-        <div className='text-center space-y-0 mt-1'>
-          <h4 className='text-sm font-serif tracking-wide text-neutral-600'>
+        <div className='text-center space-y-0 -mt-2 md:mt-1'>
+          <h4 className='text-xs md:text-sm font-space md:font-semibold tracking-wide text-stone-500'>
             Republic of the Philippines
           </h4>
-          <h2 className='text-base font-semibold uppercase tracking-wide'>
+          <h2 className='md:block hidden md:text-base text-sm md:font-semibold uppercase tracking-wide'>
             Department of Transportation
           </h2>
-          <h1 className='text-base font-semibold uppercase tracking-wider'>
+          <h1 className='md:block hidden md:text-base text-sm md:font-semibold uppercase tracking-wider'>
             Land Transportation Office
           </h1>
         </div>
 
-        <div className='mt-4 w-full max-w-lg grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm'>
-          <div className='font-medium text-right'>Field Office</div>
+        <div className='portrait:hidden mt-4 w-full flex justify-center md:max-w-lg md:grid grid-cols-[auto_1fr] gap-1 md:gap-x-4 gap-y-1 text-sm'>
+          <div className='text-xs md:font-medium md:text-right'>
+            <span className='portrait:hidden pr-1'>Field </span>Office
+          </div>
           <input
-            className='border-b border-neutral-500 font-sans px-2 bg-transparent focus:outline-none focus:border-blue-500'
+            className='portrait:max-w-32 border-b-[0.33px] border-stone-400/80 font-sans px-2 bg-transparent focus:outline-none focus:border-blue-500'
             value={data.fieldOffice}
             onChange={(e) => updateField('fieldOffice')(e.target.value)}
-            placeholder='Enter field office'
+            placeholder='Field office'
           />
-          <div className='font-medium text-right'>Office Code</div>
+          <div className='text-xs md:font-medium md:text-right'>
+            <span className='portrait:hidden pr-1'>Office</span>Code
+          </div>
           <input
-            className='border-b border-neutral-500 font-sans font-medium px-2 bg-transparent focus:outline-none focus:border-blue-500'
+            className='portrait:max-w-32 border-b-[0.33px] border-stone-400/80 font-sans px-2 bg-transparent focus:outline-none focus:border-blue-500'
             value={data.officeCode}
             onChange={(e) => updateField('officeCode')(e.target.value)}
-            placeholder='Enter office code'
+            placeholder='Office code'
           />
         </div>
       </div>
 
       {/* Title Bar */}
-      <div className='mb-2 flex flex-col md:flex-row items-center justify-between'>
-        <div className='text-base font-semibold uppercase tracking-wider bg-black text-white px-2 py-2 print:bg-black print:text-white'>
+      <div className='md:mb-2 flex flex-row items-center justify-between'>
+        <div className='md:flex hidden font-semibold uppercase tracking-wider bg-black text-white p-2 print:bg-black print:text-white'>
           Certificate of Registration
         </div>
+        <div className='md:hidden text-sm font-medium uppercase tracking-tighter bg-black text-white py-0.5 px-1.5 print:bg-black print:text-white'>
+          CR
+        </div>
         <div className='flex items-center gap-2'>
-          <span className='font-bold'>CR No.</span>
-          <span className='text-xl font-bold text-red-600 px-2 rounded-sm tracking-widest'>
+          <span className='text-sm md:text-base font-medium md:font-bold'>
+            CR No.
+          </span>
+          <span className='text-base md:text-xl font-bold text-red-600 px-2 rounded-sm tracking-widest'>
             {data.crNo}
           </span>
         </div>
-        <div className='flex items-center justify-center gap-2 text-sm w-64'>
+        <div className='flex items-center justify-center gap-2 text-xs m:text-sm md:w-64'>
           <span>Date</span>
           <input
             className='bg-transparent font-bold w-24 text-center focus:outline-none'

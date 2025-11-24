@@ -18,11 +18,12 @@ export const HyperCard = ({
     <Card
       className={cn(
         'shadow-xs relative overflow-hidden group p-0',
-        'dark:bg-origin/40 dark:border-zinc-800',
+        'dark:bg-origin/60 dark:border-zinc-800',
         'dark:inset-shadow-[0_1px_rgb(255_255_255/0.20)]',
         {
           'dark:bg-transparent dark:border-transparent': light,
         },
+        'border-stone-400/40',
         className,
       )}>
       {children}

@@ -1,8 +1,8 @@
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Row} from '@tanstack/react-table'
+import {TButton} from './buttons'
 
 interface SelectToggleProps<T> {
   on: boolean
@@ -15,22 +15,28 @@ export const SelectToggle = <T,>({
   toggleFn,
   rows,
 }: SelectToggleProps<T>) => {
-  const selectedCount = rows.filter((row) => row.getIsSelected()).length
+  // rows already contains only selected rows from table.getSelectedRowModel().rows
+  const selectedCount = rows.length
+
   return (
-    <Button
-      variant='secondary'
-      className='relative aspect-square select-none'
-      onClick={toggleFn}>
+    <div className='relative inline-block'>
       {on && selectedCount > 0 && (
-        <Badge className='absolute z-50 pointer-events-none select-none rounded-full -top-1.5 md:-top-0.5 left-full -translate-x-3.5 md:-translate-1/2 size-5 aspect-square px-1 text-white font-space'>
+        <Badge
+          variant='default'
+          className='absolute bg-mac-blue z-100 pointer-events-none select-none rounded-full -top-2 -right-2 size-5 min-w-5 aspect-square px-1 text-white font-space flex items-center justify-center shadow-lg'>
           {selectedCount > 99 ? '99+' : selectedCount}
         </Badge>
       )}
-      <Icon
-        name={'checkbox-indeterminate-2'}
-        className={cn(' md:size-5 size-4', on ? 'text-primary' : 'opacity-40')}
-      />
-      <span className='hidden md:flex'>Select</span>
-    </Button>
+      <TButton
+        variant='secondary'
+        className='relative aspect-square select-none'
+        onClick={toggleFn}>
+        <Icon
+          name={'checkbox-indeterminate-2'}
+          className={cn('size-4', on ? 'text-blue-400' : 'opacity-40')}
+        />
+        <span className='hidden md:flex'>Select</span>
+      </TButton>
+    </div>
   )
 }

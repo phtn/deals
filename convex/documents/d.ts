@@ -47,6 +47,7 @@ export const documentSchema = v.object({
     }),
   ),
   tags: v.optional(v.array(v.string())),
+  remarks: v.optional(v.string()),
   createdAt: v.number(),
   updatedAt: v.number(),
 })

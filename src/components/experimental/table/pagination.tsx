@@ -1,4 +1,3 @@
-import {Button} from '@/components/ui/button'
 import {Label} from '@/components/ui/label'
 import {
   Pagination,
@@ -15,6 +14,7 @@ import {
 import {Icon} from '@/lib/icons'
 import {PaginationState} from '@tanstack/react-table'
 import {useId} from 'react'
+import {TButton} from './buttons'
 
 export interface PageControl {
   disabledNext: boolean
@@ -39,11 +39,11 @@ export const Paginator = ({
 }: Props) => {
   const id = useId()
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-center justify-between py-2'>
       {/* Results per page */}
       <div className='flex items-center space-x-8 px-6'>
         <Label htmlFor={id} className='font-space tracking-tight'>
-          <span className='font-semibold text-base'>{rowCount}</span>
+          <span className='font-semibold text-base mr-2'>{rowCount}</span>
           <span className='opacity-80'>items</span>
         </Label>
         <div className='flex items-center dark:hover:bg-background/10 dark:focus-visible:bg-background/15 pl-3 py-1 rounded-lg space-x-1 dark:bg-dysto/20'>
@@ -93,24 +93,24 @@ export const Paginator = ({
         <Pagination>
           <PaginationContent className='gap-3'>
             <PaginationItem>
-              <Button
+              <TButton
                 variant='outline'
                 onClick={pageControl.gotoPrev}
                 disabled={pageControl.disabledPrev}
                 className='dark:bg-background/10 aspect-square size-8 p-0 aria-disabled:pointer-events-none aria-disabled:text-muted-foreground/50 border-[0.33px] dark:border-dark-origin/30 hover:bg-muted/50 dark:hover:bg-background/40 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.04),0_1px_1px_rgba(0,0,0,0.05),0_2px_2px_rgba(0,0,0,0.05),0_2px_4px_rgba(0,0,0,0.05)] dark:inset-shadow-[0_1px_rgb(255_255_255/0.15)]'
                 aria-label='Go to next page'>
                 <Icon name='chevron-left' className='size-4' />
-              </Button>
+              </TButton>
             </PaginationItem>
             <PaginationItem>
-              <Button
+              <TButton
                 variant='outline'
                 onClick={pageControl.gotoNext}
                 disabled={pageControl.disabledNext}
                 className='dark:bg-background/10 aspect-square size-8 p-0 aria-disabled:pointer-events-none aria-disabled:text-muted-foreground/50 border-[0.33px] dark:border-dark-origin/30 hover:bg-muted/50 dark:hover:bg-background/40 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.04),0_1px_1px_rgba(0,0,0,0.05),0_2px_2px_rgba(0,0,0,0.05),0_2px_4px_rgba(0,0,0,0.05)] dark:inset-shadow-[0_1px_rgb(255_255_255/0.15)]'
                 aria-label='Go to next page'>
                 <Icon name='chevron-right' className='size-4' />
-              </Button>
+              </TButton>
             </PaginationItem>
             {/* First page button */}
             {/* <PaginationItem>

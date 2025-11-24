@@ -1,6 +1,7 @@
 'use client'
 
-import {parseLTOCertificate, VehicleRegistration} from '@/lib/vision/parse-lto'
+import {parseWithGemini} from '@/lib/vision/parse-gemini'
+import {VehicleRegistration} from '@/lib/vision/parse-lto'
 import {ChangeEvent, FormEvent, ReactNode, useState} from 'react'
 
 export default function OCRUploader() {
@@ -48,8 +49,8 @@ export default function OCRUploader() {
       const data: {text: string} = await response.json()
       setExtractedText(data.text)
 
-      // Parse the text into structured data
-      const parsed = parseLTOCertificate(data.text)
+      // Parse the text into structured data using Gemini
+      const parsed = await parseWithGemini(data.text)
       setStructuredData(parsed)
     } catch (err) {
       setError('Failed to extract text from image')
@@ -58,56 +59,6 @@ export default function OCRUploader() {
       setLoading(false)
     }
   }
-
-  // const formatLabel = (key: string): string => {
-  //   // Map of field keys to display labels
-  //   const labelMap: Record<string, string> = {
-  //     fieldOffice: 'Field Office',
-  //     officeCode: 'Office Code',
-  //     dateOfIssue: 'Date of Issue',
-  //     certificateNumber: 'Certificate Number (CR No.)',
-  //     plateNumber: 'Plate Number',
-  //     engineNumber: 'Engine Number',
-  //     chassisNumber: 'Chassis Number',
-  //     vin: 'VIN',
-  //     fileNumber: 'File Number',
-  //     vehicleType: 'Vehicle Type',
-  //     vehicleCategory: 'Vehicle Category',
-  //     makeBrand: 'Make/Brand',
-  //     color: 'Color',
-  //     typeOfFuel: 'Type of Fuel',
-  //     classification: 'Classification',
-  //     bodyType: 'Body Type',
-  //     series: 'Series',
-  //     yearModel: 'Year Model',
-  //     yearRebuilt: 'Year Rebuilt',
-  //     pistonDisplacement: 'Piston Displacement',
-  //     grossWeight: 'Gross Weight',
-  //     netWeight: 'Net Weight',
-  //     maxPower: 'Max Power (KW)',
-  //     passengerCapacity: 'Passenger Capacity',
-  //     ownerName: "Owner's Name",
-  //     ownerAddress: "Owner's Address",
-  //     encumberedTo: 'Encumbered To',
-  //     detailsOfFirstRegistration: 'Details of First Registration',
-  //     remarks: 'Remarks',
-  //     orNumber: 'O.R. Number',
-  //     orDate: 'O.R. Date',
-  //     amount: 'Amount',
-  //     registrantSignature: "Registrant's Signature",
-  //     by: 'By',
-  //     chiefOfOffice: 'Chief of Office',
-  //     note: 'Note',
-  //   }
-
-  //   return (
-  //     labelMap[key] ||
-  //     key
-  //       .replace(/([A-Z])/g, ' $1')
-  //       .replace(/^./, (str) => str.toUpperCase())
-  //       .trim()
-  //   )
-  // }
 
   // Field group component matching document layout - always 4 columns
   const FieldGroup = ({

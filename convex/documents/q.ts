@@ -2,11 +2,7 @@ import {v} from 'convex/values'
 import {query} from '../_generated/server'
 
 export const getAll = query({
-  handler: async ({db}) =>
-    await db
-      .query('documents')
-      .order('desc')
-      .collect(),
+  handler: async ({db}) => await db.query('documents').order('desc').collect(),
 })
 
 export const getById = query({
@@ -73,4 +69,10 @@ export const getPendingOcr = query({
       .collect(),
 })
 
-
+export const getWeeklyDocuments = query({
+  handler: async ({db}) => {
+    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    const allDocs = await db.query('documents').order('desc').collect()
+    return allDocs.filter((doc) => doc.createdAt >= oneWeekAgo)
+  },
+})

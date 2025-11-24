@@ -14,6 +14,7 @@ import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Column} from '@tanstack/react-table'
 import {useId, useMemo} from 'react'
+import {TButton} from './buttons'
 
 interface Props<T> {
   columns: Column<T, unknown>[]
@@ -108,7 +109,7 @@ export const Filter = <T,>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
+        <TButton
           variant='secondary'
           className={cn(
             'relative aspect-square data-[state=open]:bg-origin/50 select-none',
@@ -116,9 +117,9 @@ export const Filter = <T,>({
           <Icon
             name='filter'
             className={cn(
-              'size-4 md:size-5 opacity-60',
+              'size-4 md:size-4 opacity-60',
               (totalActiveFilters > 0 || activeFilterColumns.length > 0) &&
-                'text-mac-indigo opacity-100',
+                'text-purple-400 opacity-100',
             )}
           />
           <span className='capitalize hidden md:flex'>filter</span>
@@ -127,7 +128,7 @@ export const Filter = <T,>({
               {totalActiveFilters > 99 ? '99+' : totalActiveFilters}
             </Badge>
           )}
-        </Button>
+        </TButton>
       </PopoverTrigger>
       <PopoverContent
         className='w-auto min-w-44 p-3 rounded-3xl'

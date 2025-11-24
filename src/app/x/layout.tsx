@@ -5,6 +5,8 @@ import {SettingsPanel, SettingsPanelProvider} from '@/components/settings-panel'
 import {SidebarInset, SidebarProvider} from '@/components/ui/sidebar'
 import {AffiliateCtxProvider} from '@/ctx/affiliate'
 import {AffiliateViewProvider} from '@/ctx/affiliate/view'
+import {MetricsProvider} from '@/ctx/ocr/metrics'
+import {OCRViewProvider} from '@/ctx/ocr/view'
 import {ConvexProvider} from '@/lib/convex/provider'
 import {usePathname} from 'next/navigation'
 import {ReactNode} from 'react'
@@ -18,6 +20,7 @@ export interface DashboardLayoutProps {
 export default function Layout({children, toolbar}: DashboardLayoutProps) {
   const pathname = usePathname()
   const isAffiliatesRoute = pathname?.includes('/affiliates')
+  const isOCRRoute = pathname?.includes('/ocr')
 
   const content = (
     <ConvexProvider>
@@ -26,10 +29,8 @@ export default function Layout({children, toolbar}: DashboardLayoutProps) {
           <AppSidebar />
           <SettingsPanelProvider>
             <SidebarInset className='group/sidebar-inset'>
-              <Container>
-                <WrappedContent toolbar={toolbar}>{children}</WrappedContent>
-                <SettingsPanel />
-              </Container>
+              <WrappedContent toolbar={toolbar}>{children}</WrappedContent>
+              <SettingsPanel />
             </SidebarInset>
           </SettingsPanelProvider>
         </SidebarProvider>
@@ -41,12 +42,13 @@ export default function Layout({children, toolbar}: DashboardLayoutProps) {
     return <AffiliateViewProvider>{content}</AffiliateViewProvider>
   }
 
+  if (isOCRRoute) {
+    return (
+      <OCRViewProvider>
+        <MetricsProvider>{content}</MetricsProvider>
+      </OCRViewProvider>
+    )
+  }
+
   return content
 }
-
-const Container = ({children}: {children: ReactNode}) => (
-  <div className='relative bg-sidebar w-full min-w-0 md:p-5 flex h-screen'>
-    {/*<div className='absolute top-1 hidden _flex items-center px-1 rounded-sm left-4 bg-amber-100/10 h-3 space-x-4 text-xs'></div>*/}
-    {children}
-  </div>
-)

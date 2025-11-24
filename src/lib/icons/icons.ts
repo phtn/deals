@@ -5,11 +5,11 @@ export const icons = {
     viewBox: '0 0 32 32',
     set: 're-up.ph',
   },
-  protap: {
+  'file-add': {
     symbol:
-      '<path fill-rule="evenodd" clip-rule="evenodd" d="M90.0735 -0.00212491C95.088 -0.00212448 99.1529 4.0271 99.1529 8.99738V22.9966C99.1529 28.5677 94.7718 31.9961 90.0735 31.9961H75.9502C70.9354 31.9961 66.8706 27.9669 66.8706 22.9966V8.99738C66.8706 4.0271 70.9356 -0.0021257 75.95 -0.00212613L90.0735 -0.00212491ZM92.2353 6.83889V25.1393H73.7882V6.85464L92.2353 6.83889Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M41.2753 31.9943L34.8188 31.9904V-0.00390625L52.5741 -0.00272049C59.7229 -0.00272049 63.8735 3.88234 63.8735 10.3947C63.8735 16.907 60.1835 20.7929 52.5741 20.7929L68.2541 31.9958H57.1859L41.2753 20.7917V31.9943ZM41.2753 6.39574V14.3923L52.5741 14.3935C56.9558 14.3935 57.4163 11.6537 57.4163 10.3947C57.4163 9.13572 56.9558 6.39618 52.5741 6.39618L41.2753 6.39574Z" fill="currentColor"/><path d="M121.059 31.9949L113.669 31.991V6.39675L101.459 6.39634V-0.00212064H132.358V6.39678L121.059 6.39634V31.9949Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M125.209 31.9949H160.951L142.262 -0.00212064L125.209 31.9949ZM135.355 25.7966L142.262 13.94L149.168 25.7966H135.355Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M6.45647 31.9961L0 31.9922V-0.00212064H20.983C28.1318 -0.00212064 32.2824 2.96904 32.2824 10.3953C32.2824 17.8216 25.8252 20.7935 20.983 20.7935H6.45647V31.9961ZM6.45647 6.39752V14.3941H20.983C25.3647 14.3941 25.8252 11.6543 25.8252 10.3953C25.8252 9.13632 25.3647 6.39678 20.983 6.39678L6.45647 6.39752Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M170.174 31.9961L163.718 31.9922V-0.00212064H184.701C191.849 -0.00212064 196 2.96904 196 10.3953C196 17.8216 189.543 20.7935 184.701 20.7935H170.174V31.9961ZM170.174 6.39752V14.3941H184.701C189.082 14.3941 189.543 11.6543 189.543 10.3953C189.543 9.13632 189.082 6.39678 184.701 6.39678L170.174 6.39752Z" fill="currentColor"/>',
-    viewBox: '0 0 196 32',
-    set: 'protap',
+      '<g fill="none"><path fill="currentColor" fill-rule="evenodd" d="M12 2c1.5 0 2.7 0 3.677.074A2.5 2.5 0 0 0 15.5 3v.5H15a2.5 2.5 0 0 0 0 5h.5V9a2.5 2.5 0 0 0 4.5 1.5V14c0 3.771 0 5.657-1.172 6.828S15.771 22 12 22s-5.657 0-6.828-1.172S4 17.771 4 14v-4c0-3.771 0-5.657 1.172-6.828S8.229 2 12 2m-4 9a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2zm0 3a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2zm0 3a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M18 3v6m3-3h-6"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
   },
   'arrow-up': {
     symbol:
@@ -53,11 +53,11 @@ export const icons = {
     viewBox: '0 0 24 24',
     set: 'proicons',
   },
-  'pin-location': {
+  'scan-doc': {
     symbol:
-      '<g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5"><path d="M6.4 4.76a7.92 7.92 0 0 1 11.2 11.2l-4.186 4.186a2 2 0 0 1-2.828 0L6.4 15.96a7.92 7.92 0 0 1 0-11.2Z"/><circle cx="12" cy="10.36" r="3" stroke-linecap="round"/></g>',
+      '<g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"><path d="M21 10V9c0-.93 0-1.395-.102-1.776a3 3 0 0 0-2.122-2.122C18.396 5 17.93 5 17 5M3 10V9c0-.93 0-1.395.102-1.776a3 3 0 0 1 2.122-2.122C5.605 5 6.07 5 7 5m14 9v1c0 .93 0 1.395-.102 1.776a3 3 0 0 1-2.122 2.122C18.396 19 17.93 19 17 19M3 14v1c0 .93 0 1.395.102 1.776a3 3 0 0 0 2.122 2.122C5.605 19 6.07 19 7 19"/><path stroke-linecap="round" d="M12 15V9m-4 5v-4m8 4v-4"/></g>',
     viewBox: '0 0 24 24',
-    set: 'proicons,',
+    set: 'lets-icons',
   },
   zap: {
     symbol:
@@ -113,11 +113,11 @@ export const icons = {
     viewBox: '0 0 24 24',
     set: 'proicons',
   },
-  register: {
+  'scan-user': {
     symbol:
-      '<g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5.719 16.25l1.92-4.404m0 0h6.91m-6.91 0l2.94-6.747a.553.553 0 0 1 1.029 0l2.941 6.747m0 0l.337.774"/><path fill="currentColor" d="M15.586 20.936a2.5 2.5 0 0 0 1.219-.673l5.454-5.45a2.526 2.526 0 1 0-3.57-3.573l-5.453 5.452c-.335.336-.569.76-.674 1.222l-.536 2.354a1.007 1.007 0 0 0 1.206 1.206z"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m3.75 19.687l.568.234c.638.263 1.364.175 1.956-.18c.69-.411 1.649-.915 2.483-1.1c.583-.13 1.243.199 1.091.776c-.17.642-.69 1.396-.192 1.745c.75.525 5.031-.818 5.031-.818"/></g>',
+      '<g fill="none"><circle cx="12" cy="9" r="3" fill="currentColor"/><path fill="currentColor" fill-rule="evenodd" d="M17.451 15.908a.24.24 0 0 1-.067.304A8.96 8.96 0 0 1 12 18a8.96 8.96 0 0 1-5.384-1.788a.24.24 0 0 1-.067-.304C7.499 14.192 9.582 13 12 13s4.501 1.191 5.451 2.908" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M17 4h.502c1.211 0 1.817 0 2.281.232a2.2 2.2 0 0 1 .985.985C21 5.68 21 6.287 21 7.498V8m-4 12h.502c1.211 0 1.817 0 2.281-.232a2.2 2.2 0 0 0 .985-.985c.232-.464.232-1.07.232-2.281V16M7 4h-.502c-1.211 0-1.817 0-2.281.232a2.2 2.2 0 0 0-.985.985C3 5.68 3 6.287 3 7.498V8m4 12h-.502c-1.211 0-1.817 0-2.281-.232a2.2 2.2 0 0 1-.985-.985C3 18.32 3 17.713 3 16.502V16"/></g>',
     viewBox: '0 0 24 24',
-    set: 'proicons',
+    set: 'lets-icons',
   },
   'user-profile': {
     symbol:
@@ -203,11 +203,11 @@ export const icons = {
     viewBox: '0 0 24 24',
     set: 'proicons',
   },
-  server: {
+  folder: {
     symbol:
-      '<g fill="none"><rect width="18.5" height="7.5" x="2.75" y="2.751" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" rx="2"/><circle cx="6.25" cy="6.501" r="1.25" fill="currentColor"/><circle cx="10.25" cy="6.501" r="1.25" fill="currentColor"/><rect width="18.5" height="7.5" x="2.75" y="13.749" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" rx="2"/><circle cx="6.25" cy="17.499" r="1.25" fill="currentColor"/><circle cx="10.25" cy="17.499" r="1.25" fill="currentColor"/></g>',
+      '<path fill="currentColor" d="M3 8h13.2c1.68 0 2.52 0 3.162.327a3 3 0 0 1 1.311 1.311C21 10.28 21 11.12 21 12.8v1.4c0 1.68 0 2.52-.327 3.162a3 3 0 0 1-1.311 1.311C18.72 19 17.88 19 16.2 19H7.8c-1.68 0-2.52 0-3.162-.327a3 3 0 0 1-1.311-1.311C3 16.72 3 15.88 3 14.2zm0 0c0-.932 0-1.398.152-1.765a2 2 0 0 1 1.083-1.083C4.602 5 5.068 5 6 5h2.343c.818 0 1.226 0 1.594.152s.657.442 1.235 1.02L13 8z"/>',
     viewBox: '0 0 24 24',
-    set: 'proicons',
+    set: 'lets-icons',
   },
   link: {
     symbol:
@@ -221,11 +221,11 @@ export const icons = {
     viewBox: '0 0 24 24',
     set: 'proicons',
   },
-  hexagon: {
+  table: {
     symbol:
-      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.42 3.173a3.16 3.16 0 0 1 3.16 0l5.275 3.046a3.16 3.16 0 0 1 1.579 2.735v6.092a3.16 3.16 0 0 1-1.58 2.735l-5.275 3.046a3.16 3.16 0 0 1-3.158 0L5.145 17.78a3.16 3.16 0 0 1-1.579-2.735V8.954c0-1.128.602-2.17 1.58-2.735z"/>',
+      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M15 9h6v9c0 .943 0 1.414-.293 1.707S19.943 20 19 20h-4zM3 9h6v11H5c-.943 0-1.414 0-1.707-.293S3 18.943 3 18zm6 0h6v11H9zM3 6c0-.943 0-1.414.293-1.707S4.057 4 5 4h14c.943 0 1.414 0 1.707.293S21 5.057 21 6v3H3z"/>',
     viewBox: '0 0 24 24',
-    set: 'proicons',
+    set: 'lets-icons',
   },
   'shield-keyhole': {
     symbol:
@@ -253,9 +253,9 @@ export const icons = {
   },
   eye: {
     symbol:
-      '<g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5"><path d="M3.182 12.808C4.233 14.613 7.195 18.81 12 18.81c4.813 0 7.77-4.199 8.82-6.002a1.6 1.6 0 0 0-.001-1.615C19.769 9.389 16.809 5.19 12 5.19s-7.768 4.197-8.818 6.001a1.6 1.6 0 0 0 0 1.617Z"/><path d="M12 14.625a2.625 2.625 0 1 0 0-5.25a2.625 2.625 0 0 0 0 5.25Z"/></g>',
+      '<g fill="none"><circle cx="12" cy="12" r="4" fill="currentColor"/><path stroke="currentColor" stroke-width="2" d="M21 12s-1-8-9-8s-9 8-9 8"/></g>',
     viewBox: '0 0 24 24',
-    set: 'proicons',
+    set: 'lets-icons',
   },
   'eye-off': {
     symbol:
@@ -580,12 +580,6 @@ export const icons = {
     viewBox: '0 0 24 24',
     set: 'lets-icons',
   },
-  table: {
-    symbol:
-      '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><rect width="18.5" height="16.5" x="2.75" y="3.75" rx="3"/><path d="M2.75 7.75h18.5M2.75 14h18.5M8.92 7.75v12.5m6.17-12.5v12.5"/></g>',
-    viewBox: '0 0 24 24',
-    set: 'proicons',
-  },
   calendar: {
     symbol:
       '<path fill="currentColor" d="M8.829 12.524c.11-.134.39-.274.671-.274a.75.75 0 0 1 .75.75c0 .265-.077.425-.177.521c-.102.098-.329.229-.823.229a.75.75 0 0 0 0 1.5c.494 0 .721.131.823.229c.1.097.177.256.177.521a.75.75 0 0 1-.75.75c-.28 0-.56-.14-.671-.274a.75.75 0 1 0-1.158.954c.44.534 1.176.82 1.829.82A2.25 2.25 0 0 0 11.75 16c0-.522-.149-1.068-.538-1.5c.39-.432.538-.978.538-1.5a2.25 2.25 0 0 0-2.25-2.25c-.653 0-1.389.286-1.829.82a.75.75 0 0 0 1.158.954M14.5 17.5v-4.751l-.398.211a.75.75 0 0 1-.704-1.324l1.218-.648l.009-.005c.036-.02.1-.054.162-.08a.9.9 0 0 1 .455-.066a.87.87 0 0 1 .597.359a.87.87 0 0 1 .155.433c.006.066.006.139.006.18V17.5a.75.75 0 0 1-1.5 0"/><path fill="currentColor" d="M10.367 2.75h3.266c1.092 0 1.958 0 2.655.057c.714.058 1.317.18 1.869.46a4.75 4.75 0 0 1 2.075 2.077c.281.55.403 1.154.461 1.868c.057.697.057 1.563.057 2.655v4.266c0 1.092 0 1.958-.057 2.655c-.058.714-.18 1.317-.46 1.869a4.75 4.75 0 0 1-2.076 2.075c-.552.281-1.155.403-1.869.461c-.697.057-1.563.057-2.655.057h-3.266c-1.092 0-1.958 0-2.655-.057c-.714-.058-1.317-.18-1.868-.46a4.75 4.75 0 0 1-2.076-2.076c-.281-.552-.403-1.155-.461-1.869c-.057-.697-.057-1.563-.057-2.655V9.867c0-1.092 0-1.958.057-2.655c.058-.714.18-1.317.46-1.868a4.75 4.75 0 0 1 2.077-2.076c.55-.281 1.154-.403 1.868-.461c.697-.057 1.563-.057 2.655-.057M4.75 9.5v4.6c0 1.133 0 1.937.052 2.566c.05.62.147 1.005.302 1.31a3.25 3.25 0 0 0 1.42 1.42c.305.155.69.251 1.31.302c.63.051 1.434.052 2.566.052h3.2c1.133 0 1.937 0 2.566-.052c.62-.05 1.005-.147 1.31-.302a3.25 3.25 0 0 0 1.42-1.42c.155-.305.251-.69.302-1.31c.051-.63.052-1.434.052-2.566V9.5zM9.5 5.75a1 1 0 0 0 0 2h5a1 1 0 1 0 0-2z"/>',
@@ -594,9 +588,45 @@ export const icons = {
   },
   chart: {
     symbol:
-      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 10.25a2 2 0 0 1 2-2h4.167v13H4.75a2 2 0 0 1-2-2zm12.333 2h4.167a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-4.167zm-6.166-7.5a2 2 0 0 1 2-2h2.166a2 2 0 0 1 2 2v16.5H8.917z"/>',
+      '<path fill="currentColor" fill-rule="evenodd" d="M2.879 2.879C2 3.757 2 5.172 2 8v8c0 2.828 0 4.243.879 5.121C3.757 22 5.172 22 8 22h8c2.828 0 4.243 0 5.121-.879C22 20.243 22 18.828 22 16V8c0-2.828 0-4.243-.879-5.121C20.243 2 18.828 2 16 2H8c-2.828 0-4.243 0-5.121.879m14.953 6.676a1 1 0 0 0-1.664-1.11l-3.044 4.567l-.459-.918c-.687-1.373-2.601-1.493-3.453-.215l-3.044 4.566a1 1 0 0 0 1.664 1.11l3.044-4.566l.459.917c.687 1.374 2.601 1.493 3.453.215z" clip-rule="evenodd"/>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  doc: {
+    symbol:
+      '<g fill="none" stroke="currentColor"><path stroke-linecap="round" d="M8.5 12.5h7m-7 3h4"/><path d="M5.5 5.9c0-.84 0-1.26.163-1.581a1.5 1.5 0 0 1 .656-.656c.32-.163.74-.163 1.581-.163h4.606c.367 0 .55 0 .723.041q.232.056.433.18c.152.093.281.223.54.482l3.595 3.594c.26.26.39.39.482.54q.124.204.18.434c.041.173.041.356.041.723V18.1c0 .84 0 1.26-.163 1.581a1.5 1.5 0 0 1-.656.656c-.32.163-.74.163-1.581.163H7.9c-.84 0-1.26 0-1.581-.163a1.5 1.5 0 0 1-.656-.656c-.163-.32-.163-.74-.163-1.581z"/><path d="M12.5 3.5v3.6c0 .84 0 1.26.164 1.581a1.5 1.5 0 0 0 .655.656c.32.163.74.163 1.581.163h3.6"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  arc: {
+    symbol:
+      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.25 4.75h-.5c-7.732 0-14 6.268-14 14v.5"/>',
     viewBox: '0 0 24 24',
     set: 'proicons',
+  },
+  remote: {
+    symbol:
+      '<path fill="none" stroke="currentColor" d="m7 4l4 5l-4 5m10-4l-4 5l4 5"/>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  switch: {
+    symbol:
+      '<g fill="none"><rect width="14" height="10" x="5" y="7" stroke="currentColor" rx="2"/><rect width="5" height="6" x="12" y="9" fill="currentColor" rx="1"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  tweak: {
+    symbol:
+      '<g fill="currentColor" stroke="currentColor" stroke-linecap="round"><path d="M10 8h10M4 16h10"/><circle cx="7" cy="8" r="3" transform="rotate(90 7 8)"/><circle cx="17" cy="16" r="3" transform="rotate(90 17 16)"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  money: {
+    symbol:
+      '<path fill="currentColor" fill-opacity=".25" d="M3 10c0-1.886 0-2.828.586-3.414S5.114 6 7 6h10c1.886 0 2.828 0 3.414.586S21 8.114 21 10v4c0 1.886 0 2.828-.586 3.414S18.886 18 17 18H7c-1.886 0-2.828 0-3.414-.586S3 15.886 3 14z"/><circle cx="12" cy="12" r="2" fill="currentColor"/><rect width="3" height="1" x="5" y="8" fill="currentColor" rx=".5"/><rect width="3" height="1" x="16" y="15" fill="currentColor" rx=".5"/>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
   },
 }
 

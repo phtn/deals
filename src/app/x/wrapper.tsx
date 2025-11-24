@@ -21,13 +21,14 @@ export const WrappedContent = ({children, toolbar}: WrappedContentProps) => {
     <Wrapper isPanelExpanded={isExpanded}>
       <div className='px-2 sm:px-3 py-3.5 flex items-center justify-between min-w-0'>
         <SidebarTrigger className='' />
-        <div
+        <header
+          id='mobile-navbar'
           className={cn(
-            'flex flex-1 w-full capitalize text-lg opacity-90 font-semibold px-1 md:px-2 lg:px-4 font-bone',
+            'flex flex-1 w-full capitalize text-lg dark:text-orange-200 font-semibold md:px-2 lg:px-3 font-bone',
             {uppercase: endpoint === 'ocr'},
           )}>
           {endpoint}
-        </div>
+        </header>
         {toolbar}
         <Button
           size='sq'
@@ -53,14 +54,24 @@ interface WrapperProps {
 }
 export const Wrapper = ({children, isPanelExpanded}: WrapperProps) => {
   return (
-    <div
-      className={cn(
-        'flex-1 min-w-0 [&>div>div]:h-full w-full border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-greyed',
-        'overflow-hidden drop-shadow-xl',
-        'md:rounded-xl ',
-        {'': isPanelExpanded},
-      )}>
-      {children}
-    </div>
+    <Container>
+      <div
+        className={cn(
+          'flex-1 min-w-0 [&>div>div]:h-full w-full border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-greyed',
+          'overflow-hidden drop-shadow-xl',
+          'md:rounded-xl ',
+          {'': isPanelExpanded},
+        )}>
+        {children}
+      </div>
+    </Container>
   )
 }
+
+const Container = ({children}: {children: ReactNode}) => (
+  <div
+    suppressHydrationWarning
+    className='relative bg-sidebar w-full min-w-0 md:p-5 flex h-screen'>
+    {children}
+  </div>
+)

@@ -1,5 +1,4 @@
 import {HyperList} from '@/components/list'
-import {Button} from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +19,7 @@ import {Row} from '@tanstack/react-table'
 import {useMutation} from 'convex/react'
 import {useCallback, useState} from 'react'
 import {api} from '../../../../convex/_generated/api'
+import {TButton} from './buttons'
 
 interface ISubMenuItem {
   label: string
@@ -74,12 +74,12 @@ export const RowActions = <T,>({
     {label: 'CSV', icon: 'printer', fn: () => console.log('csv')},
     {
       label: 'Copy JSON',
-      icon: 'json' as IconName,
+      icon: 'content-share-solid' as IconName,
       fn: () => copy('Row', JSON.stringify(row.original, null, 2)),
     },
     {
       label: 'Advance',
-      icon: 'pawn' as IconName,
+      icon: 'code' as IconName,
       fn: () => console.log('delete'),
     },
   ]
@@ -94,7 +94,7 @@ export const RowActions = <T,>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
+        <TButton
           size='sq'
           variant='ghost'
           className='shadow-none rounded-lg cursor-pointer hover:bg-terminal/10 dark:data-[state=open]:bg-terminal/50 data-[state=open]:bg-terminal/10'
@@ -106,7 +106,7 @@ export const RowActions = <T,>({
               'dark:text-amber-400': loading,
             })}
           />
-        </Button>
+        </TButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align='end'

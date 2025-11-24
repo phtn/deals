@@ -4,7 +4,8 @@ import {Input} from '@/components/ui/input'
 import {cn} from '@/lib/utils'
 import {HTMLAttributes, useEffect, useRef, useState} from 'react'
 
-interface EditableCellProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+interface EditableCellProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   label: string
   value: string
   onChange: (value: string) => void
@@ -61,7 +62,7 @@ export function EditableCell({
           className='absolute inset-x-0 bottom-0 focus-within:outline-none md:h-10 w-full dark:bg-transparent text-center rounded-none px-2 border-none dark:border-transparent font-semibold uppercase dark:text-background outline-none focus:ring-0 focus:ring-blue-500/20'
         />
       ) : (
-        <div className='flex items-end justify-center pb-0.5 max-w-[100ch]'>
+        <div className='flex items-end justify-center pb-0.5 md:max-w-[100ch]'>
           <span
             className={cn(
               'text-sm font-semibold',

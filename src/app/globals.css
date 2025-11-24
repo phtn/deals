@@ -11,6 +11,7 @@
   --font-figtree: var(--font-figtree);
   --font-major: var(--font-major);
   --font-bone: var(--font-bone);
+  --font-space: var(--font-space);
   --color-sidebar: var(--sidebar);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -50,6 +51,20 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /* MAC COLORS */
+  --color-mac-red: var(--mac-red);
+  --color-mac-orange: var(--mac-orange);
+  --color-mac-yellow: var(--mac-yellow);
+  --color-mac-green: var(--mac-green);
+  --color-mac-mint: var(--mac-mint);
+  --color-mac-teal: var(--mac-teal);
+  --color-mac-cyan: var(--mac-cyan);
+  --color-mac-blue: var(--mac-blue);
+  --color-mac-indigo: var(--mac-indigo);
+  --color-mac-purple: var(--mac-purple);
+  --color-mac-pink: var(--mac-pink);
+  --color-mac-brown: var(--mac-brown);
+  --color-mac-gray: var(--mac-gray);
 }
 
 :root {
@@ -92,6 +107,20 @@
   --greyed: oklch(0.381 0.021 274.3);
   --catnip: oklch(0.867 0.056 209.06);
   --dysto: oklch(0.44 0.0223 258.37);
+  /* MAC LIGHT */
+  --mac-red: oklch(65.67% 0.257 29.05);
+  --mac-orange: oklch(78.39% 0.234 70.03);
+  --mac-yellow: oklch(90.62% 0.174 98.58);
+  --mac-green: oklch(76.84% 0.194 145.71);
+  --mac-mint: oklch(76.92% 0.182 187.71);
+  --mac-teal: oklch(73.63% 0.101 220.42);
+  --mac-cyan: oklch(78.28% 0.141 248.96);
+  --mac-blue: oklch(56.59% 0.241 264.58);
+  --mac-indigo: oklch(48.8% 0.154 295.93);
+  --mac-purple: oklch(61.45% 0.195 318.1);
+  --mac-pink: oklch(65.2% 0.255 14.79);
+  --mac-brown: oklch(61.02% 0.078 71.57);
+  --mac-gray: oklch(58.26% 0.012 276.51);
 }
 
 .dark {
@@ -126,6 +155,20 @@
   --sidebar-accent-foreground: oklch(0.925 0.006 285.9);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  /* MAC DARK */
+  --mac-red: oklch(66.28% 0.25 28.91);
+  --mac-orange: oklch(79.79% 0.222 69.94);
+  --mac-yellow: oklch(91.51% 0.17 98.31);
+  --mac-green: oklch(78.85% 0.202 145.45);
+  --mac-mint: oklch(84.24% 0.14 188.05);
+  --mac-teal: oklch(79.51% 0.108 220.51);
+  --mac-cyan: oklch(80.8% 0.144 249.36);
+  --mac-blue: oklch(60.61% 0.242 264.8);
+  --mac-indigo: oklch(51.21% 0.163 296);
+  --mac-purple: oklch(65.32% 0.208 318.23);
+  --mac-pink: oklch(71.57% 0.219 14.75);
+  --mac-brown: oklch(63.46% 0.076 71.94);
+  --mac-gray: oklch(60.89% 0.012 276.57);
 }
 
 @layer base {

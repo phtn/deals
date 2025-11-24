@@ -22,8 +22,9 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props} className='border-none!' suppressHydrationWarning>
       <SidebarHeader className=''>
         <div className='h-14.5 flex items-end justify-between px-4'>
-          <h3 className='text-base h-8 font-figtree font-semibold tracking-tight'>
-            BestDeal
+          <h3 className='md:scale-125 text-transparent bg-clip-text bg-linear-to-r from-foreground via-dysto to-foreground text-base h-10 font-major font-semibold tracking-tight leading-none'>
+            <span className='font-bone text-lg italic'>BEST</span>
+            <span className='-translate-y-[0.5px]'>deal</span>
           </h3>
         </div>
         <div

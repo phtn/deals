@@ -6,6 +6,7 @@ import {
   Geist,
   Geist_Mono as GeistMono,
   Major_Mono_Display as MajorMonoDisplay,
+  Space_Grotesk as SpaceGrotesk,
 } from 'next/font/google'
 import {type ReactNode} from 'react'
 import './globals.css'
@@ -17,6 +18,11 @@ const geistSans = Geist({
 
 const geistMono = GeistMono({
   variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
+
+const space = SpaceGrotesk({
+  variable: '--font-space',
   subsets: ['latin'],
 })
 
@@ -50,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body
-        className={`${figtree.variable} ${geistSans.variable} ${geistMono.variable} ${major.variable} ${bone.variable} antialiased`}>
+        className={`${space.variable} ${figtree.variable} ${geistSans.variable} ${geistMono.variable} ${major.variable} ${bone.variable} antialiased`}>
         <ProvidersCtxProvider>{children}</ProvidersCtxProvider>
       </body>
     </html>

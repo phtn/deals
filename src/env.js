@@ -16,7 +16,9 @@ export const env = createEnv({
     RESEND_FROM: z.string(),
 
     // GOOGLE CLOUD
-    GOOGLE_CLOUD_CREDENTIALS: z.string(),
+    GOOGLE_CLOUD_PROJECT_ID: z.string(),
+    GOOGLE_CLOUD_PRIVATE_KEY: z.string(),
+    GOOGLE_CLOUD_CLIENT_EMAIL: z.string(),
 
     // IPAPI
     IPAPI_API_KEY: z.string(),
@@ -73,7 +75,9 @@ export const env = createEnv({
     RESEND_FROM: process.env.RESEND_FROM,
 
     // GOOGLE CLOUD
-    GOOGLE_CLOUD_CREDENTIALS: process.env.GOOGLE_CLOUD_CREDENTIALS,
+    GOOGLE_CLOUD_PROJECT_ID: process.env.GOOGLE_CLOUD_PROJECT_ID,
+    GOOGLE_CLOUD_PRIVATE_KEY: process.env.GOOGLE_CLOUD_PRIVATE_KEY,
+    GOOGLE_CLOUD_CLIENT_EMAIL: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
 
     // IPAPI
     IPAPI_API_KEY: process.env.IPAPI_API_KEY,

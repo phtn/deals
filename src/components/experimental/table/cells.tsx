@@ -3,8 +3,20 @@ import {cn} from '@/lib/utils'
 import {CellContext} from '@tanstack/react-table'
 import {useMutation} from 'convex/react'
 import {useCallback, useEffect, useRef, useState, type ReactNode} from 'react'
-import {api} from '../../../../convex/_generated/api'
-import {Doc, Id} from '../../../../convex/_generated/dataModel'
+import {Doc, Id, TableNames} from '../../../../convex/_generated/dataModel'
+
+// Helper type to extract table name from Doc type
+type ExtractTableName<T> = T extends Doc<infer TN> ? TN : never
+
+// Type for mutation that accepts id and data
+type UpdateMutationArgs<T extends Doc<TableNames>> = {
+  id: Id<ExtractTableName<T>>
+  data: Partial<T>
+}
+
+// Type for mutation function reference - accepts any mutation that takes id and data
+// Using Parameters to extract the exact type that useMutation accepts
+type UpdateMutationRef = Parameters<typeof useMutation>[0]
 
 interface CellOptions<T> {
   className?: ClassName
@@ -109,27 +121,35 @@ export const booleanCell = <T, K extends keyof T>(
 /**
  * Editable status toggle cell that saves directly to Convex
  * Toggles between active/inactive (true/false) and saves immediately
+ *
+ * @param prop - The property name to toggle (e.g., 'active')
+ * @param mutationApi - The Convex mutation API path (e.g., api.documents.m.update)
+ * @param labels - Optional labels for true/false states
+ * @param className - Optional CSS classes
  */
-export const editableStatusCell = <T,>(
+export const editableStatusCell = <T extends Doc<TableNames>>(
   prop: keyof T,
+  mutationApi: UpdateMutationRef,
   labels: {trueLabel?: string; falseLabel?: string} = {},
   className?: ClassName,
 ) => {
   const EditableStatusComponent = (ctx: CellContext<T, unknown>) => {
     const [isUpdating, setIsUpdating] = useState(false)
-    const patchMutation = useMutation(api.affiliates.m.update)
+    const patchMutation = useMutation(mutationApi)
     const value = ctx.row.getValue(prop as string) as boolean
     // Access _id from the row data (Convex adds this automatically)
-    const id = (ctx.row.original as unknown as Doc<'affiliates'>)
-      ._id as Id<'affiliates'>
+    const rowData = ctx.row.original as T
+    const id = rowData._id as Id<ExtractTableName<T>>
 
     const handleToggle = useCallback(async () => {
       setIsUpdating(true)
       try {
-        await patchMutation({
+        const updateData: Partial<T> = {[prop]: !value} as Partial<T>
+        const args: UpdateMutationArgs<T> = {
           id,
-          data: {active: !value} as Partial<Doc<'affiliates'>>,
-        })
+          data: updateData,
+        }
+        await patchMutation(args)
       } catch (error) {
         console.error('Failed to update status:', error)
       } finally {
@@ -172,9 +192,15 @@ export const editableStatusCell = <T,>(
 /**
  * Editable remarks cell with inline textarea/input that saves to Convex
  * Saves on blur or Enter key (with Escape to cancel)
+ *
+ * @param prop - The property name to edit (e.g., 'remarks')
+ * @param mutationApi - The Convex mutation API path (e.g., api.documents.m.update)
+ * @param className - Optional CSS classes
+ * @param placeholder - Placeholder text when empty
  */
-export const editableRemarksCell = <T,>(
+export const editableRemarksCell = <T extends Doc<TableNames>>(
   prop: keyof T,
+  mutationApi: UpdateMutationRef,
   className?: ClassName,
   placeholder = 'Add remarks...',
 ) => {
@@ -183,10 +209,11 @@ export const editableRemarksCell = <T,>(
     const [localValue, setLocalValue] = useState('')
     const [isUpdating, setIsUpdating] = useState(false)
     const inputRef = useRef<HTMLTextAreaElement>(null)
-    const patchMutation = useMutation(api.affiliates.m.update)
+    const patchMutation = useMutation(mutationApi)
     const originalValue = (ctx.row.getValue(prop as string) as string) ?? ''
     // Access _id from the row data (Convex adds this automatically)
-    const id = (ctx.row.original as Doc<'affiliates'>)._id as Id<'affiliates'>
+    const rowData = ctx.row.original as T
+    const id = rowData._id as Id<ExtractTableName<T>>
 
     // Initialize local value when component mounts or value changes
     useEffect(() => {
@@ -209,10 +236,12 @@ export const editableRemarksCell = <T,>(
 
       setIsUpdating(true)
       try {
-        await patchMutation({
+        const updateData: Partial<T> = {[prop]: localValue} as Partial<T>
+        const args: UpdateMutationArgs<T> = {
           id,
-          data: {remarks: localValue},
-        })
+          data: updateData,
+        }
+        await patchMutation(args)
         setIsEditing(false)
       } catch (error) {
         console.error('Failed to update remarks:', error)

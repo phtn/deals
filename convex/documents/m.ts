@@ -68,3 +68,32 @@ export const removeOne = mutation({
   },
 })
 
+export const removeMany = mutation({
+  args: {ids: v.array(v.id('documents'))},
+  handler: async ({db}, {ids}) => {
+    const results = []
+    const errors = []
+    
+    for (const id of ids) {
+      try {
+        const document = await db.get(id)
+        if (!document) {
+          errors.push({id, error: 'Document not found'})
+          continue
+        }
+        await db.delete(id)
+        results.push(id)
+      } catch (error) {
+        errors.push({id, error: error instanceof Error ? error.message : 'Unknown error'})
+      }
+    }
+    
+    return {
+      deleted: results,
+      errors: errors.length > 0 ? errors : undefined,
+      deletedCount: results.length,
+      totalRequested: ids.length,
+    }
+  },
+})
+

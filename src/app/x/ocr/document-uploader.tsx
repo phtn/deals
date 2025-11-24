@@ -2,7 +2,10 @@
 
 import {Button} from '@/components/ui/button'
 import {useAuthCtx} from '@/ctx/auth'
-import {parseLTOCertificate, VehicleRegistration} from '@/lib/vision/parse-lto'
+import {Icon} from '@/lib/icons'
+import {cn} from '@/lib/utils'
+import {parseWithGemini} from '@/lib/vision/parse-gemini'
+import {VehicleRegistration} from '@/lib/vision/parse-lto'
 import {useMutation} from 'convex/react'
 import Image from 'next/image'
 import {ChangeEvent, DragEvent, FormEvent, useRef, useState} from 'react'
@@ -221,8 +224,8 @@ export function DocumentUploader({
         // Store raw text
         setRawText(data.text)
 
-        // Parse the text into structured data
-        const parsed = parseLTOCertificate(data.text)
+        // Parse the text into structured data using Gemini
+        const parsed = await parseWithGemini(data.text)
         onDataExtracted(parsed)
 
         // Update document with OCR results
@@ -276,6 +279,12 @@ export function DocumentUploader({
     }
   }
 
+  const handleBrowseFile = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
   return (
     <div className='h-2/5 flex flex-col'>
       <form onSubmit={handleSubmit} className='flex-1 flex flex-col'>
@@ -283,12 +292,12 @@ export function DocumentUploader({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
+          onClick={handleBrowseFile}
           className={`
-            flex-1 w-full border-x-[0.5px] dark:border-greyed
+            flex-1 w-full border-l-[0.33px] border-stone-400/80 dark:border-greyed
             transition-all duration-200 cursor-pointer
             flex items-center justify-center relative overflow-hidden
-            ${isDragging ? 'bg-blue-50 scale-[1.02]' : 'border-greyed/60 dark:bg-white bg-dysto/30'}
+            ${isDragging ? 'bg-blue-50 scale-[1.02]' : 'border-greyed/60 dark:bg-white'}
             ${imagePreview ? 'p-2' : 'p-8'}
             min-h-[400px]
           `}>
@@ -316,16 +325,46 @@ export function DocumentUploader({
               </div>
             </div>
           ) : (
-            <div className='text-center space-y-4'>
-              <div className='text-4xl'>📄</div>
-              <div>
-                <p className='text-lg font-semibold text-gray-700'>
-                  {isDragging
-                    ? 'Drop your document here'
-                    : 'Drag & drop your document'}
-                </p>
-                <p className='text-sm text-gray-500 mt-2'>or click to browse</p>
+            <div className='text-center space-y-5 relative size-64 aspect-square'>
+              <Icon
+                name='arc'
+                className='absolute left-0 top-0 size-8 text-stone-400/80'
+              />
+              <Icon
+                name='arc'
+                className='absolute right-0 top-0 -scale-x-100 size-8 text-stone-400/80'
+              />
+
+              <div className='flex justify-center'>
+                <Icon name='doc' className='size-12 text-blue-400' />
               </div>
+
+              <div className='space-y-2'>
+                <p className='text-xl font-semibold font-figtree tracking-tight text-stone-500'>
+                  {isDragging ? (
+                    <span>Drop your document here</span>
+                  ) : (
+                    <span>
+                      <span className='font-bone tracking-[0.032em]'>Drop</span>{' '}
+                      <span className='font-bone tracking-[0.032em]'>
+                        Zone
+                      </span>{' '}
+                    </span>
+                  )}
+                </p>
+                <p className='text-base text-stone-500 rounded-lg border border-dashed border-stone-400/80 font-medium font-space w-fit mx-auto px-4 py-1'>
+                  or click to browse
+                </p>
+              </div>
+              <Icon
+                name='arc'
+                className='absolute right-0 bottom-0 -scale-100 size-8 text-stone-400/80'
+              />
+
+              <Icon
+                name='arc'
+                className='absolute left-0 bottom-0 -scale-y-100 size-8 text-stone-400/80'
+              />
             </div>
           )}
         </div>
@@ -336,27 +375,33 @@ export function DocumentUploader({
           </div>
         )}
 
-        <div className='mt-0 flex border-t-[0.44px] border-foreground/30'>
+        <div className='mt-0 flex border-t-[0.44px] border-stone-400/80'>
           {imagePreview && (
             <Button
               size='lg'
               variant='ghost'
               onClick={handleClear}
-              className='flex-1 px-4 py-2 dark:bg-background/80 text-amber-50 hover:bg-gray-300 transition-colors rounded-none!'>
+              className='flex-1 px-4 py-2 dark:bg-background/80 text-blue-400 dark:text-amber-50 hover:bg-gray-300 transition-colors rounded-none!'>
               Clear
             </Button>
           )}
           <Button
-            type='submit'
             size='lg'
             variant='ghost'
-            disabled={!selectedFile || loading || !user}
-            className='flex-1 px-4 py-2 dark:bg-background/80 text-amber-50 hover:bg-gray-300 transition-colors rounded-none!'>
+            type={!selectedFile ? 'button' : 'submit'}
+            onClick={!selectedFile ? handleBrowseFile : undefined}
+            disabled={loading || !user}
+            className={cn(
+              'flex-1 px-4 py-2 dark:bg-background/80  text-blue-400 dark:text-amber-50 hover:bg-gray-300 transition-colors rounded-none! tracking-normal ',
+              {'text-stone-500': !selectedFile},
+            )}>
             {uploading
               ? 'Uploading...'
               : loading
                 ? 'Processing...'
-                : 'Scan Document'}
+                : !selectedFile
+                  ? 'Select a document to scan'
+                  : 'Scan Document'}
           </Button>
         </div>
       </form>

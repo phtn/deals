@@ -99,7 +99,7 @@ function SidebarProvider({
         _setOpen(cookieState)
       }
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, openProp])
 
   const toggleSidebar = React.useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
@@ -254,6 +254,7 @@ function SidebarTrigger({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const {toggleSidebar, open} = useSidebar()
+  const isMobile = useMobile()
 
   return (
     <Button
@@ -261,15 +262,19 @@ function SidebarTrigger({
       size='sq'
       variant='ghost'
       data-sidebar='trigger'
-      className={cn('text-foreground/80 hover:text-foreground', className)}
+      className={cn(
+        'text-stone-400/80 hover:text-blue-500 dark:hover:text-orange-50 dark:hover:bg-transparent/90',
+        className,
+      )}
       onClick={() => {
         toggleSidebar()
       }}>
-      {open ? (
-        <Icon name='sidebar' className='size-5' />
-      ) : (
-        <Icon name='sidebar' className='size-5 rotate-180' />
-      )}
+      <Icon
+        name={isMobile ? 'remote' : 'switch'}
+        className={cn('md:size-6 rotate-180 dark:opacity-50', {
+          'rotate-0': open,
+        })}
+      />
       <span className='sr-only'>Toggle Sidebar</span>
     </Button>
   )
