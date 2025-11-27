@@ -634,6 +634,36 @@ export const icons = {
     viewBox: '0 0 24 24',
     set: 'lets-icons',
   },
+  'user-add': {
+    symbol:
+      '<g fill="none"><circle cx="10" cy="8" r="5" fill="currentColor"/><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M19 10v6m3-3h-6"/><path fill="currentColor" d="M17.142 20.383c.462-.105.739-.585.534-1.012c-.552-1.15-1.459-2.162-2.634-2.924C13.595 15.509 11.823 15 10 15s-3.595.508-5.042 1.447c-1.175.762-2.082 1.773-2.634 2.924c-.205.427.072.907.534 1.012a32.3 32.3 0 0 0 14.284 0"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  'scan-h': {
+    symbol:
+      '<g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"><path d="M20 10V9c0-.93 0-1.395-.102-1.776a3 3 0 0 0-2.122-2.122C17.396 5 16.93 5 16 5m4 9v1c0 .93 0 1.395-.102 1.776a3 3 0 0 1-2.122 2.122C17.396 19 16.93 19 16 19m-6 0H9c-1.87 0-2.804 0-3.5-.402A3 3 0 0 1 4.402 17.5C4 16.804 4 15.87 4 14m6-9H9c-1.87 0-2.804 0-3.5.402A3 3 0 0 0 4.402 6.5C4 7.196 4 8.13 4 10"/><path stroke-linecap="round" d="M10 21V3"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  'bar-chart': {
+    symbol:
+      '<g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M19 19H5"/><path fill="currentColor" d="M11 14v-4a2 2 0 1 0-4 0v4a2 2 0 1 0 4 0m6 0V6a2 2 0 1 0-4 0v8a2 2 0 1 0 4 0"/></g>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  'chat-message': {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M20 11c0-2.809 0-4.213-.674-5.222a4 4 0 0 0-1.104-1.104C17.213 4 15.81 4 13 4h-2c-2.809 0-4.213 0-5.222.674a4 4 0 0 0-1.104 1.104C4 6.787 4 8.19 4 11s0 4.213.674 5.222a4 4 0 0 0 1.104 1.104c.881.589 2.064.663 4.222.673V18l1.106 2.211a1 1 0 0 0 1.788 0L14 18v-.001c2.158-.01 3.34-.084 4.222-.673a4 4 0 0 0 1.104-1.104C20 15.213 20 13.81 20 11M9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
+  lightning: {
+    symbol:
+      '<defs><mask id="SVGDEO4Qc9R"><g fill="none"><path fill="#fff" d="m9.556 13.323l-.12-.01c-1.528-.14-2.292-.209-2.535-.732c-.242-.522.198-1.15 1.077-2.407l3.583-5.119c.581-.83.872-1.245 1.123-1.157c.25.089.216.594.15 1.605l-.204 3.049c-.062.92-.092 1.38.172 1.69c.265.31.724.351 1.642.435l.12.01c1.528.14 2.292.209 2.535.732c.242.522-.198 1.15-1.078 2.407l-3.582 5.119c-.581.83-.872 1.245-1.123 1.157c-.25-.089-.216-.594-.15-1.605l.204-3.049c.062-.92.092-1.38-.172-1.69c-.265-.31-.724-.351-1.642-.435"/><path stroke="silver" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".25" d="M18.5 4L17 6h2l-1.5 2m-11 8L5 18h2l-1.5 2"/></g></mask></defs><path fill="currentColor" d="M0 0h24v24H0z" mask="url(#SVGDEO4Qc9R)"/>',
+    viewBox: '0 0 24 24',
+    set: 'lets-icons',
+  },
 }
 
 /*

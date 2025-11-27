@@ -2,23 +2,34 @@
 
 import {EditableCheck} from '@/app/x/ocr/check'
 import {CertificateOfRegistrationForm} from '@/app/x/ocr/cr'
-import EditableDepositSlip from '@/app/x/ocr/deposit-slip'
+import {EditableDepositSlip} from '@/app/x/ocr/deposit-slip'
 import {DocumentUploader} from '@/app/x/ocr/document-uploader'
 import EditableFundTransfer from '@/app/x/ocr/fund-transfer'
-import {VehicleRegistration} from '@/lib/vision/parse-lto'
 import {useEffect, useState} from 'react'
+import {DocType} from '../../../../../../convex/documents/d'
+import {
+  CheckFields,
+  DepositSlipFields,
+  EwalletTransferFields,
+  VehicleRegistration,
+} from '../../types'
 
-type DocumentType =
-  | 'check'
-  | 'payslip'
-  | 'deposit_slip'
-  | 'receipt'
-  | 'ewallet_transfer'
-  | 'invoice'
-  | 'cr'
-  | 'driver_license'
-  | 'passport'
-  | 'other'
+// Types are extracted from the form components
+type OCRDataByDocType = {
+  check: CheckFields
+  payslip: Record<string, unknown>
+  deposit_slip: DepositSlipFields
+  receipt: Record<string, unknown>
+  ewallet_transfer: EwalletTransferFields
+  invoice: Record<string, unknown>
+  cr: VehicleRegistration
+  driver_license: Record<string, unknown>
+  passport: Record<string, unknown>
+  other: Record<string, unknown>
+}
+
+// Union type of all possible OCR data types
+type OCRData = OCRDataByDocType[DocType]
 
 interface PageProps {
   params: Promise<{doctype: string}>
@@ -28,7 +39,8 @@ export default function Page({params}: PageProps) {
   const [resolvedParams, setResolvedParams] = useState<{
     doctype: string
   } | null>(null)
-  const [ocrData, setOcrData] = useState<VehicleRegistration | null>(null)
+
+  const [ocrData, setOcrData] = useState<OCRData | null>(null)
 
   // Resolve params promise
   useEffect(() => {
@@ -39,32 +51,24 @@ export default function Page({params}: PageProps) {
     return <div>Loading...</div>
   }
 
-  const doctype = resolvedParams.doctype as DocumentType
+  const doctype = resolvedParams.doctype as DocType
 
   const renderForm = () => {
     switch (doctype) {
       case 'check':
-        return <EditableCheck />
+        return <EditableCheck data={ocrData as CheckFields} />
       case 'deposit_slip':
         return <EditableDepositSlip />
       case 'ewallet_transfer':
         return <EditableFundTransfer />
       case 'cr':
-        return <CertificateOfRegistrationForm ocrData={ocrData} />
-      // return (
-      //   <div className='w-full min-w-0'>
-      //     <div className='flex flex-col md:flex-row space-x-0 space-y-0 w-full min-w-0'>
-      //       <div className='w-full md:shrink-0 md:w-auto min-w-0'>
-      //       </div>
-      //       <div className='w-full flex-1 px-0 overflow-scroll h-screen relative min-w-0'>
-      //         <DocumentUploader
-      //           onDataExtracted={setOcrData}
-      //           documentType='cr'
-      //         />
-      //       </div>
-      //     </div>
-      //   </div>
-      // )
+        return (
+          <CertificateOfRegistrationForm
+            ocrData={
+              doctype === 'cr' ? (ocrData as VehicleRegistration | null) : null
+            }
+          />
+        )
       default:
         // Generic form with DocumentUploader for other types
         return (

@@ -1,20 +1,10 @@
 'use client'
 
 import {useState} from 'react'
+import {DepositSlipFields} from './types'
 
-interface DepositFields {
-  date: string
-  customerName: string
-  accountNumber: string
-  cash: string
-  check: string
-  validation: string
-  subtotal: string
-  total: string
-}
-
-export default function EditableDepositSlip() {
-  const [fields, setFields] = useState<DepositFields>({
+export const EditableDepositSlip = () => {
+  const [fields, setFields] = useState<DepositSlipFields>({
     date: '',
     customerName: '',
     accountNumber: '',
@@ -28,15 +18,15 @@ export default function EditableDepositSlip() {
   const [accountType, setAccountType] = useState<
     'checking' | 'savings' | 'chase-liquid'
   >('checking')
-  const [editingField, setEditingField] = useState<keyof DepositFields | null>(
-    null,
-  )
+  const [editingField, setEditingField] = useState<
+    keyof DepositSlipFields | null
+  >(null)
 
-  const handleFieldChange = (field: keyof DepositFields, value: string) => {
+  const handleFieldChange = (field: keyof DepositSlipFields, value: string) => {
     setFields((prev) => ({...prev, [field]: value}))
   }
 
-  const handleFieldClick = (field: keyof DepositFields) => {
+  const handleFieldClick = (field: keyof DepositSlipFields) => {
     setEditingField(field)
   }
 
@@ -45,7 +35,7 @@ export default function EditableDepositSlip() {
   }
 
   const renderEditableField = (
-    field: keyof DepositFields,
+    field: keyof DepositSlipFields,
     placeholder: string,
     className = '',
   ) => {

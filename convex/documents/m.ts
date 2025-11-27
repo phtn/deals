@@ -1,4 +1,5 @@
 import {v} from 'convex/values'
+import {Id} from '../_generated/dataModel'
 import {mutation} from '../_generated/server'
 import {documentSchema} from './d'
 
@@ -19,7 +20,7 @@ export const update = mutation({
   handler: async ({db}, {id, data}) => {
     const document = await db.get(id)
     if (!document) throw new Error('Document not found')
-    
+
     return await db.patch(id, {
       ...data,
       updatedAt: Date.now(),
@@ -49,7 +50,7 @@ export const updateOcrStatus = mutation({
   handler: async ({db}, {id, status, ocrResults, ocrError}) => {
     const document = await db.get(id)
     if (!document) throw new Error('Document not found')
-    
+
     return await db.patch(id, {
       ocrStatus: status,
       ocrResults: ocrResults || document.ocrResults,
@@ -61,10 +62,19 @@ export const updateOcrStatus = mutation({
 
 export const removeOne = mutation({
   args: {id: v.id('documents')},
-  handler: async ({db}, {id}) => {
-    const document = await db.get(id)
+  handler: async (ctx, {id}) => {
+    const document = await ctx.db.get(id)
     if (!document) throw new Error('Document not found')
-    return await db.delete(id)
+    const storageId = document.fileUrl as Id<'_storage'>
+    const file = await ctx.db
+      .query('files')
+      .withIndex('by_body', (q) => q.eq('body', storageId))
+      .unique()
+    if (file !== null) {
+      await ctx.db.delete(file._id)
+    }
+    await ctx.db.delete(id)
+    await ctx.storage.delete(storageId)
   },
 })
 
@@ -73,7 +83,7 @@ export const removeMany = mutation({
   handler: async ({db}, {ids}) => {
     const results = []
     const errors = []
-    
+
     for (const id of ids) {
       try {
         const document = await db.get(id)
@@ -84,10 +94,13 @@ export const removeMany = mutation({
         await db.delete(id)
         results.push(id)
       } catch (error) {
-        errors.push({id, error: error instanceof Error ? error.message : 'Unknown error'})
+        errors.push({
+          id,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        })
       }
     }
-    
+
     return {
       deleted: results,
       errors: errors.length > 0 ? errors : undefined,
@@ -96,4 +109,3 @@ export const removeMany = mutation({
     }
   },
 })
-

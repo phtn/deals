@@ -8,6 +8,7 @@ import {
   Row,
   Table,
 } from '@tanstack/react-table'
+import {FunctionReference} from 'convex/server'
 import {AnimatePresence, motion} from 'motion/react'
 import {
   ReactNode,
@@ -107,6 +108,24 @@ export interface ActionConfig<T> {
     variant?: 'default' | 'destructive'
     shortcut?: string
   }>
+  /**
+   * Icon name for the row actions button
+   */
+  icon?: IconName
+  /**
+   * Convex mutation API reference for deleting a row (e.g., api.affiliates.m.removeOne)
+   */
+  deleteMutation?: FunctionReference<'mutation', 'public', {[key: string]: unknown}, unknown>
+  /**
+   * Field name to use as the ID for deletion (e.g., 'uid', '_id', 'id')
+   * Defaults to checking common fields: '_id', 'uid', 'id'
+   */
+  idField?: keyof T | string
+  /**
+   * Key name for the mutation arguments (e.g., 'uid' or 'id')
+   * Defaults to idField if provided, otherwise 'id'
+   */
+  deleteArgsKey?: string
 }
 
 // Generic column factory function
@@ -159,6 +178,7 @@ export const createColumns = <T,>(
     actionConfig &&
     (actionConfig.viewFn ||
       actionConfig.deleteFn ||
+      actionConfig.deleteMutation ||
       actionConfig.customActions?.length)
   ) {
     columns.push({
@@ -174,9 +194,13 @@ export const createColumns = <T,>(
       cell: ({row}) => (
         <RowActions
           row={row}
+          icon={actionConfig.icon}
           viewFn={actionConfig.viewFn}
           deleteFn={actionConfig.deleteFn}
           customActions={actionConfig.customActions}
+          deleteMutation={actionConfig.deleteMutation}
+          idField={actionConfig.idField}
+          deleteArgsKey={actionConfig.deleteArgsKey}
         />
       ),
       size: 0,

@@ -2,6 +2,13 @@ import {useAuthCtx} from '@/ctx/auth'
 import {useMutation} from 'convex/react'
 import {ChangeEvent, DragEvent, useRef, useState} from 'react'
 import {api} from '../../convex/_generated/api'
+import {DocType} from '../../convex/documents/d'
+
+export interface OCRResults {
+  text: string
+  confidence: number
+  fields: Record<string, unknown>
+}
 
 type FileFormat =
   | 'image/jpeg'
@@ -18,7 +25,7 @@ type FileFormat =
   | 'xlsx'
 
 interface UseDocumentUploaderOptions {
-  documentType?: string
+  documentType?: DocType
   onDocumentCreated?: (documentId: string) => void
 }
 
@@ -100,7 +107,10 @@ export function useDocumentUploader(options: UseDocumentUploaderOptions = {}) {
     }
   }
 
-  const uploadFileAndCreateDocument = async (file: File) => {
+  const uploadFileAndCreateDocument = async (
+    file: File,
+    ocrResults?: OCRResults,
+  ) => {
     if (!user) {
       throw new Error('User must be authenticated to upload documents')
     }
@@ -131,15 +141,23 @@ export function useDocumentUploader(options: UseDocumentUploaderOptions = {}) {
       format: fileFormat,
     })
 
-    // Step 4: Create document entry
+    // Step 4: Create document entry with OCR results if provided
     const documentId = await createDocument({
       data: {
-        documentType: documentType as any,
+        documentType,
         fileUrl: storageId,
         fileName: file.name,
         fileSize: file.size,
         mimeType: file.type,
-        ocrStatus: 'pending',
+        ocrStatus: ocrResults ? 'completed' : 'pending',
+        ocrResults: ocrResults
+          ? {
+              text: ocrResults.text,
+              confidence: ocrResults.confidence,
+              fields: ocrResults.fields,
+              processedAt: Date.now(),
+            }
+          : undefined,
         uploadedBy: user.uid,
         uploadedByName: user.displayName || user.email || 'Unknown',
         createdAt: Date.now(),

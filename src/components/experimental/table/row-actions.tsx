@@ -17,8 +17,8 @@ import {Icon, IconName} from '@/lib/icons'
 import {cn} from '@/lib/utils'
 import {Row} from '@tanstack/react-table'
 import {useMutation} from 'convex/react'
+import {FunctionReference} from 'convex/server'
 import {useCallback, useState} from 'react'
-import {api} from '../../../../convex/_generated/api'
 import {TButton} from './buttons'
 
 interface ISubMenuItem {
@@ -39,16 +39,40 @@ interface CustomAction<T> {
 
 interface Props<T> {
   row: Row<T>
+  icon?: IconName
   viewFn?: VoidFunction
   deleteFn?: (row: T) => void
   customActions?: CustomAction<T>[]
+  /**
+   * Convex mutation API reference for deleting a row (e.g., api.affiliates.m.removeOne)
+   */
+  deleteMutation?: FunctionReference<
+    'mutation',
+    'public',
+    {[key: string]: unknown},
+    unknown
+  >
+  /**
+   * Field name to use as the ID for deletion (e.g., 'uid', '_id', 'id')
+   * Defaults to checking common fields: '_id', 'uid', 'id'
+   */
+  idField?: keyof T | string
+  /**
+   * Key name for the mutation arguments (e.g., 'uid' or 'id')
+   * Defaults to idField if provided, otherwise 'id'
+   */
+  deleteArgsKey?: string
 }
 
 export const RowActions = <T,>({
   row,
+  icon = 'more-v',
   viewFn,
   deleteFn,
   customActions = [],
+  deleteMutation,
+  idField,
+  deleteArgsKey,
 }: Props<T>) => {
   const {copy} = useCopy({timeout: 2000})
   const [loading, setLoading] = useState(false)
@@ -84,12 +108,61 @@ export const RowActions = <T,>({
     },
   ]
 
-  const rowItem = useMutation(api.affiliates.m.removeOne)
-  const handleDeleteRow = useCallback(() => {
-    const uid = row.getValue('uid') as string
+  // Get the mutation hook if deleteMutation is provided
+  const deleteRowMutation = useMutation(
+    deleteMutation as FunctionReference<'mutation'>,
+  )
+
+  // Determine the ID field to use
+  const getIdValue = useCallback((): string | undefined => {
+    if (idField) {
+      const value = row.getValue(idField as string)
+      return value ? String(value) : undefined
+    }
+
+    // Try common ID fields in order of preference
+    const commonFields: (keyof T | string)[] = ['_id', 'uid', 'id']
+    for (const field of commonFields) {
+      try {
+        const value = row.getValue(field as string)
+        if (value !== null && value !== undefined) {
+          return String(value)
+        }
+      } catch {
+        // Field doesn't exist, try next
+        continue
+      }
+    }
+
+    return undefined
+  }, [row, idField])
+
+  // Determine the args key name for the mutation
+  const getArgsKey = useCallback((): string => {
+    if (deleteArgsKey) return deleteArgsKey
+    if (idField) return String(idField)
+    return 'id'
+  }, [deleteArgsKey, idField])
+
+  const handleDeleteRow = useCallback(async () => {
+    if (!deleteRowMutation) return
+
+    const idValue = getIdValue()
+    if (!idValue) {
+      console.error('Unable to determine ID field for row deletion')
+      return
+    }
+
+    const argsKey = getArgsKey()
     setLoading(true)
-    rowItem({uid})
-  }, [rowItem, row])
+    try {
+      await deleteRowMutation({[argsKey]: idValue} as {[key: string]: unknown})
+    } catch (error) {
+      console.error('Failed to delete row:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [deleteRowMutation, getIdValue, getArgsKey])
 
   return (
     <DropdownMenu>
@@ -101,7 +174,7 @@ export const RowActions = <T,>({
           aria-label='More'>
           <Icon
             solid
-            name={loading ? 'spinners-ring' : 'settings'}
+            name={loading ? 'spinners-ring' : icon}
             className={cn('text-muted-foreground size-4', {
               'dark:text-amber-400': loading,
             })}
@@ -139,12 +212,14 @@ export const RowActions = <T,>({
         {customActions.length > 0 && <DropdownMenuSeparator />}
 
         <DropdownMenuGroup className='space-y-1 tracking-tight font-figtree'>
-          <DropdownMenuItem asChild className='h-12 rounded-2xl px-4'>
-            <button onClick={handleView} className='w-full'>
-              <Icon name='eye' className='size-4 mr-2' />
-              <span>View</span>
-            </button>
-          </DropdownMenuItem>
+          {viewFn && (
+            <DropdownMenuItem asChild className='h-12 rounded-2xl px-4'>
+              <button onClick={handleView} className='w-full'>
+                <Icon name='eye' className='size-4 mr-2' />
+                <span>View</span>
+              </button>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={handleDeleteRow}
             className='h-12 rounded-2xl px-4'>

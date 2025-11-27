@@ -1,32 +1,37 @@
+import type {ParsedData, ParsedDataByDocumentType} from '@/app/x/ocr/types'
 import {parseWithGemini} from '@/lib/vision/parse-gemini'
-import {VehicleRegistration} from '@/lib/vision/parse-lto'
 import {useState} from 'react'
+import {DocType} from '../../convex/documents/d'
 
-interface UseGeminiParsingReturn {
-  parseText: (text: string) => Promise<VehicleRegistration>
+interface UseGeminiParsingReturn<T> {
+  parseText: (text: string) => Promise<T>
   loading: boolean
   error: string | null
-  parsedData: VehicleRegistration | null
+  parsedData: T | null
 }
 
-export function useGeminiParsing(): UseGeminiParsingReturn {
+interface UseGeminiParsingOptions {
+  documentType: DocType
+}
+
+export function useGeminiParsing({documentType}: UseGeminiParsingOptions) {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const [parsedData, setParsedData] = useState<VehicleRegistration | null>(null)
+  const [parsedData, setParsedData] = useState<ParsedData | null>(null)
 
-  const parseText = async (text: string): Promise<VehicleRegistration> => {
+  const parseText = async (
+    text: string,
+  ): Promise<ParsedDataByDocumentType[typeof documentType]> => {
     setLoading(true)
     setError(null)
 
     try {
-      const parsed = await parseWithGemini(text)
+      const parsed = await parseWithGemini(text, documentType)
       setParsedData(parsed)
       return parsed
     } catch (err) {
       const errorMessage =
-        err instanceof Error
-          ? err.message
-          : 'Failed to parse text with Gemini'
+        err instanceof Error ? err.message : 'Failed to parse text with Gemini'
       setError(errorMessage)
       throw err
     } finally {
@@ -39,6 +44,5 @@ export function useGeminiParsing(): UseGeminiParsingReturn {
     loading,
     error,
     parsedData,
-  }
+  } as UseGeminiParsingReturn<ParsedData>
 }
-

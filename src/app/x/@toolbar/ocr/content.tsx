@@ -10,7 +10,7 @@ type ViewType =
   | 'settings'
   | 'scan-doc'
   | 'scan-id'
-  | 'add-new'
+  | 'create'
 
 const toolbar: Record<ViewType, IconName> = {
   stats: 'chart',
@@ -18,7 +18,7 @@ const toolbar: Record<ViewType, IconName> = {
   'scan-doc': 'scan-doc',
   'scan-id': 'scan-user',
   settings: 'tweak',
-  'add-new': 'add-square',
+  create: 'add-square',
 }
 
 const routeMap: Record<ViewType, string> = {
@@ -27,7 +27,7 @@ const routeMap: Record<ViewType, string> = {
   settings: '/x/ocr/settings',
   'scan-doc': '/x/ocr/scan-doc',
   'scan-id': '/x/ocr/scan-doc', // Map scan-id to scan-doc for now
-  'add-new': '/x/ocr/add-new',
+  create: '/x/ocr/create',
 }
 
 export const Content = () => {

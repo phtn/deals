@@ -1,51 +1,26 @@
 'use server'
 
+import {ParsedDataByDocumentType} from '@/app/x/ocr/types'
 import {createClient} from '@/lib/gemini'
-import {VehicleRegistration} from './parse-lto'
+import {DocType} from '../../../convex/documents/d'
+import {instructions} from '../gemini/instructions'
 
 /**
  * Parses raw text using Gemini API to extract structured vehicle registration data
  * @param rawText - The raw text to parse (typically from OCR)
  * @returns A promise that resolves to a VehicleRegistration object
  */
-export async function parseWithGemini(
-  rawText: string,
-): Promise<VehicleRegistration> {
+export async function parseWithGemini(rawText: string, documentType: DocType) {
   const client = await createClient()
+
+  const systemInstruction = instructions[documentType]
+  type ParsedData = ParsedDataByDocumentType[typeof documentType]
 
   const response = await client.models.generateContent({
     model: 'gemini-2.5-flash',
     contents: rawText,
     config: {
-      systemInstruction: `
-      [INSTRUCTION]::
-      You will be given a block of raw text extracted from a vehicle registration certificate (LTO certificate).
-      This text contains keys and values, but:
-      - They are not ordered
-      - Every key and value appears on its own line
-      - Keys and values may be separated by other unrelated lines, or follow loose patterns
-      - Some lines may be noise or random text
-
-      Your task is to:
-      1. Identify all valid keys related to vehicle registration
-      2. Identify all valid values
-      3. Match each key to its correct value as accurately as possible based on wording, context, semantic closeness, domain knowledge, and any patterns present in the dataset
-      4. Ignore unrelated or noise lines
-
-      Extract the following fields if present:
-      - Office Information: fieldOffice, officeCode, dateOfIssue, certificateNumber
-      - Vehicle Information: plateNumber, engineNumber, chassisNumber, vin, fileNumber, vehicleType, vehicleCategory, makeBrand, color, typeOfFuel, classification, bodyType, series, yearModel, yearRebuilt, pistonDisplacement, grossWeight, netWeight, maxPower, passengerCapacity
-      - Owner Information: ownerName, ownerAddress, encumberedTo
-      - Registration Details: detailsOfFirstRegistration, remarks, orNumber, orDate, amount, registrantSignature, by, chiefOfOffice, chiefOfOfficeSignature, note
-
-      Output the final result as a JSON object matching the VehicleRegistration interface.
-      Use camelCase for field names (e.g., "plateNumber" not "PLATE NO").
-      If multiple values seem to fit a key, choose the one with the highest semantic confidence.
-      If no value can reasonably be matched to a key, omit that field (do not include "N/A").
-      Only include fields that have valid values.
-
-      IMPORTANT: Return ONLY valid JSON. Do not include any markdown formatting, code blocks, or explanatory text.
-      `,
+      systemInstruction,
     },
   })
 
@@ -70,12 +45,12 @@ export async function parseWithGemini(
   }
 
   try {
-    const parsed = JSON.parse(jsonText) as VehicleRegistration
+    const parsed = JSON.parse(jsonText) as ParsedData
     return parsed
   } catch (error) {
     // If JSON parsing fails, log error and return empty object
     console.error('Failed to parse Gemini response as JSON:', error)
     console.error('Response text:', responseText)
-    return {} as VehicleRegistration
+    return {} as ParsedData
   }
 }

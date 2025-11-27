@@ -8,6 +8,7 @@ import * as React from 'react'
 // Initial data state
 const INITIAL_DATA = {
   fieldOffice: '',
+  chiefOffice: '',
   officeCode: '',
   crNo: '',
   date: '',
@@ -39,6 +40,8 @@ const INITIAL_DATA = {
   orDate: '',
   amount: '',
   remarks: '',
+  by: '',
+  office: '',
 }
 
 type FormData = typeof INITIAL_DATA
@@ -82,6 +85,8 @@ function mapOcrDataToForm(ocrData: VehicleRegistration): Partial<FormData> {
     orDate: ocrData.orDate || '',
     amount: ocrData.amount || '',
     remarks: ocrData.remarks || '',
+    by: ocrData.by || '',
+    office: ocrData.office || '',
   }
 }
 
@@ -103,29 +108,29 @@ export function CertificateOfRegistrationForm({
   }
 
   return (
-    <div className='portrait:h-[88lvh] overflow-y-scroll w-full md:max-w-6xl md:px-6 px-3 bg-white text-black shadow-2xl overflow-scroll print:shadow-none min-w-0 border-t-[0.33px] border-stone-400/80'>
+    <div className='portrait:h-[88lvh] overflow-y-scroll w-full md:max-w-5xl md:px-6 px-3 bg-white text-black shadow-2xl overflow-scroll print:shadow-none min-w-0 border-t-[0.33px] border-stone-400/80'>
       {/* Header Section */}
       <div className='flex flex-col items-center p-4 relative'>
         <div className='absolute md:left-8 -left-4 -top-3  md:top-8 scale-50 md:scale-100'>
-          <Image src='/svg/dot.svg' alt='dot' width={64} height={64} />
+          <Image src='/svg/dot.svg' alt='dot' width={50} height={50} />
         </div>
         <div className='absolute md:right-8 -right-4 -top-3  md:top-8 scale-50 md:scale-100'>
-          <Image src='/svg/lto.svg' alt='lto' width={64} height={64} />
+          <Image src='/svg/lto.svg' alt='lto' width={50} height={50} />
         </div>
 
         <div className='text-center space-y-0 -mt-2 md:mt-1'>
           <h4 className='text-xs md:text-sm font-space md:font-semibold tracking-wide text-stone-500'>
             Republic of the Philippines
           </h4>
-          <h2 className='md:block hidden md:text-base text-sm md:font-semibold uppercase tracking-wide'>
+          <h2 className='md:block hidden text-sm md:font-semibold uppercase tracking-wide'>
             Department of Transportation
           </h2>
-          <h1 className='md:block hidden md:text-base text-sm md:font-semibold uppercase tracking-wider'>
+          <h1 className='md:block hidden text-sm md:font-semibold uppercase tracking-wider'>
             Land Transportation Office
           </h1>
         </div>
 
-        <div className='portrait:hidden mt-4 w-full flex justify-center md:max-w-lg md:grid grid-cols-[auto_1fr] gap-1 md:gap-x-4 gap-y-1 text-sm'>
+        <div className='portrait:hidden mt-2 w-full flex justify-center md:max-w-lg md:grid grid-cols-[auto_1fr] gap-1 md:gap-x-4 gap-y-1 text-sm'>
           <div className='text-xs md:font-medium md:text-right'>
             <span className='portrait:hidden pr-1'>Field </span>Office
           </div>
@@ -149,9 +154,12 @@ export function CertificateOfRegistrationForm({
 
       {/* Title Bar */}
       <div className='md:mb-2 flex flex-row items-center justify-between'>
-        <div className='md:flex hidden font-semibold uppercase tracking-wider bg-black text-white p-2 print:bg-black print:text-white'>
+        <div className='hidden md:flex items-center justify-center dark:bg-background bg-foreground text-white px-3 py-1.5 text-sm font-bold w-fit uppercase'>
           Certificate of Registration
         </div>
+        {/*<div className='md:flex hidden font-bold uppercase tracking-wider bg-black text-white text-sm px-2 py-1 print:bg-black print:text-white'>
+
+        </div>*/}
         <div className='md:hidden text-sm font-medium uppercase tracking-tighter bg-black text-white py-0.5 px-1.5 print:bg-black print:text-white'>
           CR
         </div>
@@ -159,12 +167,12 @@ export function CertificateOfRegistrationForm({
           <span className='text-sm md:text-base font-medium md:font-bold'>
             CR No.
           </span>
-          <span className='text-base md:text-xl font-bold text-red-600 px-2 rounded-sm tracking-widest'>
-            {data.crNo}
+          <span className='text-base md:text-xl font-mono font-bold text-red-600 px-2 rounded-sm tracking-widest'>
+            {data.crNo.toLowerCase().replace('cr', '').trim()}
           </span>
         </div>
         <div className='flex items-center justify-center gap-2 text-xs m:text-sm md:w-64'>
-          <span>Date</span>
+          <span>DATE:</span>
           <input
             className='bg-transparent font-bold w-24 text-center focus:outline-none'
             value={data.date}
@@ -291,14 +299,14 @@ export function CertificateOfRegistrationForm({
           label="Owner's Name"
           value={data.ownerName}
           onChange={updateField('ownerName')}
-          className='md:col-span-4 min-h-[50px] items-start'
+          className='md:col-span-4 items-start w-full'
         />
 
         <EditableCell
           label="Owner's Address"
           value={data.ownerAddress}
           onChange={updateField('ownerAddress')}
-          className='md:col-span-4 min-h-[50px] whitespace-normal items-start'
+          className='md:col-span-4 whitespace-normal items-start'
         />
 
         <EditableCell
@@ -333,9 +341,11 @@ export function CertificateOfRegistrationForm({
         />
         {/* Amount Row - Using a custom cell for layout consistency with the image */}
         <div className='md:col-span-4 bg-white p-2'>
-          <span className='text-xs font-bold'>REMARKS</span>
+          <span className='h-12 font-semibold text-[10px] dark:text-background opacity-60 font-figtree uppercase tracking-wider select-none'>
+            remarks:
+          </span>
           <textarea
-            className='w-full h-11 resize-none border-none outline-none text-sm uppercase font-mono p-2'
+            className='w-full h-8 border resize-none border-none outline-none text-sm uppercase font-mono p-2'
             placeholder='Enter remarks here...'
             value={data.remarks}
             onChange={(e) => updateField('remarks')(e.target.value)}
@@ -351,16 +361,18 @@ export function CertificateOfRegistrationForm({
           </div>
         </div>
 
-        <div className='flex-1 flex flex-col items-center justify-end pt-12 relative border-l dark:border-background border-foreground/60 col-span-3'>
-          <span className='absolute top-4 left-0 font-bold text-sm px-4'>
-            BY:
+        <div className='flex-1 flex flex-col items-center justify-end pt-9 relative border-l dark:border-background border-foreground/60 col-span-3'>
+          <span className='absolute h-12 top-2 left-0 px-4 font-semibold text-[10px] dark:text-background opacity-60 font-figtree uppercase tracking-wider select-none'>
+            by:
           </span>
+          {/*<span className='font-bold text-sm'>
+          </span>*/}
           {/* Signature Placeholder */}
           <div className='w-full text-center'>
-            <div className='font-bold text-lg uppercase border-t border-black pt-1 w-full text-center'>
-              Atty. Vigor D. Mendoza II
+            <div className='font-bold text-lg min-h-6 uppercase border-t border-black pt-1 w-full text-center'>
+              {data.by}
             </div>
-            <div className='text-sm'>Assistant Secretary</div>
+            <div className='text-sm'>{data.office}</div>
           </div>
         </div>
       </div>

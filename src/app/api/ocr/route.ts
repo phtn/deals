@@ -14,10 +14,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Extract text using Vision API
-    const text = await extractTextFromBuffer(buffer)
+    // Extract text and confidence using Vision API
+    const {text, confidence} = await extractTextFromBuffer(buffer)
 
-    return NextResponse.json({text})
+    return NextResponse.json({text, confidence})
   } catch (error) {
     console.error('OCR error:', error)
     return NextResponse.json({error: 'Failed to process image'}, {status: 500})

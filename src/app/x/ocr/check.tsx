@@ -2,6 +2,7 @@
 
 import {Icon} from '@/lib/icons'
 import {useState} from 'react'
+import {CheckFields} from './types'
 
 interface EditableFieldProps {
   value: string
@@ -41,16 +42,14 @@ function EditableField({
   )
 }
 
-export function EditableCheck() {
-  const [checkNumber] = useState('0001')
-  const [date, setDate] = useState('')
-  const [payTo, setPayTo] = useState('')
-  const [amount, setAmount] = useState('')
-  const [memo, setMemo] = useState('')
+interface EditableCheckProps {
+  data?: CheckFields
+}
 
+export function EditableCheck({data}: EditableCheckProps) {
   return (
     <div className='w-full max-w-5xl'>
-      <div className='bg-linear-to-br from-cyan-200/80 via-cyan-200 to-cyan-100 rounded-sm shadow-2xl p-8 relative overflow-hidden border-b-16 border-white'>
+      <div className='bg-linear-to-br from-cyan-200/80 via-cyan-200 to-cyan-100 rounded-sm shadow-xl p-8 relative overflow-hidden border-b-16 border-white'>
         {/* Decorative diagonal line */}
         <div className='absolute top-0 right-0 w-96 h-96 bg-cyan-100/50 transform rotate-45 translate-x-48 -translate-y-48' />
 
@@ -61,16 +60,16 @@ export function EditableCheck() {
               <div className='flex items-center gap-2 mb-2'>
                 <Icon name='nut' className='size-6' />
                 <h1 className='text-2xl font-bold text-gray-800 font-bone'>
-                  BANK NAME
+                  {data?.bank_address ? data?.bank_address.substring(0, 3) : ''}
+                  {data?.bank_info ? data?.bank_info.substring(0, 3) : ''}
                 </h1>
               </div>
               <div className='text-xs text-gray-700 leading-tight'>
-                <div>Address</div>
-                <div>+63 </div>
+                <div>{data?.bank_address ? data?.bank_info : 'Address'}</div>
               </div>
             </div>
             <div className='text-xl font-major font-bold text-gray-800'>
-              {checkNumber}
+              {data?.check_number ?? data?.checkNumber ?? '0000'}
             </div>
           </div>
 
@@ -80,8 +79,8 @@ export function EditableCheck() {
               DATE:
             </span>
             <EditableField
-              value={date}
-              onChange={setDate}
+              value={data?.date ?? ''}
+              onChange={(value) => console.log(value)}
               className='ps-4 w-40 text-sm'
               placeholder='MM/DD/YYYY'
             />
@@ -96,8 +95,8 @@ export function EditableCheck() {
               ORDER OF:
             </div>
             <EditableField
-              value={payTo}
-              onChange={setPayTo}
+              value={data?.payee ?? data?.pay_to ?? ''}
+              onChange={(value) => console.log(value)}
               className='ps-24 w-full text-sm'
               placeholder='Name of payee'
             />
@@ -109,8 +108,8 @@ export function EditableCheck() {
             <div className='flex items-center gap-2'>
               <span className='text-2xl font-bold text-gray-800'>$</span>
               <EditableField
-                value={amount}
-                onChange={setAmount}
+                value={data?.amount_numeric ?? data?.amount ?? ''}
+                onChange={(value) => console.log(value)}
                 className='w-32 text-xl font-semibold'
                 placeholder='0.00'
               />
@@ -128,8 +127,8 @@ export function EditableCheck() {
                   MEMO:
                 </span>
                 <EditableField
-                  value={memo}
-                  onChange={setMemo}
+                  value={data?.memo ?? data?.notes ?? ''}
+                  onChange={(value) => console.log(value)}
                   className='ps-4 flex-1 text-sm'
                   placeholder='Optional memo'
                 />
@@ -145,9 +144,8 @@ export function EditableCheck() {
 
           {/* Bottom routing numbers */}
           <div className='hidden _flex items-center justify-center gap-8 text-sm font-mono text-gray-800'>
-            <span>|: 897566093 |:</span>
-            <span>90732578</span>
-            <span>73829</span>
+            <span>{data?.micr_line ?? ''}</span>
+            <span>{data?.brstn ?? ''}</span>
           </div>
         </div>
       </div>

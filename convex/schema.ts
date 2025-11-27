@@ -17,5 +17,5 @@ export default defineSchema({
     .index('by_status', ['ocrStatus'])
     .index('by_type', ['documentType'])
     .index('by_uploader', ['uploadedBy']),
-  files: defineTable(fileSchema),
+  files: defineTable(fileSchema).index('by_body', ['body']),
 })

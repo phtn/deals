@@ -40,8 +40,8 @@ export const Content = () => {
   }
 
   return (
-    <div className='w-full min-w-0 md:size-full space-y-6 px-2 sm:px-4 md:px-6 pb-8 overflow-x-hidden'>
+    <main className='relative w-full md:min-w-0 pb-20 md:pb-0 p-4'>
       {renderView()}
-    </div>
+    </main>
   )
 }

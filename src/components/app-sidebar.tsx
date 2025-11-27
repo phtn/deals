@@ -15,14 +15,16 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import {useAppTheme} from '@/hooks/use-theme'
+import {Icon, IconName} from '@/lib/icons'
 import {cn} from '@/lib/utils'
+import Link from 'next/link'
 
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props} className='border-none!' suppressHydrationWarning>
       <SidebarHeader className=''>
         <div className='h-14.5 flex items-end justify-between px-4'>
-          <h3 className='md:scale-125 text-transparent bg-clip-text bg-linear-to-r from-foreground via-dysto to-foreground text-base h-10 font-major font-semibold tracking-tight leading-none'>
+          <h3 className='md:scale-125 text-transparent bg-clip-text bg-linear-to-r from-indigo-950 dark:from-foreground dark:via-dysto via-blue-300 to-foreground text-base h-10 font-major font-semibold tracking-tight leading-none'>
             <span className='font-bone text-lg italic'>BEST</span>
             <span className='-translate-y-[0.5px]'>deal</span>
           </h3>
@@ -37,10 +39,8 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         {/* We only show the first parent group */}
         <SidebarGroup>
-          <SidebarGroupLabel className='pl-3 h-10'>
-            <h3 className='text-lg tracking-tight font-medium text-gray-900 dark:text-gray-100'>
-              {data.navMain[0]?.title}
-            </h3>
+          <SidebarGroupLabel className='pl-4 text-xs font-figtree tracking-widest uppercase text-sidebar-foreground/50'>
+            {data.navMain[0]?.title}
           </SidebarGroupLabel>
           <SidebarGroupContent className='py-2'>
             <SidebarMenu>
@@ -57,26 +57,6 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
-              <a
-                data-active='true'
-                className='relative flex flex-row items-center tracking-tight gap-2 rounded-lg p-2 ps-4 text-start wrap:anywhere [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary/10 text-fd-primary'
-                href='/docs/components/action-search-bar'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  height={8}
-                  width={8}
-                  stroke='currentColor'
-                  strokeWidth='1'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  className='lucide lucide-command'
-                  aria-hidden='true'>
-                  <path d='M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3'></path>
-                </svg>
-                Action Search Bar
-              </a>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -84,7 +64,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         {/* Secondary Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className='pl-4 text-xs tracking-widest uppercase text-sidebar-foreground/50'>
+          <SidebarGroupLabel className='pl-4 text-xs font-figtree tracking-widest uppercase text-sidebar-foreground/50'>
             {data.navMain[1]?.title}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -113,14 +93,15 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
 
 const MenuContent = (item: NavItem) => {
   return (
-    <a
+    <Link
       href={item.url}
       suppressHydrationWarning
       className=' font-figtree group/menu-content hover:bg-foreground/10 rounded-lg flex items-center px-4 h-10'>
+      <Icon name={item.icon as IconName} className='mr-3 size-4' />
       <span className='group-hover/menu-content:text-foreground tracking-tighter text-sm font-medium text-foreground/80'>
         {item.title}
       </span>
-    </a>
+    </Link>
   )
 }
 
@@ -134,52 +115,52 @@ const data: Record<string, NavGroup[]> = {
   ],
   navMain: [
     {
-      title: '',
+      title: 'Operations',
       url: '#',
       items: [
         {
           title: 'Overview',
           url: '/x',
-          icon: 'chat',
+          icon: 'bar-chart',
           isActive: true,
         },
         {
           title: 'Affiliates',
           url: '/x/affiliates',
-          icon: 'chevron-right',
+          icon: 'user-add',
+        },
+        {
+          title: 'Inquiries',
+          url: '/x/settings',
+          icon: 'chat-message',
+        },
+        {
+          title: 'OCR',
+          url: '/x/ocr',
+          icon: 'scan-h',
         },
         {
           title: 'Leads',
-          url: '/x',
-          icon: 'chat',
+          url: '/x/settings',
+          icon: 'lightning',
           isActive: true,
         },
 
         {
-          title: 'Scans',
-          url: '/x',
-          icon: 'chat',
-        },
-        {
-          title: 'OCR Upload',
-          url: '/x/ocr',
-          icon: 'chat',
-        },
-        {
           title: 'Master',
-          url: '/x',
-          icon: 'chat',
+          url: '/x/settings',
+          icon: 'table',
         },
       ],
     },
     {
       title: 'Preferences',
-      url: '/x',
+      url: '/x/settings',
       items: [
         {
           title: 'Settings',
           url: '/x/settings',
-          icon: 'chat',
+          icon: 'nut',
         },
       ],
     },

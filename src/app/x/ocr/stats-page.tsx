@@ -244,7 +244,9 @@ export const StatsPage = () => {
     <div
       ref={containerRef}
       className='p-4 overflow-scroll border-t-[0.33px] border-stone-400/80 dark:border-dysto'>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 min-w-0'>
+      <div
+        suppressHydrationWarning
+        className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 min-w-0'>
         {/* Total Documents */}
         {isVisible('totalDocuments') && (
           <Card className='bg-terminal border-terminal  transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>

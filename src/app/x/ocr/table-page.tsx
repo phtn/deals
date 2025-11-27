@@ -1,6 +1,7 @@
 'use client'
 
 import {DataTable} from '@/components/experimental/table'
+import {TButton} from '@/components/experimental/table/buttons'
 import {
   dateCell,
   editableRemarksCell,
@@ -10,7 +11,6 @@ import {
 import {ColumnConfig} from '@/components/experimental/table/create-columns'
 import {RowActions} from '@/components/experimental/table/row-actions'
 import {HyperTableProps} from '@/components/ui/hyper-table'
-import {useToggle} from '@/hooks/use-toggle'
 import {Icon} from '@/lib/icons'
 import {formatDate} from '@/utils/date'
 import {FilterFn} from '@tanstack/react-table'
@@ -18,10 +18,13 @@ import {useMutation, useQuery} from 'convex/react'
 import {useCallback, useEffect, useMemo, useState, useTransition} from 'react'
 import {api} from '../../../../convex/_generated/api'
 import {Doc, Id} from '../../../../convex/_generated/dataModel'
+import {DocumentViewerDrawer} from './document-viewer'
 
 export const DataTablePage = () => {
   const [isPending, startTransition] = useTransition()
-  const [, setSelectedItem] = useState<Doc<'documents'> | null>(null)
+  const [selectedItem, setSelectedItem] = useState<Doc<'documents'> | null>(
+    null,
+  )
 
   const docs = useQuery(api.documents.q.getAll)
   const removeMany = useMutation(api.documents.m.removeMany)
@@ -44,25 +47,9 @@ export const DataTablePage = () => {
     [docs, isPending],
   )
 
-  const {on: open, toggle} = useToggle()
-
-  const onOpenChange = useCallback(
-    (open: boolean) => {
-      if (!open) {
-        toggle()
-        setSelectedItem(null)
-      }
-    },
-    [toggle],
-  )
-
-  const handleView = useCallback(
-    (item: Doc<'documents'>) => {
-      setSelectedItem(item)
-      toggle()
-    },
-    [toggle],
-  )
+  const handleOptions = useCallback((item: Doc<'documents'>) => {
+    setSelectedItem(item)
+  }, [])
 
   const groupFilter: FilterFn<Doc<'documents'>> = (row, id, filterValue) => {
     const value = row.getValue(id)
@@ -209,6 +196,28 @@ export const DataTablePage = () => {
           enableSorting: true,
         },
         {
+          id: 'view',
+          accessorKey: 'ocrResults',
+          header: (
+            <div className='w-fit flex justify-center px-1.5'>
+              <Icon name='eye' className='size-4 md:size-5 opacity-80' />
+            </div>
+          ),
+          cell: ({row}) => (
+            <TButton
+              size='sq'
+              variant='ghost'
+              className='shadow-none rounded-lg cursor-pointer hover:bg-terminal/10'
+              aria-label='View document'
+              onClick={() => handleOptions(row.original)}>
+              <Icon name='eye' className='text-muted-foreground size-4' />
+            </TButton>
+          ),
+          size: 0,
+          enableHiding: false,
+          enableSorting: false,
+        },
+        {
           id: 'actions',
           accessorKey: 'uploadedBy',
           header: (
@@ -217,29 +226,48 @@ export const DataTablePage = () => {
             </div>
           ),
           cell: ({row}) => (
-            <RowActions row={row} viewFn={() => handleView(row.original)} />
+            <RowActions
+              icon='settings'
+              row={row}
+              viewFn={() => handleOptions(row.original)}
+              deleteMutation={api.documents.m.removeOne}
+              idField='_id'
+              deleteArgsKey='id'
+            />
           ),
           size: 0,
           enableHiding: false,
           enableSorting: false,
         },
       ] as ColumnConfig<Doc<'documents'>>[],
-    [handleView],
+    [handleOptions],
   )
 
   const tableProps = useMemo(
     () =>
       ({
         title: 'Documents',
-        viewer: {open, onOpenChange},
+        viewer: {open: false, onOpenChange: () => {}},
         data: data ?? [],
         loading,
         columnConfigs,
         deleteIdAccessor: '_id',
         onDeleteSelected: handleDeleteSelected,
       }) as HyperTableProps<Doc<'documents'>, Id<'documents'>>,
-    [data, loading, open, onOpenChange, columnConfigs, handleDeleteSelected],
+    [data, loading, columnConfigs, handleDeleteSelected],
   )
 
-  return <DataTable {...tableProps} />
+  return (
+    <>
+      <DataTable {...tableProps} />
+      <DocumentViewerDrawer
+        document={selectedItem}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedItem(null)
+          }
+        }}
+      />
+    </>
+  )
 }

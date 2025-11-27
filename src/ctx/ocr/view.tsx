@@ -8,7 +8,7 @@ export type ViewType =
   | 'settings'
   | 'scan-doc'
   | 'scan-id'
-  | 'add-new'
+  | 'create'
 
 interface ViewContextType {
   view: ViewType

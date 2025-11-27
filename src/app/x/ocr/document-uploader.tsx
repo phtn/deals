@@ -1,33 +1,32 @@
 'use client'
 
+import {Lens} from '@/components/lens'
 import {Button} from '@/components/ui/button'
 import {useDocumentUploader} from '@/hooks/use-document-uploader'
 import {useGeminiParsing} from '@/hooks/use-gemini-parsing'
 import {useOCRProcessing} from '@/hooks/use-ocr-processing'
+import {useToggle} from '@/hooks/use-toggle'
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
-import {VehicleRegistration} from '@/lib/vision/parse-lto'
-import {useMutation} from 'convex/react'
 import Image from 'next/image'
 import {FormEvent, useState} from 'react'
 import toast from 'react-hot-toast'
-import {api} from '../../../../convex/_generated/api'
+import {DocType} from '../../../../convex/documents/d'
 
-interface DocumentUploaderProps {
-  onDataExtracted: (data: VehicleRegistration | null) => void
+interface DocumentUploaderProps<T> {
+  onDataExtracted: (data: T | null) => void
   onDocumentCreated?: (documentId: string) => void
-  documentType?: string
+  documentType?: DocType
 }
 
-export function DocumentUploader({
+export function DocumentUploader<T>({
   onDataExtracted,
   onDocumentCreated,
   documentType = 'cr',
-}: DocumentUploaderProps) {
+}: DocumentUploaderProps<T>) {
+  const {on: hovering, setOn: setHovering} = useToggle()
   const [loading, setLoading] = useState<boolean>(false)
   const [rawText, setRawText] = useState<string>('')
-
-  const updateOcrStatus = useMutation(api.documents.m.updateOcrStatus)
 
   const uploader = useDocumentUploader({
     documentType,
@@ -35,7 +34,7 @@ export function DocumentUploader({
   })
 
   const {extractText: extractOCRText, loading: ocrLoading} = useOCRProcessing()
-  const {parseText, loading: geminiLoading} = useGeminiParsing()
+  const {parseText, loading: geminiLoading} = useGeminiParsing({documentType})
 
   const handleSubmit = async (
     e?: FormEvent<HTMLFormElement>,
@@ -57,47 +56,26 @@ export function DocumentUploader({
     uploader.setError('')
 
     try {
-      // Step 1: Upload file and create document
-      const {documentId} = await uploader.uploadFileAndCreateDocument(
+      // Step 1: Extract text using OCR
+      const {text: extractedText, confidence} = await extractOCRText(
         uploader.selectedFile,
       )
 
-      toast.success('Document uploaded successfully')
+      // Store raw text
+      setRawText(extractedText)
 
-      // Step 2: Process OCR
-      try {
-        const extractedText = await extractOCRText(uploader.selectedFile)
+      // Step 2: Parse the text into structured data using Gemini
+      const parsed = await parseText(extractedText)
+      onDataExtracted(parsed as T)
 
-        // Store raw text
-        setRawText(extractedText)
+      // Step 3: Upload file and create document with OCR results
+      await uploader.uploadFileAndCreateDocument(uploader.selectedFile, {
+        text: extractedText,
+        confidence,
+        fields: parsed as Record<string, unknown>,
+      })
 
-        // Parse the text into structured data using Gemini
-        const parsed = await parseText(extractedText)
-        onDataExtracted(parsed)
-
-        // Update document with OCR results
-        await updateOcrStatus({
-          id: documentId,
-          status: 'completed',
-          ocrResults: {
-            text: extractedText,
-            confidence: 0.95, // You can calculate this from OCR response if available
-            fields: parsed,
-            processedAt: Date.now(),
-          },
-        })
-
-        toast.success('OCR processing completed')
-      } catch (ocrError) {
-        // Update document with OCR failure status
-        await updateOcrStatus({
-          id: documentId,
-          status: 'failed',
-          ocrError:
-            ocrError instanceof Error ? ocrError.message : 'Unknown OCR error',
-        })
-        throw ocrError // Re-throw to be caught by outer catch
-      }
+      toast.success('Document processed and uploaded successfully')
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to process document'
@@ -119,19 +97,23 @@ export function DocumentUploader({
   const isLoading = loading || ocrLoading || geminiLoading || uploader.uploading
 
   return (
-    <div className='h-2/5 flex flex-col border-t-[0.33px] border-stone-400/80'>
+    <div className='h-3/7 flex flex-col border-t-[0.33px] border-stone-400/80'>
       <form onSubmit={handleSubmit} className='flex-1 flex flex-col'>
         <div
           onDragOver={uploader.handleDragOver}
           onDragLeave={uploader.handleDragLeave}
           onDrop={uploader.handleDrop}
-          onClick={uploader.handleBrowseFile}
+          onClick={
+            uploader.imagePreview === null
+              ? uploader.handleBrowseFile
+              : undefined
+          }
           className={`
             flex-1 w-full border-l-[0.33px] border-stone-400/80 dark:border-greyed
-            transition-all duration-200 cursor-pointer
+            transition-all duration-200 p-2
             flex items-center justify-center relative overflow-hidden
             ${uploader.isDragging ? 'bg-blue-50 scale-[1.02]' : 'border-greyed/60 dark:bg-white'}
-            ${uploader.imagePreview ? 'p-2' : 'p-8'}
+            ${uploader.imagePreview === null ? 'cursor-pointer' : ''}
             min-h-[400px]
           `}>
           <input
@@ -139,23 +121,27 @@ export function DocumentUploader({
             type='file'
             accept='image/*'
             onChange={uploader.handleFileChange}
-            className='hidden'
+            className={cn('hidden', {
+              'pointer-events-none': uploader.imagePreview === null,
+            })}
           />
 
           {uploader.imagePreview ? (
-            <div className='relative w-full h-full flex items-center justify-center group'>
-              <Image
-                src={uploader.imagePreview}
-                alt='Document preview'
-                fill
-                className='object-contain rounded-lg shrink-0'
-                priority
-              />
-              <div className='absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center rounded-lg'>
-                <span className='opacity-0 group-hover:opacity-100 text-white font-semibold text-sm bg-black/70 px-4 py-2 rounded-lg backdrop-blur-sm'>
-                  Click to change image
-                </span>
-              </div>
+            <div className='relative w-full h-full flex items-center justify-center group overflow-auto'>
+              <Lens hovering={hovering} setHovering={setHovering}>
+                <Image
+                  fill
+                  priority
+                  src={uploader.imagePreview}
+                  alt='Document preview'
+                  className='object-cover rounded-sm shrink-0'
+                />
+                {/*<div className='absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center rounded-lg'>
+                  <span className='opacity-0 group-hover:opacity-100 text-white font-semibold text-sm bg-black/70 px-4 py-2 rounded-lg backdrop-blur-sm'>
+                    Click to change image
+                  </span>
+                </div>*/}
+              </Lens>
             </div>
           ) : (
             <div className='text-center space-y-5 relative size-64 aspect-square'>

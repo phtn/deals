@@ -1,8 +1,9 @@
 'use client'
 
 import {Input} from '@/components/ui/input'
+import {useToggle} from '@/hooks/use-toggle'
 import {cn} from '@/lib/utils'
-import {HTMLAttributes, useEffect, useRef, useState} from 'react'
+import {HTMLAttributes, useEffect, useRef} from 'react'
 
 interface EditableCellProps
   extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -20,7 +21,7 @@ export function EditableCell({
   type = 'text',
   ...props
 }: EditableCellProps) {
-  const [isEditing, setIsEditing] = useState(false)
+  const {on: isEditing, toggle: toggleEdit} = useToggle()
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -29,25 +30,21 @@ export function EditableCell({
     }
   }, [isEditing])
 
-  const handleBlur = () => {
-    setIsEditing(false)
-  }
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      setIsEditing(false)
+      toggleEdit()
     }
   }
 
   return (
     <div
       className={cn(
-        'relative flex min-h-[50px] flex-col justify-between bg-white px-2 py-1 text-xs hover:bg-neutral-50 cursor-text group transition-colors',
+        'w-full relative flex min-h-[45px] flex-col justify-between bg-white px-2 py-1 text-xs hover:bg-neutral-50 cursor-text group transition-colors',
         className,
       )}
-      onClick={() => setIsEditing(true)}
+      onClick={toggleEdit}
       {...props}>
-      <span className='font-semibold text-[10px] dark:text-background opacity-60 font-figtree uppercase tracking-wider select-none'>
+      <span className='font-semibold text-[10px] dark:text-background opacity-60 font-figtree uppercase tracking-wide select-none'>
         {label}
       </span>
 
@@ -57,12 +54,15 @@ export function EditableCell({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onBlur={handleBlur}
+          onBlur={toggleEdit}
           onKeyDown={handleKeyDown}
           className='absolute inset-x-0 bottom-0 focus-within:outline-none md:h-10 w-full dark:bg-transparent text-center rounded-none px-2 border-none dark:border-transparent font-semibold uppercase dark:text-background outline-none focus:ring-0 focus:ring-blue-500/20'
         />
       ) : (
-        <div className='flex items-end justify-center pb-0.5 md:max-w-[100ch]'>
+        <div
+          className={cn('flex items-end justify-center pb-0.5 ', {
+            'md:max-w-[100ch]': value !== undefined || value !== null,
+          })}>
           <span
             className={cn(
               'text-sm font-semibold',

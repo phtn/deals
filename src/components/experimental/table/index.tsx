@@ -88,7 +88,7 @@ export const DataTable = <T, I>({
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: '_creationTime',
-      desc: false,
+      desc: true,
     },
   ])
 
@@ -154,7 +154,7 @@ export const DataTable = <T, I>({
   const selectedRows = useMemo(
     () => table.getSelectedRowModel().rows ?? [],
 
-    /// eslint-ignore-next-line @typescript-eslint/exhaustive-deps
+    /// eslint-ignore-next-line react-hooks/exhaustive-deps
     [table, rowSelection],
   )
 

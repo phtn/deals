@@ -3,12 +3,23 @@
 import {Button} from '@/components/ui/button'
 import {Toolbar} from '@/components/ui/toolbar'
 import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip'
-import {useAffiliateView} from '@/ctx/affiliate/view'
+import {useAffiliateViewSafe} from '@/ctx/affiliate/view'
 import {Icon} from '@/lib/icons'
 import {cn} from '@/lib/utils'
+import {usePathname} from 'next/navigation'
 
 const AffiliatesToolbar = () => {
-  const {view, setView} = useAffiliateView()
+  const pathname = usePathname()
+  const isAffiliatesRoute = pathname?.includes('/x/affiliates')
+  
+  // Use safe hook that returns defaults when provider is not available
+  // This prevents errors during route transitions when parallel routes persist
+  const {view, setView} = useAffiliateViewSafe()
+  
+  // If not on affiliates route, render empty toolbar to avoid showing wrong controls
+  if (!isAffiliatesRoute) {
+    return <Toolbar />
+  }
 
   return (
     <Toolbar>

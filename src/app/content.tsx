@@ -212,8 +212,8 @@ const SilverButton = ({
       size='sq'
       onClick={onClick}
       variant='ghost'
-      className='rounded-full overflow-visible size-24 aspect-square border-none'>
-      <div className='size-22 bg-neutral-900 rounded-full'>
+      className='rounded-full overflow-visible size-16 md:size-24 aspect-square border-none'>
+      <div className='bg-neutral-900 rounded-full'>
         <LiquidMetal
           speed={speed}
           colorBack='rgba(100, 100, 100, 0)'
@@ -238,7 +238,7 @@ const SilverButton = ({
 
       <span
         suppressHydrationWarning
-        className='text-4xl text-white drop-shadow-xs drop-shadow-neutral-950 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+        className='text-2xl md:text-4xl text-white drop-shadow-xs drop-shadow-neutral-950 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
         {children as ReactNode}
       </span>
     </Button>

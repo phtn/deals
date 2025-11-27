@@ -40,8 +40,7 @@ export interface VehicleRegistration {
   amount?: string
   registrantSignature?: string
   by?: string
-  chiefOfOffice?: string
-  chiefOfOfficeSignature?: string
+  office?: string
   note?: string
 }
 
@@ -201,7 +200,7 @@ function extractGroupedFields(
   let valueOffset = 0
   for (let i = 0; i < labelGroup.length; i++) {
     const fieldName = getFieldNameForLabel(labelGroup[i])
-    
+
     // Find the next valid value (skip sub-labels and empty lines)
     while (valuesStartIndex + valueOffset < lines.length) {
       const valueIndex = valuesStartIndex + valueOffset
@@ -232,7 +231,7 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Special handling for YEAR REBUILT - accept 4-digit year OR N/A
       if (fieldName === 'yearRebuilt') {
         if (value.toUpperCase() !== 'N/A' && !/^(19|20)\d{2}$/.test(value)) {
@@ -240,7 +239,7 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Special handling for VIN - accept alphanumeric OR N/A
       if (fieldName === 'vin') {
         if (value.toUpperCase() !== 'N/A' && !/^[A-Z0-9]+$/.test(value)) {
@@ -248,7 +247,7 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Validate PLATE NO - typically 6-8 chars, alphanumeric, shorter than engine numbers
       if (fieldName === 'plateNumber') {
         if (/^\d{2}\/\d{2}\/\d{4}$/.test(value) || value.length > 10) {
@@ -256,23 +255,30 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Validate ENGINE NO - typically longer alphanumeric (10+ chars)
       if (fieldName === 'engineNumber') {
-        if (/^\d{2}\/\d{2}\/\d{4}$/.test(value) || (value.length < 10 && /^[A-Z0-9]+$/.test(value))) {
+        if (
+          /^\d{2}\/\d{2}\/\d{4}$/.test(value) ||
+          (value.length < 10 && /^[A-Z0-9]+$/.test(value))
+        ) {
           valueOffset++
           continue
         }
       }
-      
+
       // Validate O.R. NO - should be a long number (15+ digits typically)
       if (fieldName === 'orNumber') {
-        if (/^\d{2}\/\d{2}\/\d{4}$/.test(value) || /^PHP/i.test(value) || value.length < 12) {
+        if (
+          /^\d{2}\/\d{2}\/\d{4}$/.test(value) ||
+          /^PHP/i.test(value) ||
+          value.length < 12
+        ) {
           valueOffset++
           continue
         }
       }
-      
+
       // Validate O.R. DATE - should be a date format
       if (fieldName === 'orDate') {
         if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
@@ -280,7 +286,7 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Validate AMOUNT - should contain PHP or be a number with commas/decimals
       if (fieldName === 'amount') {
         if (!/^PHP/i.test(value) && !/^[\d,]+\.?\d*$/.test(value)) {
@@ -288,7 +294,7 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Validate SERIES - should be text, not numbers
       if (fieldName === 'series') {
         if (/^\d+$/.test(value)) {
@@ -296,7 +302,7 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Validate GROSS WEIGHT and NET WEIGHT - should be numbers
       if (fieldName === 'grossWeight' || fieldName === 'netWeight') {
         if (!/^\d+$/.test(value) && value.toUpperCase() !== 'N/A') {
@@ -304,7 +310,7 @@ function extractGroupedFields(
           continue
         }
       }
-      
+
       // Found a valid value - one value per label, ignore multi-line
       result.set(labelGroup[i], value)
       valueOffset++
@@ -342,10 +348,12 @@ export function parseLTOCertificate(rawText: string): VehicleRegistration {
       while (j < lines.length && isLabel(lines[j])) {
         const fieldName = getFieldNameForLabel(lines[j])
         // Stop grouping if we hit office information fields (Date, Field Office, Office Code, CR No)
-        if (fieldName === 'dateOfIssue' || 
-            fieldName === 'fieldOffice' || 
-            fieldName === 'officeCode' || 
-            fieldName === 'certificateNumber') {
+        if (
+          fieldName === 'dateOfIssue' ||
+          fieldName === 'fieldOffice' ||
+          fieldName === 'officeCode' ||
+          fieldName === 'certificateNumber'
+        ) {
           break
         }
         labelGroup.push(lines[j])
@@ -585,7 +593,7 @@ export function parseLTOCertificate(rawText: string): VehicleRegistration {
   if (!data.by) extractSingleField('BY:', 'by')
 
   // Chief of Office
-  if (!data.chiefOfOffice) {
+  if (!data.by) {
     const chiefLineIndex = normalizedLines.findIndex((line) =>
       line.includes('CHIEF OF OFFICE'),
     )
@@ -601,7 +609,7 @@ export function parseLTOCertificate(rawText: string): VehicleRegistration {
           line.length > 3 &&
           !line.toUpperCase().match(/^(SIGNATURE|DATE|BY|NOTE)/)
         ) {
-          data.chiefOfOffice = line
+          data.by = line
           break
         }
       }
@@ -642,7 +650,7 @@ export function parseLTOCertificate(rawText: string): VehicleRegistration {
   if (data.typeOfFuel) {
     const fuelType = data.typeOfFuel.toUpperCase()
     const isElectric = fuelType.includes('ELECTRIC') || fuelType.includes('EV')
-    
+
     // If fuel type is not electric (GAS, PETROL, DIESEL, etc.), always set maxPower to N/A
     if (!isElectric) {
       data.maxPower = 'N/A'
@@ -652,25 +660,25 @@ export function parseLTOCertificate(rawText: string): VehicleRegistration {
   // Clean up values - remove "N/A" and empty strings
   // But keep maxPower as N/A if fuel type is not electric
   // And keep yearRebuilt as N/A (it's a valid value)
-  const shouldKeepMaxPowerAsNA = 
-    data.typeOfFuel && 
-    !data.typeOfFuel.toUpperCase().includes('ELECTRIC') && 
+  const shouldKeepMaxPowerAsNA =
+    data.typeOfFuel &&
+    !data.typeOfFuel.toUpperCase().includes('ELECTRIC') &&
     !data.typeOfFuel.toUpperCase().includes('EV') &&
     data.maxPower === 'N/A'
 
   Object.keys(data).forEach((key) => {
     const value = data[key as keyof VehicleRegistration]
-    
+
     // Keep maxPower as N/A for non-electric vehicles
     if (key === 'maxPower' && shouldKeepMaxPowerAsNA) {
       return // Don't delete it
     }
-    
+
     // Keep yearRebuilt as N/A (it's a valid value indicating vehicle wasn't rebuilt)
     if (key === 'yearRebuilt' && value === 'N/A') {
       return // Don't delete it - it's valid N/A
     }
-    
+
     if (
       value === 'N/A' ||
       value === 'n/a' ||

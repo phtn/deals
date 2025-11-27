@@ -17,6 +17,10 @@ export const WrappedContent = ({children, toolbar}: WrappedContentProps) => {
   const {state, togglePanel} = useSettingsPanel()
   const endpoint = usePathname().split('/').pop()
   const isExpanded = useMemo(() => state === 'expanded', [state])
+  const normalizedEndpoint = useMemo(
+    () => endpoint?.split('-').join(' '),
+    [endpoint],
+  )
   return (
     <Wrapper isPanelExpanded={isExpanded}>
       <div className='px-2 sm:px-3 py-3.5 flex items-center justify-between min-w-0'>
@@ -24,10 +28,10 @@ export const WrappedContent = ({children, toolbar}: WrappedContentProps) => {
         <header
           id='mobile-navbar'
           className={cn(
-            'flex flex-1 w-full whitespace-nowrap capitalize text-lg dark:text-orange-200 font-semibold md:px-2 lg:px-3 font-bone',
+            'flex flex-1 w-full whitespace-nowrap capitalize text-lg dark:text-orange-200 md:px-2 lg:px-3 font-bone font-medium',
             {uppercase: endpoint === 'ocr'},
           )}>
-          {endpoint?.split('-').join(' ')}
+          {normalizedEndpoint === 'x' ? 'Overview' : normalizedEndpoint}
         </header>
         {toolbar}
         <Button

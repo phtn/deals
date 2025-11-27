@@ -3,7 +3,7 @@ import {z} from 'zod'
 export const QrCodeSchema = z.object({
   id: z.string().optional(),
   ident: z.string().optional(),
-  url: z.string().url(),
+  url: z.url(),
   active: z.boolean(),
   createdBy: z.string().optional(),
   createdAt: z.number(),
@@ -34,7 +34,7 @@ export type IAffiliate = z.infer<typeof AffiliateSchema>
 
 export const AffiliateFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('A valid email is required'),
+  email: z.email('A valid email is required'),
   phone: z.string().min(1, 'Phone number is required'),
   tags: z.string().optional(),
   group: z.string().optional(),

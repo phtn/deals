@@ -1,4 +1,4 @@
-import {v} from 'convex/values'
+import {Infer, v} from 'convex/values'
 
 export const documentType = v.union(
   v.literal('check'),
@@ -12,6 +12,8 @@ export const documentType = v.union(
   v.literal('passport'),
   v.literal('other'),
 )
+
+export type DocType = Infer<typeof documentType>
 
 export const ocrStatus = v.union(
   v.literal('pending'),
@@ -54,3 +56,5 @@ export const documentSchema = v.object({
   createdAt: v.number(),
   updatedAt: v.number(),
 })
+
+

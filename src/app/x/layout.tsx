@@ -7,7 +7,6 @@ import {AffiliateCtxProvider} from '@/ctx/affiliate'
 import {AffiliateViewProvider} from '@/ctx/affiliate/view'
 import {MetricsProvider} from '@/ctx/ocr/metrics'
 import {OCRViewProvider} from '@/ctx/ocr/view'
-import {ConvexProvider} from '@/lib/convex/provider'
 import {usePathname} from 'next/navigation'
 import {ReactNode} from 'react'
 import {WrappedContent} from './wrapper'
@@ -19,36 +18,36 @@ export interface DashboardLayoutProps {
 
 export default function Layout({children, toolbar}: DashboardLayoutProps) {
   const pathname = usePathname()
-  const isAffiliatesRoute = pathname?.includes('/affiliates')
-  const isOCRRoute = pathname?.includes('/ocr')
+  const isAffiliatesRoute = pathname?.includes('/x/affiliates')
+  const isOCRRoute = pathname?.includes('/x/ocr')
 
-  const content = (
-    <ConvexProvider>
-      <AffiliateCtxProvider>
-        <SidebarProvider>
-          <AppSidebar />
-          <SettingsPanelProvider>
-            <SidebarInset className='group/sidebar-inset'>
-              <WrappedContent toolbar={toolbar}>{children}</WrappedContent>
-              <SettingsPanel />
-            </SidebarInset>
-          </SettingsPanelProvider>
-        </SidebarProvider>
-      </AffiliateCtxProvider>
-    </ConvexProvider>
+  const baseContent = (
+    <SidebarProvider>
+      <AppSidebar />
+      <SettingsPanelProvider>
+        <SidebarInset className='group/sidebar-inset'>
+          <WrappedContent toolbar={toolbar}>{children}</WrappedContent>
+          <SettingsPanel />
+        </SidebarInset>
+      </SettingsPanelProvider>
+    </SidebarProvider>
   )
 
   if (isAffiliatesRoute) {
-    return <AffiliateViewProvider>{content}</AffiliateViewProvider>
+    return (
+      <AffiliateCtxProvider>
+        <AffiliateViewProvider>{baseContent}</AffiliateViewProvider>
+      </AffiliateCtxProvider>
+    )
   }
 
   if (isOCRRoute) {
     return (
       <OCRViewProvider>
-        <MetricsProvider>{content}</MetricsProvider>
+        <MetricsProvider>{baseContent}</MetricsProvider>
       </OCRViewProvider>
     )
   }
 
-  return content
+  return baseContent
 }

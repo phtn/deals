@@ -1,6 +1,7 @@
 'use client'
 
 import {ThemeHotkey} from '@/components/theme-hotkey'
+import {ConvexProvider} from '@/lib/convex/provider'
 import {FirebaseProvider} from '@/lib/firebase/provider'
 import {ThemeProvider} from 'next-themes'
 import {createContext, useContext, type ReactNode} from 'react'
@@ -22,21 +23,23 @@ const ProvidersCtxProvider = ({children}: ProvidersProviderProps) => {
     <ProvidersCtx value={null}>
       <FirebaseProvider>
         <AuthProvider>
-          <ThemeProvider
-            enableSystem
-            attribute='class'
-            enableColorScheme
-            defaultTheme='system'
-            disableTransitionOnChange>
-            <div
-              className={`bg-background h-screen w-screen overflow-hidden  selection:bg-sky-300/80 dark:selection:text-zinc-800 selection:text-foreground font-sans`}>
-              {children}
+          <ConvexProvider>
+            <ThemeProvider
+              enableSystem
+              attribute='class'
+              enableColorScheme
+              defaultTheme='system'
+              disableTransitionOnChange>
+              <div
+                className={`bg-background h-screen w-screen overflow-hidden  selection:bg-sky-300/80 dark:selection:text-zinc-800 selection:text-foreground font-sans`}>
+                {children}
 
-              <ThemeHotkey />
-            </div>
+                <ThemeHotkey />
+              </div>
 
-            <Toasts />
-          </ThemeProvider>
+              <Toasts />
+            </ThemeProvider>
+          </ConvexProvider>
         </AuthProvider>
       </FirebaseProvider>
     </ProvidersCtx>
