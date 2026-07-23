@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {useSFX} from './use-sfx'
 
 interface UseSequenceReturn {
@@ -20,27 +20,48 @@ export const useSequence = (): UseSequenceReturn => {
   const [message, setMessage] = useState<string>('Sequence Challenge')
   const [isCorrect, setIsCorrect] = useState<boolean>(false)
 
+  // Use refs to always have access to current values inside callbacks
+  const currentStepRef = useRef<number>(currentStep)
+  const isResettingRef = useRef<boolean>(false)
+
+  // Keep ref in sync with state
+  currentStepRef.current = currentStep
+
   const {sfxDarbuka: darbuka} = useSFX({interrupt: true})
 
-  const generateSequence = (): void => {
+  const generateSequence = useCallback((): void => {
     setSequence(generateShuffledSequence())
     setCurrentStep(1)
+    currentStepRef.current = 1
     setIsCorrect(false)
     setMessage('Sequence Challenge')
-  }
+    isResettingRef.current = false
+  }, [])
 
   const handleClick = useCallback(
     (num: number) => () => {
+      // Prevent clicks during reset
+      if (isResettingRef.current) return
+
       darbuka({playbackRate: num})
-      if (num === currentStep) {
-        if (currentStep === 4) {
+
+      const step = currentStepRef.current
+
+      if (num === step) {
+        if (step === 4) {
           setMessage('OK')
           setIsCorrect(true)
         } else {
-          setCurrentStep(currentStep + 1)
-          setMessage(`Next: ${currentStep + 1}`)
+          const nextStep = step + 1
+          currentStepRef.current = nextStep
+          setCurrentStep(nextStep)
+          setMessage(`Next: ${nextStep}`)
         }
       } else {
+        // Prevent multiple resets from queuing
+        if (isResettingRef.current) return
+        isResettingRef.current = true
+
         setMessage('Reloading ...')
         darbuka({playbackRate: 1.75})
         setTimeout(() => {
@@ -48,7 +69,7 @@ export const useSequence = (): UseSequenceReturn => {
         }, 500)
       }
     },
-    [currentStep, darbuka],
+    [darbuka, generateSequence],
   )
 
   return {

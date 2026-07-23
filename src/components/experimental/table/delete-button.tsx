@@ -51,7 +51,7 @@ export const DeleteButton = <T, I>({
       onClick={handleDelete}
       disabled={disabled || !hasSelection}>
       <Icon
-        name={loading ? 'spinners-ring' : 'close'}
+        name={loading ? 'spinner-ring' : 'close'}
         className={cn('md:size-5 size-4 text-mac-red dark:text-red-500', {
           'opacity-50': disabled || !hasSelection,
         })}

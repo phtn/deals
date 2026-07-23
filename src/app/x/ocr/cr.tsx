@@ -1,9 +1,9 @@
 'use client'
 
 import {EditableCell} from '@/components/ui/editable-cell'
-import {VehicleRegistration} from '@/lib/vision/parse-lto'
 import Image from 'next/image'
 import * as React from 'react'
+import {VehicleRegistration} from './types'
 
 // Initial data state
 const INITIAL_DATA = {

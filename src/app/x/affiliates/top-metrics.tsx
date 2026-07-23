@@ -1,8 +1,8 @@
 'use client'
 
 import {Card} from '@/components/ui/card'
+import {Icon} from '@/lib/icons'
 import {useQuery} from 'convex/react'
-import {Activity, Gauge, TrendingUp, Users} from 'lucide-react'
 import {useMemo} from 'react'
 import {api} from '../../../../convex/_generated/api'
 import MiniChart from './mini-chart'
@@ -45,51 +45,28 @@ export const Metrics = () => {
     )
   }
 
-  const circumference = 2 * Math.PI * 20
-  const activePercentage = metrics.activePercentage
-  const strokeDasharray = `${(activePercentage / 100) * circumference} ${circumference}`
-
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0'>
-      <Card className='bg-[#1a1f2e] border-[#1a1f2e] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-        <div className='flex items-start justify-between mb-3'>
-          <div className='p-2 bg-[#242938] rounded-lg'>
-            <Users className='w-5 h-5 text-cyan-400' />
-          </div>
+      <Card className='bg-neutral-100 transition-all duration-300 p-3 sm:p-4 md:p-4 min-w-0'>
+        <div className='flex items-start justify-between'>
+          <Icon name='user-profile' className='text-cyan-500' />
+          <span className='text-3xl font-poly'>
+            {metrics.total.toLocaleString()}
+          </span>
         </div>
-        <div className='space-y-1'>
-          <div className='flex items-baseline gap-2'>
-            <span className='text-3xl font-bold text-white'>
-              {metrics.total.toLocaleString()}
-            </span>
-            <span className='text-sm text-gray-400'>affiliates</span>
-          </div>
-          <p className='text-sm text-gray-400'>Total Affiliates</p>
-        </div>
-        <div className='mt-4 h-12'>
+        <div className='mt-0'>
           <MiniChart data={chartData} color='#06b6d4' />
         </div>
       </Card>
 
-      <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+      <Card className='bg-neutral-100 transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
         <div className='flex items-start justify-between mb-3'>
-          <div className='p-2 bg-[#242938] rounded-lg'>
-            <Activity className='w-5 h-5 text-orange-400' />
-          </div>
-          <div className='text-xs text-gray-400'>
-            {metrics.inactive} inactive
-          </div>
+          <Icon name='user-profile' className='text-orange-400' />
+          <span className='text-3xl font-poly'>
+            {metrics.active.toLocaleString()}
+          </span>
         </div>
-        <div className='space-y-1'>
-          <div className='flex items-baseline gap-2'>
-            <span className='text-3xl font-bold text-white'>
-              {metrics.active.toLocaleString()}
-            </span>
-            <span className='text-sm text-gray-400'>active</span>
-          </div>
-          <p className='text-sm text-gray-400'>Active Affiliates</p>
-        </div>
-        <div className='mt-4 h-1 bg-[#2a3142] rounded-full overflow-hidden'>
+        <div className='mt-0 h-1 rounded-full overflow-hidden'>
           <div
             className='h-full bg-linear-to-r from-orange-500 to-red-500 transition-all duration-700'
             style={{width: `${metrics.activePercentage}%`}}
@@ -97,95 +74,16 @@ export const Metrics = () => {
         </div>
       </Card>
 
-      <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
+      <Card className='bg-neutral-100 transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
         <div className='flex items-start justify-between mb-3'>
-          <div className='p-2 bg-[#242938] rounded-lg'>
-            <Gauge className='w-5 h-5 text-blue-400' />
-          </div>
-          <div className='relative inline-flex'>
-            <svg width='48' height='48' className='transform -rotate-90'>
-              <circle
-                cx='24'
-                cy='24'
-                r='20'
-                stroke='#2a3142'
-                strokeWidth='4'
-                fill='none'
-              />
-              <circle
-                cx='24'
-                cy='24'
-                r='20'
-                stroke='#3b82f6'
-                strokeWidth='4'
-                fill='none'
-                strokeDasharray={strokeDasharray}
-                strokeLinecap='round'
-                className='transition-all duration-700'
-              />
-            </svg>
-          </div>
-        </div>
-        <div className='space-y-1'>
-          <div className='flex items-baseline gap-2'>
-            <span className='text-3xl font-bold text-white'>
-              {metrics.activePercentage}
-            </span>
+          <Icon name='user-profile' className='text-orange-400' />
+
+          <span className='text-3xl font-poly'>
+            <span>{metrics.activePercentage}</span>
             <span className='text-sm text-gray-400'>%</span>
-          </div>
-          <p className='text-sm text-gray-400'>Active Rate</p>
+          </span>
         </div>
-      </Card>
-
-      <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-        <div className='flex items-start justify-between mb-3'>
-          <div className='p-2 bg-[#242938] rounded-lg'>
-            <TrendingUp className='w-5 h-5 text-green-400' />
-          </div>
-        </div>
-        <div className='space-y-1'>
-          <div className='flex items-baseline gap-2'>
-            <span className='text-3xl font-bold text-white'>
-              {metrics.totalRewardPoints.toLocaleString()}
-            </span>
-            <span className='text-sm text-gray-400'>points</span>
-          </div>
-          <p className='text-sm text-gray-400'>Total Reward Points</p>
-        </div>
-      </Card>
-
-      <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-        <div className='flex items-start justify-between mb-3'>
-          <div className='p-2 bg-[#242938] rounded-lg'>
-            <Users className='w-5 h-5 text-purple-400' />
-          </div>
-        </div>
-        <div className='space-y-1'>
-          <div className='flex items-baseline gap-2'>
-            <span className='text-3xl font-bold text-white'>
-              {metrics.totalReferrals.toLocaleString()}
-            </span>
-            <span className='text-sm text-gray-400'>referrals</span>
-          </div>
-          <p className='text-sm text-gray-400'>Total Referrals</p>
-        </div>
-      </Card>
-
-      <Card className='bg-[#1a1f2e] border-[#2a3142] hover:border-[#3a4152] transition-all duration-300 p-3 sm:p-4 md:p-5 min-w-0'>
-        <div className='flex items-start justify-between mb-3'>
-          <div className='p-2 bg-[#242938] rounded-lg'>
-            <Activity className='w-5 h-5 text-yellow-400' />
-          </div>
-        </div>
-        <div className='space-y-1'>
-          <div className='flex items-baseline gap-2'>
-            <span className='text-3xl font-bold text-white'>
-              {metrics.recent}
-            </span>
-            <span className='text-sm text-gray-400'>new</span>
-          </div>
-          <p className='text-sm text-gray-400'>Last 30 Days</p>
-        </div>
+        <div className='space-y-1'></div>
       </Card>
     </div>
   )

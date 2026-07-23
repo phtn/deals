@@ -45,7 +45,7 @@ const bone = BakbakOne({
 
 export const metadata: Metadata = {
   title: 'BestDeal Admin',
-  description: 'Made by re-up.ph',
+  description: 're-up.ph',
 }
 
 export default function RootLayout({

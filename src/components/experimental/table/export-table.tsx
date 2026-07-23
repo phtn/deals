@@ -72,7 +72,7 @@ export const ExportTable = <T,>({table, tableName = '', loading}: Props<T>) => {
               {loading ? 'Loading' : 'Export'}
             </span>
             <Icon
-              name={loading ? 'spinners-ring' : 'download'}
+              name={loading ? 'spinner-ring' : 'download'}
               className='size-4'
             />
           </TButton>

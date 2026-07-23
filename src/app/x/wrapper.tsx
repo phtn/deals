@@ -23,12 +23,12 @@ export const WrappedContent = ({children, toolbar}: WrappedContentProps) => {
   )
   return (
     <Wrapper isPanelExpanded={isExpanded}>
-      <div className='px-2 sm:px-3 py-3.5 flex items-center justify-between min-w-0'>
+      <div className='px-2 sm:px-3 py-3 flex items-center justify-between min-w-0'>
         <SidebarTrigger className='' />
         <header
           id='mobile-navbar'
           className={cn(
-            'flex flex-1 w-full whitespace-nowrap capitalize text-lg dark:text-orange-200 md:px-2 lg:px-3 font-bone font-medium',
+            'flex flex-1 w-full font-poly text-base capitalize whitespace-nowrap md:px-2 lg:px-3',
             {uppercase: endpoint === 'ocr'},
           )}>
           {normalizedEndpoint === 'x' ? 'Overview' : normalizedEndpoint}
@@ -38,7 +38,7 @@ export const WrappedContent = ({children, toolbar}: WrappedContentProps) => {
           size='sq'
           variant='ghost'
           data-sidebar='trigger'
-          className={cn('text-foreground/80 hover:text-foreground')}
+          className={cn('hidden text-foreground/80 hover:text-foreground')}
           onClick={togglePanel}>
           <Icon
             name='sidebar'

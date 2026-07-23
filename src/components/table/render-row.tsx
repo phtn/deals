@@ -1,0 +1,75 @@
+import { cn } from '@/lib/utils'
+import type { Row, VisibilityState } from '@tanstack/react-table'
+import { memo, type MouseEvent } from 'react'
+import { TableRow } from '../ui/table'
+import { RenderCell } from './render-cell'
+import { isColumnVisible } from './visibility'
+
+interface RenderRowProps<T> {
+  row: Row<T>
+  isActive: boolean
+  isEditing: boolean
+  isPinned: boolean
+  isSelected: boolean
+  showSelectColumn: boolean
+  columnVisibility: VisibilityState
+}
+
+const RenderRowInner = <T,>({
+  row,
+  isActive,
+  isEditing,
+  isPinned,
+  isSelected,
+  showSelectColumn,
+  columnVisibility
+}: RenderRowProps<T>) => {
+  'use no memo'
+
+  const handleRowClick = (event: MouseEvent<HTMLTableRowElement>) => {
+    const target = event.target
+
+    if (
+      target instanceof HTMLElement &&
+      target.closest('button, input, select, textarea, a, form, label, [role="button"], [role="menuitem"]')
+    ) {
+      return
+    }
+
+    if (showSelectColumn && row.getCanSelect()) {
+      row.toggleSelected()
+    }
+  }
+
+  const isHighlighted = isEditing || isActive
+
+  return (
+    <TableRow
+      data-state={isSelected ? 'selected' : undefined}
+      className={cn(
+        'group/row h-10 _border-y _border-y-dotted _border-y-dark-table/10 bg-sidebar/5 text-foreground transition-colors duration-75 hover:border-y-dark-table/30 hover:bg-sidebar active:bg-background/20 _dark:border-greyed _dark:border-y-dark-table/40 dark:hover:bg-background/80',
+        {
+          'last:rounded-tr-2xl dark:bg-blue-200/50': isHighlighted,
+          '_border-y-dark-table/30 bg-sidebar hover:bg-sidebar last:rounded-tr-2xl dark:bg-mac-blue/20':
+            isSelected && !isHighlighted,
+          '_border-y-light-gray bg-sky-300/20 hover:bg-brand/10 _dark:border-y-sky-300/15 dark:bg-background/20 dark:hover:bg-background/30':
+            isPinned && !isHighlighted && !isSelected,
+          'cursor-pointer': showSelectColumn && row.getCanSelect()
+        }
+      )}
+      onClick={handleRowClick}>
+      {row.getAllCells().map((cell) => (
+        <RenderCell
+          key={cell.id}
+          cell={cell}
+          isEditing={isSelected || showSelectColumn || isHighlighted}
+          isVisible={isColumnVisible(cell.column.id, columnVisibility)}
+        />
+      ))}
+    </TableRow>
+  )
+}
+
+RenderRowInner.displayName = 'RenderRow'
+
+export const RenderRow = memo(RenderRowInner) as typeof RenderRowInner

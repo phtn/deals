@@ -271,9 +271,9 @@ function SidebarTrigger({
         toggleSidebar()
       }}>
       <Icon
-        name={isMobile ? 'remote' : 'switch'}
-        className={cn('md:size-6 rotate-180', {
-          'rotate-0': open,
+        name={isMobile ? 'remote' : 'sidebar'}
+        className={cn('md:size-5', {
+          ' rotate-180': open,
         })}
       />
       <span className='sr-only'>Toggle Sidebar</span>

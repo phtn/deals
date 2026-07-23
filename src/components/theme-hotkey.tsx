@@ -1,18 +1,16 @@
-"use client";
+'use client'
 
-import type { Keys } from "@/hooks/use-window";
-import { useWindow } from "@/hooks/use-window";
-import { useEffect } from "react";
+import {useWindow} from '@/hooks/use-window'
+import {useEffect} from 'react'
 
 export function ThemeHotkey() {
-  const noop: VoidFunction = () => {};
-  const { onKeyDown } = useWindow(false, noop);
-  const { add, remove } = onKeyDown("i" as Keys);
+  const noop: VoidFunction = () => {}
+  const {open} = useWindow({isOpen: false, onOpenChange: noop, hotkey: 'i'})
 
   useEffect(() => {
-    add();
-    return () => remove();
-  }, [add, remove]);
+    open()
+    return () => open()
+  }, [open])
 
-  return null;
+  return null
 }

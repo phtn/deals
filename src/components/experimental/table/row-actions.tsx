@@ -174,7 +174,7 @@ export const RowActions = <T,>({
           aria-label='More'>
           <Icon
             solid
-            name={loading ? 'spinners-ring' : icon}
+            name={loading ? 'spinner-ring' : icon}
             className={cn('text-muted-foreground size-4', {
               'dark:text-amber-400': loading,
             })}

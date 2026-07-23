@@ -48,20 +48,20 @@ export const Content = () => {
           animate={{opacity: 1, scale: 1}}
           transition={transition}
           className='absolute flex items-center w-screen h-160 md:size-200 justify-center'>
-          <div className='space-y-10 shadow-lg bg-linear-to-br from-neutral-50/60 via-neutral-50 to-neutral-50/40 dark:from-neutral-400 dark:via-neutral-300 dark:to-neutral-200 backdrop-blur-lg size-112 rounded-[4.5rem] flex flex-col items-center justify-center'>
+          <div className='space-y-10 md:shadow-lg bg-linear-to-br from-neutral-50/60 via-neutral-50 to-neutral-50/40 dark:from-neutral-400 dark:via-neutral-300 dark:to-neutral-200 backdrop-blur-lg size-112 rounded-[4.5rem] flex flex-col items-center justify-center'>
             <div className='h-12 border-b border-neutral-300 w-full flex items-center justify-between px-8'>
               <div className='flex items-center space-x-4'>
                 <TextAnimate
                   delay={0.8}
                   type='whipInUp'
-                  className='h-12 font-semibold font-figtree tracking-tighter text-2xl dark:text-white'>
+                  className='h-12 font-poly font-medium text-2xl dark:text-white'>
                   BestDeal
                 </TextAnimate>
                 <span className='font-light tracking-wider h-10 uppercase dark:text-neutral-700'></span>
               </div>
               <span className='text-sm tracking-tight h-9 text-emerald-500 dark:text-emerald-800'>
                 {message === 'OK' && (
-                  <Icon name='checkmark-circle' className='size-5' />
+                  <Icon name='check-circle-fill' className='size-6' />
                 )}
               </span>
             </div>
@@ -79,12 +79,12 @@ export const Content = () => {
                         size='lg'
                         variant='dark'
                         onClick={signInWithGoogle}
-                        rightIcon={loading ? 'spinners-ring' : 'google'}>
+                        rightIcon={loading ? 'spinner-ring' : 'google'}>
                         <span className='px-5'>Sign in with Google</span>
                       </Button>
                       <div className='h-20 flex items-center justify-center w-full whitespace-nowrap space-x-2 px-2'>
                         <Icon
-                          name='lock'
+                          name='shield-keyhole'
                           className='size-3 opacity-60 dark:opacity-100 dark:text-neutral-600'
                         />
                         <span className='font-mono text-xs opacity-60 dark:opacity-100 dark:text-neutral-700'>
@@ -128,7 +128,7 @@ export const Content = () => {
                           }}
                           key={target}
                           className={cn(
-                            'absolute top-1/4 left-1/4 flex items-center justify-center rounded-full border border-neutral-600 overflow-visible bg-orange-200/20 backdrop-blur-2xl size-25 aspect-square',
+                            'absolute top-1/4 left-1/4 flex items-center justify-center rounded-full overflow-visible bg-neutral-200/20 backdrop-blur-2xl size-25 aspect-square',
                             {
                               'bg-emerald-400':
                                 target === currentStep - 1 ||
@@ -169,7 +169,7 @@ export const Content = () => {
                           }}
                           key={target}
                           className={cn(
-                            'absolute top-1/4 left-1/4 flex items-center justify-center rounded-full border border-neutral-400/80 overflow-visible bg-orange-200/20 backdrop-blur-2xl size-25 aspect-square',
+                            'absolute top-1/4 left-1/4 flex items-center justify-center rounded-full overflow-visible bg-neutral-200/20 backdrop-blur-2xl size-25 aspect-square',
                             {
                               'bg-emerald-400':
                                 target === currentStep - 1 ||
@@ -238,7 +238,7 @@ const SilverButton = ({
 
       <span
         suppressHydrationWarning
-        className='text-2xl md:text-4xl text-white drop-shadow-xs drop-shadow-neutral-950 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+        className='font-poly text-2xl md:text-4xl text-emerald-300 drop-shadow-xs drop-shadow-neutral-950 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
         {children as ReactNode}
       </span>
     </Button>

@@ -1,12 +1,53 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+  font-family: 'PolySans';
+  src: url('/fonts/PolySansTrial-Median.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PolySans';
+  src: url('/fonts/PolySansTrial-MedianWide.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ios';
+  src: url('/fonts/IoskeleyMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: monospace;
+  font-mono: swap;
+}
+@font-face {
+  font-family: 'OKX';
+  src: url('/fonts/okxs-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-mono: swap;
+}
+@font-face {
+  font-family: 'OKX';
+  src: url('/fonts/okxs-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-mono: swap;
+}
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'OKX';
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-sans);
+  --font-heading: var(--font-sans);
+  --font-poly: 'PolySans';
+  --font-okx: 'OKX';
+  --font-ios: 'Ios', monospace;
   --font-mono: var(--font-geist-mono);
   --font-figtree: var(--font-figtree);
   --font-major: var(--font-major);
