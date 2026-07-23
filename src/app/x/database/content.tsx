@@ -14,7 +14,6 @@ import {
   FileSpreadsheet,
   Rows3,
   Search,
-  ShieldCheck,
   X,
 } from 'lucide-react'
 import {
@@ -350,9 +349,9 @@ const SourceStep = ({
   }
 
   return (
-    <section className='flex flex-1 items-center'>
+    <section className='flex flex-1 md:items-center py-8'>
       <div className='w-full'>
-        <div className='mx-auto max-w-2xl text-center mb-12 space-y-6'>
+        <div className='hidden md:block mx-auto max-w-2xl text-center mb-12 space-y-6'>
           <span className='mb-3 hidden _inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white/80 px-3 py-1 text-[11px] font-medium text-zinc-600 shadow-sm backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-300'>
             <FileSpreadsheet className='size-3.5 text-emerald-600 dark:text-emerald-400' />
             A clean table in three steps
@@ -377,7 +376,7 @@ const SourceStep = ({
             <div className='p-5 sm:p-7 lg:p-8'>
               <div className='mb-5 flex items-start justify-between gap-4'>
                 <div>
-                  <h3 className='font-figtree text-base font-semibold tracking-tight'>
+                  <h3 className='font-sans text-base font-medium'>
                     Upload a file
                   </h3>
                   <p className='mt-1 text-xs text-zinc-500 dark:text-zinc-400'>
@@ -425,7 +424,7 @@ const SourceStep = ({
                     <Icon name='cloud-upload' className='size-6' />
                   </div>
                 </div>
-                <p className='relative text-sm font-sans font-medium'>
+                <p className='relative text-sm font-poly font-medium'>
                   {isParsing
                     ? 'Reading your spreadsheet…'
                     : isDragging
@@ -451,7 +450,7 @@ const SourceStep = ({
 
             <div className='border-t border-zinc-200 bg-zinc-50/60 p-5 sm:p-7 lg:border-l lg:border-t-0 lg:p-8 dark:border-zinc-800 dark:bg-zinc-950/30'>
               <div className='mb-5'>
-                <h3 className='font-figtree text-base font-semibold tracking-tight'>
+                <h3 className='font-sans font-medium text-base'>
                   Connect cloud storage
                 </h3>
                 <p className='mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400'>
@@ -459,7 +458,7 @@ const SourceStep = ({
                 </p>
               </div>
 
-              <div className='grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2'>
+              <div className='grid gap-2.5 grid-cols-2'>
                 {CLOUD_PROVIDERS.map((provider) => (
                   <button
                     key={provider.id}
@@ -482,8 +481,11 @@ const SourceStep = ({
 
               <div className='mt-5 rounded-xl border border-zinc-200/80 bg-white/60 px-3.5 py-3 dark:border-zinc-800 dark:bg-zinc-900/60'>
                 <div className='flex items-start gap-2.5'>
-                  <ShieldCheck className='mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400' />
-                  <p className='text-[11px] leading-4 text-zinc-500 dark:text-zinc-400'>
+                  <Icon
+                    name='shield-checkmark'
+                    className='mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400'
+                  />
+                  <p className='text-xs leading-4 text-zinc-500 dark:text-zinc-400'>
                     Cloud connections use provider sign-in and only request
                     access to the files you choose.
                   </p>
@@ -494,10 +496,13 @@ const SourceStep = ({
 
           <div className='flex flex-col gap-2 border-t border-zinc-200 bg-zinc-50/70 px-5 py-3 text-[11px] text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-8 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-400'>
             <span className='flex items-center gap-1.5'>
-              <ShieldCheck className='size-3.5 text-emerald-600 dark:text-emerald-400' />
+              <Icon
+                name='computer'
+                className='size-3.5 text-blue-600 dark:text-blue-400'
+              />
               Local files are processed in your browser
             </span>
-            <span>CSV · XLS · XLSX · XLSM · ODS</span>
+            <span className='font-ios'>CSV · XLS · XLSX · XLSM · ODS</span>
           </div>
         </div>
       </div>
@@ -1033,7 +1038,7 @@ const ImportProgress = ({
                 'mx-3 h-px flex-1 sm:mx-4',
                 stepNumber < activeStep
                   ? 'bg-emerald-500'
-                  : 'bg-zinc-200 dark:bg-zinc-800',
+                  : 'bg-zinc-400 dark:bg-zinc-800',
               )}
               aria-hidden='true'
             />
