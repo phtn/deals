@@ -349,7 +349,7 @@ const SourceStep = ({
   }
 
   return (
-    <section className='flex flex-1 md:items-center py-8'>
+    <section className='flex flex-1 py-8 md:pt-16'>
       <div className='w-full'>
         <div className='hidden md:block mx-auto max-w-2xl text-center mb-12 space-y-6'>
           <span className='mb-3 hidden _inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white/80 px-3 py-1 text-[11px] font-medium text-zinc-600 shadow-sm backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-300'>
@@ -359,11 +359,11 @@ const SourceStep = ({
           <h2 className='font-poly text-xl leading-tight tracking-wide text-zinc-950 lg:text-4xl dark:text-zinc-50'>
             Bring your data to the table.
           </h2>
-          <div>
-            <p className='mx-auto mt-3 max-w-xl text-base leading-6 text-zinc-500 dark:text-zinc-400'>
+          <div className='py-4'>
+            <p className='mx-auto mt-3 max-w-xl text-base leading-6 text-foreground/80'>
               Upload or Connect your spreadsheet from the cloud.
             </p>
-            <p className='mx-auto max-w-2xl text-base leading-6 text-zinc-500 dark:text-zinc-400'>
+            <p className='mx-auto max-w-2xl text-base leading-6 text-foreground/70'>
               We’ll detect your columns, let you review, then create the table.
             </p>
           </div>
@@ -391,8 +391,8 @@ const SourceStep = ({
               <label
                 className={cn(
                   'group relative flex min-h-64 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed px-6 py-10 text-center outline-none transition-all duration-200',
-                  'border-zinc-300 bg-zinc-50/70 hover:border-zinc-400 hover:bg-zinc-50 focus-visible:ring-2 focus-visible:ring-zinc-900/20',
-                  'dark:border-zinc-700 dark:bg-zinc-950/45 dark:hover:border-zinc-600 dark:hover:bg-zinc-950/70 dark:focus-visible:ring-white/20',
+                  'border-zinc-300 bg-zinc-50/70 hover:border-blue-500 hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-zinc-900/20',
+                  'dark:border-zinc-700 dark:bg-zinc-950/45 dark:hover:border-blue-600 dark:hover:bg-blue-950/30 dark:focus-visible:ring-white/20',
                   isDragging &&
                     'scale-[0.995] border-emerald-500 bg-emerald-50/70 dark:border-emerald-500 dark:bg-emerald-950/20',
                   isParsing && 'pointer-events-none opacity-70',
@@ -1052,8 +1052,8 @@ const ImportProgress = ({
 const ProviderLogo = ({id}: {id: ProviderId}) => {
   if (id === 'google-drive') {
     return (
-      <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-950 dark:ring-zinc-700'>
-        <svg viewBox='0 0 24 24' className='size-5' aria-hidden='true'>
+      <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-700'>
+        <svg viewBox='0 0 24 24' className='size-7' aria-hidden='true'>
           <path fill='#0F9D58' d='M8.2 3.5h5.25l6.1 10.55h-5.28z' />
           <path fill='#F4B400' d='m8.2 3.5-5.75 9.96 2.62 4.53L13.45 3.5z' />
           <path fill='#4285F4' d='M5.07 17.99 7.7 13.46h11.85l-2.62 4.53z' />
@@ -1064,7 +1064,7 @@ const ProviderLogo = ({id}: {id: ProviderId}) => {
 
   if (id === 'dropbox') {
     return (
-      <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#f2f6ff] shadow-sm ring-1 ring-blue-100 dark:bg-blue-950/40 dark:ring-blue-900'>
+      <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#f2f6ff] shadow-sm ring-1 ring-blue-100 dark:bg-zinc-900 dark:ring-zinc-700'>
         <svg viewBox='0 0 24 24' className='size-5' aria-hidden='true'>
           <path
             fill='#0061FF'
@@ -1077,7 +1077,7 @@ const ProviderLogo = ({id}: {id: ProviderId}) => {
 
   if (id === 'onedrive') {
     return (
-      <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#f2f8ff] shadow-sm ring-1 ring-sky-100 dark:bg-sky-950/40 dark:ring-sky-900'>
+      <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#f2f8ff] shadow-sm ring-1 ring-sky-100 dark:bg-zinc-900 dark:ring-zinc-700'>
         <svg viewBox='0 0 24 24' className='size-6' aria-hidden='true'>
           <path
             fill='#0364B8'
@@ -1097,7 +1097,7 @@ const ProviderLogo = ({id}: {id: ProviderId}) => {
   }
 
   return (
-    <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#f3f8ff] text-[15px] font-bold tracking-widest text-[#0061d5] shadow-sm ring-1 ring-blue-100 dark:bg-blue-950/40 dark:ring-blue-900'>
+    <span className='flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#f3f8ff] text-[15px] font-bold tracking-widest text-[#0061d5] shadow-sm ring-1 ring-blue-100 dark:bg-zinc-900 dark:ring-zinc-700'>
       <svg width='32' height='16' viewBox='0 0 462 244' role='img'>
         <g>
           <path
